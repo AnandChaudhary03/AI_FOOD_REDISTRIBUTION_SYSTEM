@@ -54,7 +54,13 @@ npm run dev
 
 Open **`http://localhost:5173`** in your browser.
 
-hosting url  **`https://ai-food-redistribution-system.vercel.app/login`**
+## 🌐 Live Demo
+
+**Application URL:**  
+https://ai-food-redistribution-system.vercel.app/login
+
+Or click here:  
+[🚀 AI Food Redistribution System](https://ai-food-redistribution-system.vercel.app/login)
 
 ---
 
