@@ -54,6 +54,8 @@ npm run dev
 
 Open **`http://localhost:5173`** in your browser.
 
+hosting url  **`https://ai-food-redistribution-system.vercel.app/login`**
+
 ---
 
 ## 🔑 Demo Login Accounts
