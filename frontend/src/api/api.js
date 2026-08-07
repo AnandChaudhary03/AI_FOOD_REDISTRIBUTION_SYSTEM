@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://ai-food-redistribution-system-1.onrender.com'
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: API_URL,
   headers: { 'Content-Type': 'application/json' }
 })
 
@@ -18,7 +20,7 @@ api.interceptors.response.use(
       const refreshToken = localStorage.getItem('annasetu_refresh')
       if (refreshToken) {
         try {
-          const res = await axios.post('http://localhost:8000/auth/refresh', {}, {
+          const res = await axios.post(`${API_URL}/auth/refresh`, {}, {
             headers: { Authorization: `Bearer ${refreshToken}` }
           })
           localStorage.setItem('annasetu_token', res.data.access_token)
