@@ -6,11 +6,14 @@ pymysql
 cryptography
 python-jose[cryptography]
 passlib[bcrypt]
+bcrypt
 python-multipart
 python-dotenv
 httpx
-pydantic
+pydantic[email]
 pydantic-settings
 pillow
 websockets
 slowapi
+email-validator
+dnspython
