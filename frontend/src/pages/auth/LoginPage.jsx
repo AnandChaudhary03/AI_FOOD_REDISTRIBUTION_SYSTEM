@@ -5,6 +5,8 @@ import toast from 'react-hot-toast'
 import { LogIn, Sparkles, Building2, Heart, User, Truck, Shield } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 
+import AnnaSetuLogo from '../../components/AnnaSetuLogo'
+
 export default function LoginPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -52,10 +54,10 @@ export default function LoginPage() {
   return (
     <div className="auth-bg">
       <div className="auth-card">
-        <div className="auth-logo">
-          <div className="auth-logo-icon">अ</div>
-          <h1 className="auth-title">AnnaSetu</h1>
-          <p className="auth-subtitle">{t('tagline')}</p>
+        <div className="auth-logo" style={{ marginBottom: '1.25rem' }}>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <AnnaSetuLogo size={52} />
+          </Link>
         </div>
 
         {/* 5-Role Login Tabs */}

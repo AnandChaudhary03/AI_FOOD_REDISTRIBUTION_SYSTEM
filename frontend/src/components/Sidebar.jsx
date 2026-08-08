@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Package, HeartHandshake, Receipt, Barcode, MapPin,
   Settings, User, LogOut, Calendar, History, Users, FileText, Truck, ShieldCheck, Bell
 } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import AnnaSetuLogo from './AnnaSetuLogo'
 
 export default function Sidebar({ collapsed, role }) {
   const { t } = useTranslation()
@@ -69,15 +69,9 @@ export default function Sidebar({ collapsed, role }) {
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
-        <div className="sidebar-logo">अ</div>
-        {!collapsed && (
-          <div>
-            <div className="sidebar-brand">AnnaSetu</div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--accent-saffron)', fontWeight: 700 }}>
-              {role.toUpperCase()}
-            </div>
-          </div>
-        )}
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <AnnaSetuLogo size={collapsed ? 36 : 40} showText={!collapsed} subtitle={role.toUpperCase()} />
+        </Link>
       </div>
 
       <nav className="sidebar-nav">
