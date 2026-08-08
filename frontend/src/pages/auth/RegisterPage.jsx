@@ -56,14 +56,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="auth-bg">
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
       <ThreeDBackground />
-      <div className="auth-card" style={{ maxWidth: '540px' }}>
-        <div className="auth-logo">
-          <div className="auth-logo-icon">अ</div>
-          <h1 className="auth-title">Create Account</h1>
-          <p className="auth-subtitle">Join AnnaSetu to reduce food waste</p>
-        </div>
+      <div className="app-container-frame" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 3rem)', padding: '2rem 1rem' }}>
+        <div className="auth-card" style={{ maxWidth: '540px' }}>
+          <div className="auth-logo">
+            <Link to="/" style={{ textDecoration: 'none', display: 'inline-block', marginBottom: '0.5rem' }}>
+              <AnnaSetuLogo size={48} />
+            </Link>
+            <h1 className="auth-title">Create Account</h1>
+            <p className="auth-subtitle">Join AnnaSetu to reduce food waste</p>
+          </div>
 
         {/* 4-Role Registration Tabs */}
         <div className="role-tabs">
@@ -137,6 +140,7 @@ export default function RegisterPage() {
             {t('login')}
           </Link>
         </p>
+        </div>
       </div>
     </div>
   )

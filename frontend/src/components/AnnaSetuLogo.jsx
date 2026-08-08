@@ -8,11 +8,11 @@ export default function AnnaSetuLogo({ size = 42, showText = true, subtitle = "B
           width: size,
           height: size,
           borderRadius: '14px',
-          background: 'linear-gradient(135deg, #ea580c 0%, #f97316 50%, #2563eb 100%)',
+          background: 'linear-gradient(135deg, #7c3aed 0%, #f97316 100%)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 6px 20px rgba(249,115,22,0.3)',
+          boxShadow: '0 6px 20px rgba(124, 58, 237, 0.35)',
           flexShrink: 0,
           position: 'relative',
           overflow: 'hidden'
@@ -30,11 +30,11 @@ export default function AnnaSetuLogo({ size = 42, showText = true, subtitle = "B
 
       {showText && (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: size * 0.48, fontWeight: 900, letterSpacing: '-0.02em', background: 'linear-gradient(135deg, #0f172a 40%, #ea580c 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1 }}>
+          <span style={{ fontSize: size * 0.48, fontWeight: 900, letterSpacing: '-0.02em', background: 'linear-gradient(135deg, #7c3aed 0%, #f97316 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1 }}>
             AnnaSetu
           </span>
           {subtitle && (
-            <span style={{ fontSize: size * 0.22, color: 'var(--accent-saffron)', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '0.2rem' }}>
+            <span style={{ fontSize: size * 0.22, color: '#f97316', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '0.2rem' }}>
               {subtitle}
             </span>
           )}

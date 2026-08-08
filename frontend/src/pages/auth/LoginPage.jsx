@@ -53,14 +53,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="auth-bg">
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
       <ThreeDBackground />
-      <div className="auth-card">
-        <div className="auth-logo" style={{ marginBottom: '1.25rem' }}>
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <AnnaSetuLogo size={52} />
-          </Link>
-        </div>
+      <div className="app-container-frame" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 3rem)' }}>
+        <div className="auth-card">
+          <div className="auth-logo" style={{ marginBottom: '1.25rem' }}>
+            <Link to="/" style={{ textDecoration: 'none' }}>
+              <AnnaSetuLogo size={52} />
+            </Link>
+          </div>
 
         {/* 5-Role Login Tabs */}
         <div className="role-tabs">
@@ -136,6 +137,7 @@ export default function LoginPage() {
             {t('register')}
           </Link>
         </p>
+        </div>
       </div>
     </div>
   )
