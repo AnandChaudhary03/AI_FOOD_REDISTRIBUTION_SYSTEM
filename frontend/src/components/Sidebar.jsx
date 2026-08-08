@@ -5,6 +5,7 @@ import {
   Settings, User, LogOut, Calendar, History, Users, FileText, Truck, ShieldCheck, Bell
 } from 'lucide-react'
 import AnnaSetuLogo from './AnnaSetuLogo'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function Sidebar({ collapsed, role }) {
   const { t } = useTranslation()

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { UserPlus, Building2, Heart, User, Truck } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
+import AnnaSetuLogo from '../../components/AnnaSetuLogo'
 import ThreeDBackground from '../../components/ThreeDBackground'
 
 export default function RegisterPage() {
@@ -56,17 +57,16 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh' }}>
+    <div className="auth-bg">
       <ThreeDBackground />
-      <div className="app-container-frame" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 3rem)', padding: '2rem 1rem' }}>
-        <div className="auth-card" style={{ maxWidth: '540px' }}>
-          <div className="auth-logo">
-            <Link to="/" style={{ textDecoration: 'none', display: 'inline-block', marginBottom: '0.5rem' }}>
-              <AnnaSetuLogo size={48} />
-            </Link>
-            <h1 className="auth-title">Create Account</h1>
-            <p className="auth-subtitle">Join AnnaSetu to reduce food waste</p>
-          </div>
+      <div className="auth-card" style={{ maxWidth: '540px' }}>
+        <div className="auth-logo">
+          <Link to="/" style={{ textDecoration: 'none', display: 'inline-block', marginBottom: '0.5rem' }}>
+            <AnnaSetuLogo size={48} />
+          </Link>
+          <h1 className="auth-title">Create Account</h1>
+          <p className="auth-subtitle">Join AnnaSetu to reduce food waste</p>
+        </div>
 
         {/* 4-Role Registration Tabs */}
         <div className="role-tabs">
@@ -86,61 +86,66 @@ export default function RegisterPage() {
           })}
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          <div className="input-group" style={{ gridColumn: 'span 2' }}>
-            <label className="input-label">{t('name')} *</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} className="input" placeholder="John Doe" required />
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="grid-2">
+            <div className="input-group">
+              <label className="input-label">{t('name')} *</label>
+              <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" className="input" required />
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">{t('email')} *</label>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" className="input" required />
+            </div>
           </div>
 
-          <div className="input-group">
-            <label className="input-label">{t('email')} *</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} className="input" placeholder="john@example.com" required />
+          <div className="grid-2">
+            <div className="input-group">
+              <label className="input-label">{t('phone')}</label>
+              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 9876543210" className="input" />
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">{t('password')} *</label>
+              <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" className="input" required />
+            </div>
           </div>
 
-          <div className="input-group">
-            <label className="input-label">{t('phone')}</label>
-            <input type="text" name="phone" value={formData.phone} onChange={handleChange} className="input" placeholder="+91 9876543210" />
-          </div>
-
-          <div className="input-group" style={{ gridColumn: 'span 2' }}>
-            <label className="input-label">{t('password')} *</label>
-            <input type="password" name="password" value={formData.password} onChange={handleChange} className="input" placeholder="••••••••" required />
-          </div>
-
-          {(activeRole === 'business' || activeRole === 'ngo') && (
-            <div className="input-group" style={{ gridColumn: 'span 2' }}>
+          {activeRole !== 'individual' && (
+            <div className="input-group">
               <label className="input-label">{t('organization')}</label>
-              <input type="text" name="organization_name" value={formData.organization_name} onChange={handleChange} className="input" placeholder="e.g. Green Bakery or Hunger Care NGO" />
+              <input type="text" name="organization_name" value={formData.organization_name} onChange={handleChange} placeholder="Org / Business Name" className="input" />
             </div>
           )}
 
-          <div className="input-group" style={{ gridColumn: 'span 2' }}>
+          <div className="input-group">
             <label className="input-label">{t('address')}</label>
-            <input type="text" name="address" value={formData.address} onChange={handleChange} className="input" placeholder="123 Main Street" />
+            <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Street Address" className="input" />
           </div>
 
-          <div className="input-group">
-            <label className="input-label">{t('city')}</label>
-            <input type="text" name="city" value={formData.city} onChange={handleChange} className="input" />
+          <div className="grid-2">
+            <div className="input-group">
+              <label className="input-label">{t('city')}</label>
+              <input type="text" name="city" value={formData.city} onChange={handleChange} className="input" />
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">{t('state')}</label>
+              <input type="text" name="state" value={formData.state} onChange={handleChange} className="input" />
+            </div>
           </div>
 
-          <div className="input-group">
-            <label className="input-label">{t('state')}</label>
-            <input type="text" name="state" value={formData.state} onChange={handleChange} className="input" />
-          </div>
-
-          <button type="submit" className="btn btn-primary btn-lg" style={{ gridColumn: 'span 2', justifyContent: 'center', marginTop: '0.5rem' }} disabled={loading}>
-            {loading ? t('loading') : <><UserPlus size={18} /> Register as {activeRole.toUpperCase()}</>}
+          <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }} disabled={loading}>
+            {loading ? t('loading') : <><UserPlus size={18} /> {t('register')} as {activeRole.toUpperCase()}</>}
           </button>
         </form>
 
         <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '1.25rem' }}>
           Already have an account?{' '}
-          <Link to="/login" style={{ color: 'var(--accent-green)', fontWeight: 600, textDecoration: 'none' }}>
+          <Link to="/login" style={{ color: 'var(--accent-saffron-dark)', fontWeight: 700, textDecoration: 'none' }}>
             {t('login')}
           </Link>
         </p>
-        </div>
       </div>
     </div>
   )

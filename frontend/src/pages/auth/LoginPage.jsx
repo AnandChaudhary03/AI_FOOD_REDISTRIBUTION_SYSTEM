@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { LogIn, Sparkles, Building2, Heart, User, Truck, Shield } from 'lucide-react'
+import { LogIn, Building2, Heart, User, Truck, Shield } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
-
 import AnnaSetuLogo from '../../components/AnnaSetuLogo'
 import ThreeDBackground from '../../components/ThreeDBackground'
 
@@ -53,15 +52,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh' }}>
+    <div className="auth-bg">
       <ThreeDBackground />
-      <div className="app-container-frame" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 3rem)' }}>
-        <div className="auth-card">
-          <div className="auth-logo" style={{ marginBottom: '1.25rem' }}>
-            <Link to="/" style={{ textDecoration: 'none' }}>
-              <AnnaSetuLogo size={52} />
-            </Link>
-          </div>
+      <div className="auth-card">
+        <div className="auth-logo" style={{ marginBottom: '1.25rem' }}>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <AnnaSetuLogo size={52} />
+          </Link>
+        </div>
 
         {/* 5-Role Login Tabs */}
         <div className="role-tabs">
@@ -82,7 +80,7 @@ export default function LoginPage() {
         </div>
 
         {activeRole === 'admin' && (
-          <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', padding: '0.6rem 0.8rem', borderRadius: 'var(--radius)', marginBottom: '1rem', fontSize: '0.75rem', color: '#fbbf24', textAlign: 'center' }}>
+          <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', padding: '0.6rem 0.8rem', borderRadius: 'var(--radius)', marginBottom: '1rem', fontSize: '0.75rem', color: '#d97706', textAlign: 'center', fontWeight: 600 }}>
             🔒 Master Administrator Account (Single Admin System)
           </div>
         )}
@@ -133,11 +131,10 @@ export default function LoginPage() {
 
         <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '1.25rem' }}>
           Don't have an account?{' '}
-          <Link to="/register" style={{ color: 'var(--accent-green)', fontWeight: 600, textDecoration: 'none' }}>
+          <Link to="/register" style={{ color: 'var(--accent-saffron-dark)', fontWeight: 700, textDecoration: 'none' }}>
             {t('register')}
           </Link>
         </p>
-        </div>
       </div>
     </div>
   )
