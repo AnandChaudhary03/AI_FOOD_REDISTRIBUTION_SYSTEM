@@ -20,19 +20,19 @@ export default function ThreeDBackground() {
 
     window.addEventListener('resize', handleResize)
 
-    // Food Salvage Symbols & Nodes matching reference image palette
-    const foodSymbols = ['🌾', '🍎', '📦', '🍲', '🥑', '🍞', '💛']
-    const nodeCount = Math.min(Math.floor(width / 30), 38)
+    // Food & AI Network Symbols
+    const foodSymbols = ['🌾', '🍎', '📦', '🍲', '🥑', '⚡', '🤖', '✨']
+    const nodeCount = Math.min(Math.floor(width / 32), 36)
     const nodes = []
 
     const colorPalettes = [
-      { r: 124, g: 58, b: 237 },  // Deep Purple
-      { r: 249, g: 115, b: 22 },  // Saffron Orange
-      { r: 245, g: 158, b: 11 },  // Gold Amber
-      { r: 236, g: 72, b: 153 }   // Pink Coral
+      { r: 180, g: 43, b: 114 },  // Magenta #B42B72
+      { r: 255, g: 107, b: 82 },  // Coral #FF6B52
+      { r: 255, g: 135, b: 95 },  // Orange #FF875F
+      { r: 75, g: 23, b: 111 }    // Deep Purple #4B176F
     ]
 
-    // Create 3D Floating Food Nodes
+    // Create 3D Nodes
     for (let i = 0; i < nodeCount; i++) {
       const col = colorPalettes[i % colorPalettes.length]
       nodes.push({
@@ -41,12 +41,12 @@ export default function ThreeDBackground() {
         z: Math.random() * 600 + 100,
         symbol: foodSymbols[i % foodSymbols.length],
         color: col,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
-        vz: (Math.random() - 0.5) * 0.4,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        vz: (Math.random() - 0.5) * 0.35,
         pulse: Math.random() * Math.PI * 2,
         rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.02
+        rotSpeed: (Math.random() - 0.5) * 0.015
       })
     }
 
@@ -54,15 +54,15 @@ export default function ThreeDBackground() {
     const render = () => {
       ctx.clearRect(0, 0, width, height)
 
-      // 1. Draw 3D Food Network Bridge Mesh Lines
+      // 1. Draw Network Connections
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x
           const dy = nodes[i].y - nodes[j].y
           const dist = Math.sqrt(dx * dx + dy * dy)
 
-          if (dist < 190) {
-            const alpha = (1 - dist / 190) * 0.28
+          if (dist < 180) {
+            const alpha = (1 - dist / 180) * 0.22
             const grad = ctx.createLinearGradient(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y)
             grad.addColorStop(0, `rgba(${nodes[i].color.r}, ${nodes[i].color.g}, ${nodes[i].color.b}, ${alpha})`)
             grad.addColorStop(1, `rgba(${nodes[j].color.r}, ${nodes[j].color.g}, ${nodes[j].color.b}, ${alpha})`)
@@ -70,18 +70,18 @@ export default function ThreeDBackground() {
             ctx.moveTo(nodes[i].x, nodes[i].y)
             ctx.lineTo(nodes[j].x, nodes[j].y)
             ctx.strokeStyle = grad
-            ctx.lineWidth = 1.2
+            ctx.lineWidth = 1
             ctx.stroke()
           }
         }
       }
 
-      // 2. Draw 3D Food Salvage Nodes & Floating Icons
+      // 2. Draw Floating Nodes
       nodes.forEach((node) => {
         node.x += node.vx
         node.y += node.vy
         node.z += node.vz
-        node.pulse += 0.02
+        node.pulse += 0.018
         node.rotation += node.rotSpeed
 
         if (node.x < -20 || node.x > width + 20) node.vx *= -1
@@ -89,15 +89,15 @@ export default function ThreeDBackground() {
         if (node.z < 50 || node.z > 700) node.vz *= -1
 
         const perspective = 400 / (node.z || 1)
-        const size = Math.max(12, 24 * perspective)
+        const size = Math.max(10, 22 * perspective)
 
-        // 3D Glow Aura
+        // Radial Glow Aura
         const glowRad = size * 1.8
         const radGrad = ctx.createRadialGradient(
           node.x, node.y, size * 0.2,
           node.x, node.y, glowRad
         )
-        radGrad.addColorStop(0, `rgba(${node.color.r}, ${node.color.g}, ${node.color.b}, 0.35)`)
+        radGrad.addColorStop(0, `rgba(${node.color.r}, ${node.color.g}, ${node.color.b}, 0.3)`)
         radGrad.addColorStop(1, `rgba(${node.color.r}, ${node.color.g}, ${node.color.b}, 0)`)
 
         ctx.beginPath()
@@ -105,14 +105,14 @@ export default function ThreeDBackground() {
         ctx.fillStyle = radGrad
         ctx.fill()
 
-        // 3D Floating Food Symbol
+        // Core Floating Symbol
         ctx.save()
         ctx.translate(node.x, node.y)
         ctx.rotate(node.rotation)
         ctx.font = `${size}px sans-serif`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
-        ctx.globalAlpha = Math.min(0.85, perspective * 0.8)
+        ctx.globalAlpha = Math.min(0.8, perspective * 0.75)
         ctx.fillText(node.symbol, 0, 0)
         ctx.restore()
       })
@@ -130,35 +130,47 @@ export default function ThreeDBackground() {
 
   return (
     <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
-      {/* Exact Reference Ambient Gradient Orbs (Purple Top-Left to Coral Saffron Bottom-Right) */}
+      {/* Blurred Ambient Glow Orbs matching reference image */}
       <div
         style={{
           position: 'absolute',
-          top: '-20%',
-          left: '-15%',
-          width: '65vw',
-          height: '65vw',
+          top: '-15%',
+          left: '-10%',
+          width: '50vw',
+          height: '50vw',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(124,58,237,0.35) 0%, rgba(124,58,237,0) 70%)',
-          filter: 'blur(80px)',
-          animation: 'float-3d-slow 20s ease-in-out infinite alternate'
+          background: 'radial-gradient(circle, rgba(75,23,111,0.45) 0%, rgba(53,19,95,0) 70%)',
+          filter: 'blur(90px)',
+          animation: 'float-3d-slow 22s ease-in-out infinite alternate'
         }}
       />
       <div
         style={{
           position: 'absolute',
-          bottom: '-20%',
-          right: '-15%',
-          width: '70vw',
-          height: '70vw',
+          bottom: '-15%',
+          right: '-10%',
+          width: '55vw',
+          height: '55vw',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(249,115,22,0.35) 0%, rgba(249,115,22,0) 70%)',
-          filter: 'blur(90px)',
-          animation: 'float-3d-slow 24s ease-in-out infinite alternate-reverse'
+          background: 'radial-gradient(circle, rgba(255,107,82,0.4) 0%, rgba(255,135,95,0) 70%)',
+          filter: 'blur(100px)',
+          animation: 'float-3d-slow 25s ease-in-out infinite alternate-reverse'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: '35%',
+          right: '15%',
+          width: '40vw',
+          height: '40vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(180,43,114,0.3) 0%, rgba(180,43,114,0) 70%)',
+          filter: 'blur(80px)',
+          animation: 'float-3d-slow 18s ease-in-out infinite alternate'
         }}
       />
 
-      {/* 3D Food Salvage Canvas Mesh */}
       <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
     </div>
   )
