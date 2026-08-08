@@ -26,9 +26,6 @@ export default function BusinessDashboard() {
           <p className="page-subtitle">Welcome back! Manage your food inventory and surplus donations.</p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <Link to="/business/barcode" className="btn btn-secondary">
-            <Barcode size={18} /> {t('scan_barcode')}
-          </Link>
           <Link to="/business/inventory" className="btn btn-primary">
             <Plus size={18} /> {t('add_item')}
           </Link>
@@ -109,14 +106,14 @@ export default function BusinessDashboard() {
       )}
 
       {/* Quick Navigation Cards */}
-      <div className="grid-3">
+      <div className="grid-2">
         <div className="card">
-          <Barcode size={32} color="var(--accent-green)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Barcode Scanner & CSV</h3>
+          <Package size={32} color="var(--accent-blue)" style={{ marginBottom: '1rem' }} />
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Manage Inventory, Barcodes & CSV</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Scan products in real-time or bulk upload CSV files to add products to inventory.
+            Scan barcodes, upload CSV files, track expiry dates, and AI urgency scores.
           </p>
-          <Link to="/business/barcode" className="btn btn-secondary btn-sm">Open Scanner &rarr;</Link>
+          <Link to="/business/inventory" className="btn btn-secondary btn-sm">Manage Inventory &rarr;</Link>
         </div>
 
         <div className="card">
@@ -126,15 +123,6 @@ export default function BusinessDashboard() {
             Discover registered NGOs near your business location for quick donation pickups.
           </p>
           <Link to="/business/map" className="btn btn-secondary btn-sm">View Map &rarr;</Link>
-        </div>
-
-        <div className="card">
-          <Package size={32} color="var(--accent-blue)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Manage Inventory</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            View all inventory items, expiry dates, and AI urgency scores in one place.
-          </p>
-          <Link to="/business/inventory" className="btn btn-secondary btn-sm">Manage &rarr;</Link>
         </div>
       </div>
     </div>

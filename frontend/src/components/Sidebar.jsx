@@ -19,7 +19,6 @@ export default function Sidebar({ collapsed, role }) {
           { path: '/business/inventory', label: t('inventory'), icon: Package },
           { path: '/business/donations', label: t('donations'), icon: HeartHandshake },
           { path: '/business/transactions', label: t('transactions'), icon: Receipt },
-          { path: '/business/barcode', label: t('barcode'), icon: Barcode },
           { path: '/business/map', label: t('map'), icon: MapPin },
           { path: '/business/settings', label: t('settings'), icon: Settings },
           { path: '/business/profile', label: t('profile'), icon: User },

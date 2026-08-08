@@ -72,7 +72,7 @@ export default function App() {
               <Route path="inventory" element={<BusinessInventory />} />
               <Route path="donations" element={<BusinessDonations />} />
               <Route path="transactions" element={<BusinessTransactions />} />
-              <Route path="barcode" element={<BusinessBarcode />} />
+              <Route path="barcode" element={<Navigate to="/business/inventory" replace />} />
               <Route path="map" element={<BusinessMap />} />
               <Route path="settings" element={<BusinessSettings />} />
               <Route path="profile" element={<BusinessProfile />} />
