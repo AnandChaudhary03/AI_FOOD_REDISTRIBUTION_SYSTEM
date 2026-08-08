@@ -33,6 +33,8 @@ def require_role(*roles: UserRole):
 
 @router.post("/register", response_model=dict)
 def register(user_data: UserRegister, db: Session = Depends(get_db)):
+    if user_data.role == UserRole.admin:
+        raise HTTPException(status_code=403, detail="Admin registration is restricted. System contains single master admin.")
     existing = db.query(User).filter(User.email == user_data.email).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")

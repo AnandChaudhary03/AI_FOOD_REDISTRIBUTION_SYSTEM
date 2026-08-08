@@ -58,7 +58,7 @@ export default function LoginPage() {
           <p className="auth-subtitle">{t('tagline')}</p>
         </div>
 
-        {/* 5-Role Tabs */}
+        {/* 5-Role Login Tabs */}
         <div className="role-tabs">
           {roles.map((r) => {
             const Icon = r.icon
@@ -75,6 +75,12 @@ export default function LoginPage() {
             )
           })}
         </div>
+
+        {activeRole === 'admin' && (
+          <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', padding: '0.6rem 0.8rem', borderRadius: 'var(--radius)', marginBottom: '1rem', fontSize: '0.75rem', color: '#fbbf24', textAlign: 'center' }}>
+            🔒 Master Administrator Account (Single Admin System)
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div className="input-group">

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { UserPlus, Building2, Heart, User, Truck, Shield } from 'lucide-react'
+import { UserPlus, Building2, Heart, User, Truck } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 
 export default function RegisterPage() {
@@ -25,12 +25,12 @@ export default function RegisterPage() {
   })
   const [loading, setLoading] = useState(false)
 
+  // Admin registration is disabled (System has single pre-configured admin)
   const roles = [
     { id: 'business', label: t('business'), icon: Building2 },
     { id: 'ngo', label: t('ngo'), icon: Heart },
     { id: 'individual', label: t('individual'), icon: User },
     { id: 'delivery', label: t('delivery'), icon: Truck },
-    { id: 'admin', label: t('admin'), icon: Shield },
   ]
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -63,7 +63,7 @@ export default function RegisterPage() {
           <p className="auth-subtitle">Join AnnaSetu to reduce food waste</p>
         </div>
 
-        {/* 5-Role Tabs */}
+        {/* 4-Role Registration Tabs */}
         <div className="role-tabs">
           {roles.map((r) => {
             const Icon = r.icon
