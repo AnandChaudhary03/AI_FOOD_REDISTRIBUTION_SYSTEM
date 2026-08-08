@@ -6,6 +6,7 @@ import {
   Barcode, Zap, MapPin, KeyRound, Sparkles, CheckCircle2
 } from 'lucide-react'
 import AnnaSetuLogo from '../components/AnnaSetuLogo'
+import ThreeDBackground from '../components/ThreeDBackground'
 
 export default function LandingPage() {
   const { t, i18n } = useTranslation()
@@ -90,7 +91,8 @@ export default function LandingPage() {
   ]
 
   return (
-    <div style={{ background: 'var(--bg-primary)', minHeight: '100vh', color: 'var(--text-primary)' }}>
+    <div style={{ position: 'relative', minHeight: '100vh', color: 'var(--text-primary)', overflow: 'hidden' }}>
+      <ThreeDBackground />
       {/* Top Header Navbar */}
       <header
         style={{

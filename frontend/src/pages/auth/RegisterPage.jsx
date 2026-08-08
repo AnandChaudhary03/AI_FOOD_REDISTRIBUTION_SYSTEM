@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { UserPlus, Building2, Heart, User, Truck } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
+import ThreeDBackground from '../../components/ThreeDBackground'
 
 export default function RegisterPage() {
   const { t } = useTranslation()
@@ -56,6 +57,7 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-bg">
+      <ThreeDBackground />
       <div className="auth-card" style={{ maxWidth: '540px' }}>
         <div className="auth-logo">
           <div className="auth-logo-icon">अ</div>

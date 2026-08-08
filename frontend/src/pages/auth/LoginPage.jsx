@@ -6,6 +6,7 @@ import { LogIn, Sparkles, Building2, Heart, User, Truck, Shield } from 'lucide-r
 import { useAuth } from '../../contexts/AuthContext'
 
 import AnnaSetuLogo from '../../components/AnnaSetuLogo'
+import ThreeDBackground from '../../components/ThreeDBackground'
 
 export default function LoginPage() {
   const { t } = useTranslation()
@@ -53,6 +54,7 @@ export default function LoginPage() {
 
   return (
     <div className="auth-bg">
+      <ThreeDBackground />
       <div className="auth-card">
         <div className="auth-logo" style={{ marginBottom: '1.25rem' }}>
           <Link to="/" style={{ textDecoration: 'none' }}>
