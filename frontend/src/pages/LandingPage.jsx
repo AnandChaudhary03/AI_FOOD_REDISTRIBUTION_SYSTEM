@@ -3,10 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   Building2, Heart, User, Truck, Shield, ArrowRight, Download, Globe,
-  Barcode, Zap, MapPin, KeyRound, Sparkles, CheckCircle2, TrendingUp, Leaf, ShieldCheck
+  Barcode, Zap, MapPin, KeyRound, Sparkles, CheckCircle2
 } from 'lucide-react'
 import AnnaSetuLogo from '../components/AnnaSetuLogo'
-import { registerSW } from 'virtual:pwa-register'
 
 export default function LandingPage() {
   const { t, i18n } = useTranslation()
@@ -48,8 +47,8 @@ export default function LandingPage() {
       title: 'Business Dashboard',
       subtitle: 'Restaurants, hotels, supermarkets & bakeries manage stock, scan barcodes & publish expiring inventory for NGOs & individuals.',
       badge: 'Donors & Commercial',
-      color: '#22c55e',
-      bgGlow: 'rgba(34,197,94,0.12)',
+      color: '#f97316',
+      bgGlow: 'rgba(249,115,22,0.1)',
       icon: Building2
     },
     {
@@ -57,8 +56,8 @@ export default function LandingPage() {
       title: 'NGO Dashboard',
       subtitle: 'NGOs, food banks & community kitchens claim available food, view AI match scores & schedule automated pickups.',
       badge: 'NGOs & Food Banks',
-      color: '#3b82f6',
-      bgGlow: 'rgba(59,130,246,0.12)',
+      color: '#2563eb',
+      bgGlow: 'rgba(37,99,235,0.1)',
       icon: Heart
     },
     {
@@ -66,8 +65,8 @@ export default function LandingPage() {
       title: 'Individual User Dashboard',
       subtitle: 'Households and individuals manage home inventory, receive expiry alerts & claim free surplus food nearby.',
       badge: 'Households & Citizens',
-      color: '#f59e0b',
-      bgGlow: 'rgba(245,158,11,0.12)',
+      color: '#d97706',
+      bgGlow: 'rgba(217,119,6,0.1)',
       icon: User
     },
     {
@@ -75,8 +74,8 @@ export default function LandingPage() {
       title: 'Delivery Dashboard',
       subtitle: 'Delivery logistics partners accept pickup routes, navigate maps & complete 6-digit OTP verification upon delivery.',
       badge: 'Volunteers & Logistics',
-      color: '#a855f7',
-      bgGlow: 'rgba(168,85,247,0.12)',
+      color: '#9333ea',
+      bgGlow: 'rgba(147,51,234,0.1)',
       icon: Truck
     },
     {
@@ -84,8 +83,8 @@ export default function LandingPage() {
       title: 'Admin Control Center',
       subtitle: 'Platform administrators monitor real-time food analytics, verify user accounts & broadcast emergency notifications.',
       badge: 'System Governance',
-      color: '#ef4444',
-      bgGlow: 'rgba(239,68,68,0.12)',
+      color: '#dc2626',
+      bgGlow: 'rgba(220,38,38,0.1)',
       icon: Shield
     }
   ]
@@ -98,10 +97,11 @@ export default function LandingPage() {
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          background: 'rgba(10, 22, 40, 0.92)',
+          background: 'rgba(255, 255, 255, 0.92)',
           backdropFilter: 'blur(16px)',
           borderBottom: '1px solid var(--border)',
-          padding: '0.875rem 2rem'
+          padding: '0.875rem 2rem',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
         }}
       >
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -119,16 +119,16 @@ export default function LandingPage() {
                 onChange={(e) => changeLanguage(e.target.value)}
                 style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none', fontSize: '0.825rem', fontWeight: 600, cursor: 'pointer' }}
               >
-                <option value="en" style={{ background: '#152035' }}>English</option>
-                <option value="hi" style={{ background: '#152035' }}>हिन्दी (Hindi)</option>
-                <option value="ta" style={{ background: '#152035' }}>தமிழ் (Tamil)</option>
-                <option value="te" style={{ background: '#152035' }}>తెలుగు (Telugu)</option>
+                <option value="en" style={{ background: '#ffffff' }}>English</option>
+                <option value="hi" style={{ background: '#ffffff' }}>हिन्दी (Hindi)</option>
+                <option value="ta" style={{ background: '#ffffff' }}>தமிழ் (Tamil)</option>
+                <option value="te" style={{ background: '#ffffff' }}>తెలుగు (Telugu)</option>
               </select>
             </div>
 
             {/* PWA Install Button */}
             {deferredPrompt && !isPwaInstalled && (
-              <button onClick={handleInstallPwa} className="btn btn-secondary btn-sm" style={{ borderColor: 'var(--accent-green)', color: 'var(--accent-green)' }}>
+              <button onClick={handleInstallPwa} className="btn btn-secondary btn-sm" style={{ borderColor: 'var(--accent-saffron)', color: 'var(--accent-saffron)' }}>
                 <Download size={16} /> Install PWA App
               </button>
             )}
@@ -151,22 +151,22 @@ export default function LandingPage() {
           <div
             className="card"
             style={{
-              background: 'linear-gradient(145deg, #111f3d 0%, #152545 100%)',
+              background: 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)',
               border: '1px solid var(--border-light)',
               borderRadius: 'var(--radius-xl)',
               padding: '2.5rem',
               display: 'flex',
               flexDirection: 'column',
               justify: 'space-between',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.4)'
+              boxShadow: '0 20px 50px rgba(0,0,0,0.06)'
             }}
           >
             <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(34,197,94,0.15)', color: '#4ade80', padding: '0.4rem 0.85rem', borderRadius: '99px', fontSize: '0.78rem', fontWeight: 700, border: '1px solid rgba(34,197,94,0.3)', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(249,115,22,0.12)', color: '#ea580c', padding: '0.4rem 0.85rem', borderRadius: '99px', fontSize: '0.78rem', fontWeight: 700, border: '1px solid rgba(249,115,22,0.25)', marginBottom: '1.5rem' }}>
                 <Sparkles size={14} /> AI FOOD REDISTRIBUTION PLATFORM
               </div>
 
-              <h1 style={{ fontSize: '2.75rem', fontWeight: 900, lineHeight: 1.15, marginBottom: '1.25rem', background: 'linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              <h1 style={{ fontSize: '2.75rem', fontWeight: 900, lineHeight: 1.15, marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
                 Choose your dashboard.
               </h1>
 
@@ -177,23 +177,23 @@ export default function LandingPage() {
 
             {/* Impact Highlights Bar inside Left Card */}
             <div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', padding: '1.25rem', background: 'rgba(10,22,40,0.6)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', padding: '1.25rem', background: 'var(--bg-primary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', marginBottom: '1.5rem' }}>
                 <div>
-                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--accent-green)' }}>15,400+</div>
+                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--accent-saffron)' }}>15,400+</div>
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', marginTop: '0.2rem' }}>kg Food Saved</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--accent-saffron)' }}>38,500+</div>
+                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--accent-blue)' }}>38,500+</div>
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', marginTop: '0.2rem' }}>kg CO₂ Offset</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--accent-blue)' }}>250+</div>
+                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#9333ea' }}>250+</div>
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', marginTop: '0.2rem' }}>Partners</div>
                 </div>
               </div>
 
               <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <CheckCircle2 size={16} color="var(--accent-green)" /> Select any portal on the right to access role dashboard.
+                <CheckCircle2 size={16} color="var(--accent-saffron)" /> Select any portal on the right to access role dashboard.
               </div>
             </div>
           </div>
@@ -207,7 +207,7 @@ export default function LandingPage() {
                   key={portal.id}
                   className="card"
                   style={{
-                    background: 'var(--gradient-card)',
+                    background: 'var(--bg-card)',
                     border: '1px solid var(--border)',
                     borderRadius: 'var(--radius-lg)',
                     padding: '1.5rem',
@@ -216,7 +216,8 @@ export default function LandingPage() {
                     justify: 'space-between',
                     position: 'relative',
                     overflow: 'hidden',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
                   }}
                 >
                   <div>
@@ -246,7 +247,7 @@ export default function LandingPage() {
                       width: '100%',
                       justify: 'space-between',
                       borderColor: 'var(--border-light)',
-                      background: 'rgba(255,255,255,0.03)'
+                      background: 'var(--bg-primary)'
                     }}
                   >
                     <span>OPEN PORTAL</span>
@@ -260,10 +261,10 @@ export default function LandingPage() {
       </section>
 
       {/* AI Features & Technology Showcase */}
-      <section style={{ padding: '4rem 2rem', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section style={{ padding: '4rem 2rem', background: '#ffffff', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 3rem' }}>
-            <h2 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '0.75rem' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '0.75rem', color: 'var(--text-primary)' }}>
               Engineered with Smart AI Logistics
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
@@ -273,7 +274,7 @@ export default function LandingPage() {
 
           <div className="grid-4">
             <div className="card">
-              <div className="stat-icon" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', marginBottom: '1rem' }}>
+              <div className="stat-icon" style={{ background: 'rgba(249,115,22,0.12)', color: '#ea580c', marginBottom: '1rem' }}>
                 <Barcode size={24} />
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.5rem' }}>Camera Barcode Scanner</h3>
@@ -283,7 +284,7 @@ export default function LandingPage() {
             </div>
 
             <div className="card">
-              <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b', marginBottom: '1rem' }}>
+              <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.12)', color: '#d97706', marginBottom: '1rem' }}>
                 <Zap size={24} />
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.5rem' }}>AI Expiry Urgency Score</h3>
@@ -293,7 +294,7 @@ export default function LandingPage() {
             </div>
 
             <div className="card">
-              <div className="stat-icon" style={{ background: 'rgba(59,130,246,0.15)', color: '#3b82f6', marginBottom: '1rem' }}>
+              <div className="stat-icon" style={{ background: 'rgba(37,99,235,0.12)', color: '#2563eb', marginBottom: '1rem' }}>
                 <MapPin size={24} />
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.5rem' }}>Geospatial NGO Matching</h3>
@@ -303,7 +304,7 @@ export default function LandingPage() {
             </div>
 
             <div className="card">
-              <div className="stat-icon" style={{ background: 'rgba(168,85,247,0.15)', color: '#a855f7', marginBottom: '1rem' }}>
+              <div className="stat-icon" style={{ background: 'rgba(147,51,234,0.12)', color: '#9333ea', marginBottom: '1rem' }}>
                 <KeyRound size={24} />
               </div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.5rem' }}>6-Digit Delivery OTP</h3>
@@ -322,8 +323,8 @@ export default function LandingPage() {
           <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
             © {new Date().getFullYear()} AnnaSetu Platform. All Rights Reserved.
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--accent-green)' }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-green)', display: 'inline-block' }}></span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--accent-saffron)' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-saffron)', display: 'inline-block' }}></span>
             All API Systems Operational
           </div>
         </div>
