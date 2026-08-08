@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   Building2, Heart, User, Truck, Shield, ArrowRight, Download, Globe,
-  Barcode, Zap, MapPin, KeyRound, Sparkles, CheckCircle2, TrendingUp, Leaf, PackageHandover, ShieldCheck
+  Barcode, Zap, MapPin, KeyRound, Sparkles, CheckCircle2, TrendingUp, Leaf, ShieldCheck
 } from 'lucide-react'
 import AnnaSetuLogo from '../components/AnnaSetuLogo'
 import { registerSW } from 'virtual:pwa-register'
@@ -187,7 +187,7 @@ export default function LandingPage() {
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', marginTop: '0.2rem' }}>kg CO₂ Offset</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.35rem', fontWeight 900, color: 'var(--accent-blue)' }}>250+</div>
+                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--accent-blue)' }}>250+</div>
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', marginTop: '0.2rem' }}>Partners</div>
                 </div>
               </div>
@@ -286,7 +286,7 @@ export default function LandingPage() {
               <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b', marginBottom: '1rem' }}>
                 <Zap size={24} />
               </div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight 700, marginBottom: '0.5rem' }}>AI Expiry Urgency Score</h3>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.5rem' }}>AI Expiry Urgency Score</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                 Algorithmic 0–100% urgency scoring ranks expiring stock to ensure critical items get donated first.
               </p>
@@ -296,7 +296,7 @@ export default function LandingPage() {
               <div className="stat-icon" style={{ background: 'rgba(59,130,246,0.15)', color: '#3b82f6', marginBottom: '1rem' }}>
                 <MapPin size={24} />
               </div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight 700, marginBottom: '0.5rem' }}>Geospatial NGO Matching</h3>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.5rem' }}>Geospatial NGO Matching</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                 Haversine distance calculation pairs nearby food donors with recipient NGOs within radius limits.
               </p>
@@ -306,7 +306,7 @@ export default function LandingPage() {
               <div className="stat-icon" style={{ background: 'rgba(168,85,247,0.15)', color: '#a855f7', marginBottom: '1rem' }}>
                 <KeyRound size={24} />
               </div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight 700, marginBottom: '0.5rem' }}>6-Digit Delivery OTP</h3>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.5rem' }}>6-Digit Delivery OTP</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                 Tamper-proof handshakes require delivery volunteers to enter a recipient OTP to complete job status.
               </p>
