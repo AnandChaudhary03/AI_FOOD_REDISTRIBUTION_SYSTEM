@@ -125,6 +125,7 @@ export default function LandingPage() {
         background: 'linear-gradient(135deg, #35135F 0%, #4B176F 25%, #B42B72 55%, #FF6B52 80%, #FF875F 100%)',
         padding: '2.5rem 1.5rem',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justify: 'center',
         fontFamily: "'Inter', -apple-system, sans-serif",
@@ -135,11 +136,12 @@ export default function LandingPage() {
       {/* Dynamic Background Canvas */}
       <ThreeDBackground />
 
-      {/* CENTRAL WEBSITE PANEL */}
+      {/* CENTRAL WEBSITE PANEL - Perfectly Centered */}
       <div
         style={{
           width: '100%',
           maxWidth: '1280px',
+          margin: '0 auto',
           background: '#FFF8E9',
           borderRadius: '28px',
           boxShadow: '0 35px 90px rgba(0, 0, 0, 0.4)',
@@ -149,30 +151,30 @@ export default function LandingPage() {
           zIndex: 1
         }}
       >
-        {/* NAVBAR — Clean layout without center nav links */}
+        {/* NAVBAR — Far Right Action Controls */}
         <header
           style={{
-            padding: '1.4rem 2.75rem',
+            padding: '1.4rem 3rem',
             display: 'flex',
             alignItems: 'center',
             justify: 'space-between',
             background: 'transparent'
           }}
         >
-          {/* Left Brand Logo (Without "AI" text) */}
+          {/* Far Left Brand Logo */}
           <Link to="/" style={{ textDecoration: 'none' }}>
-            <AnnaSetuLogo size={38} />
+            <AnnaSetuLogo size={40} />
           </Link>
 
-          {/* Right Action Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-            {/* Language Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: '#FFFFFF', padding: '0.38rem 0.75rem', borderRadius: '99px', border: '1px solid rgba(53,19,95,0.1)' }}>
-              <Globe size={14} color="#FF6B52" />
+          {/* Far Right Action Controls (Multilingual, Login, Sign Up) */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginLeft: 'auto' }}>
+            {/* Multilingual Language Selector */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#FFFFFF', padding: '0.4rem 0.85rem', borderRadius: '99px', border: '1px solid rgba(53,19,95,0.12)', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
+              <Globe size={15} color="#FF6B52" />
               <select
                 value={i18n.language || 'en'}
                 onChange={(e) => changeLanguage(e.target.value)}
-                style={{ background: 'transparent', color: '#35135F', border: 'none', outline: 'none', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}
+                style={{ background: 'transparent', color: '#35135F', border: 'none', outline: 'none', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
               >
                 <option value="en">English</option>
                 <option value="hi">हिन्दी (Hindi)</option>
@@ -187,16 +189,18 @@ export default function LandingPage() {
               </button>
             )}
 
-            <Link to="/login" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 700, fontSize: '0.9rem' }}>
+            {/* Login Link */}
+            <Link to="/login" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 700, fontSize: '0.925rem', padding: '0.25rem 0.5rem' }}>
               {t('login')}
             </Link>
 
+            {/* Sign Up Button */}
             <button
               onClick={() => navigate('/register')}
               style={{
                 background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)',
                 color: '#ffffff',
-                padding: '0.62rem 1.4rem',
+                padding: '0.65rem 1.5rem',
                 borderRadius: '99px',
                 fontWeight: 700,
                 fontSize: '0.875rem',
@@ -211,8 +215,8 @@ export default function LandingPage() {
           </div>
         </header>
 
-        {/* HERO SECTION */}
-        <div style={{ padding: '2.5rem 2.75rem 3.5rem', display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '3rem', alignItems: 'center', position: 'relative' }}>
+        {/* HERO SECTION — Perfectly Aligned Columns */}
+        <div style={{ padding: '3rem 3rem 3.5rem', display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '3rem', alignItems: 'center', position: 'relative' }}>
           
           {/* LEFT SIDE CONTENT */}
           <div>
@@ -475,7 +479,7 @@ export default function LandingPage() {
               </div>
             ) : (
               <form onSubmit={handleDemoSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#35135F', marginBottom: '0.25rem' }}>{t('request_demo')}</h3>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#35135F', marginBottom: '0.25rem' }}>Request Platform Demo</h3>
                 <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem' }}>Experience real-time AI food salvage & redistribution in action.</p>
 
                 <div className="input-group">
