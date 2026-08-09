@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Truck, CheckCircle, MapPin, KeyRound, ArrowRight } from 'lucide-react'
+import { Truck, CheckCircle, MapPin, KeyRound } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import api from '../../api/api'
 
@@ -21,10 +21,10 @@ export default function DeliveryDashboard() {
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 className="page-title">{t('dashboard')}</h1>
-          <p className="page-subtitle">Delivery Partner Hub — Pick up food donations & verify delivery with OTP</p>
+          <p className="page-subtitle">{t('welcome_back_delivery')}</p>
         </div>
         <Link to="/delivery/available" className="btn btn-primary">
-          <Truck size={18} /> Available Deliveries
+          <Truck size={18} /> {t('available_pickups')}
         </Link>
       </div>
 
@@ -34,7 +34,7 @@ export default function DeliveryDashboard() {
             <Truck size={24} />
           </div>
           <div>
-            <div className="stat-label">Total Deliveries</div>
+            <div className="stat-label">{t('total_donations')}</div>
             <div className="stat-value">{stats?.total_deliveries || 0}</div>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function DeliveryDashboard() {
             <CheckCircle size={24} />
           </div>
           <div>
-            <div className="stat-label">Completed Deliveries</div>
+            <div className="stat-label">{t('completed_deliveries')}</div>
             <div className="stat-value">{stats?.completed_deliveries || 0}</div>
           </div>
         </div>
@@ -54,7 +54,7 @@ export default function DeliveryDashboard() {
             <MapPin size={24} />
           </div>
           <div>
-            <div className="stat-label">Active Pickup Jobs</div>
+            <div className="stat-label">{t('active_delivery')}</div>
             <div className="stat-value">{stats?.active_deliveries || 0}</div>
           </div>
         </div>
@@ -63,20 +63,20 @@ export default function DeliveryDashboard() {
       <div className="grid-2">
         <div className="card">
           <Truck size={32} color="var(--accent-green)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Available Food Pickups</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('available_pickups')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Find nearby food donations scheduled for NGO pickup. Accept orders and navigate.
+            {t('delivery_desc')}
           </p>
-          <Link to="/delivery/available" className="btn btn-secondary btn-sm">Find Pickups &rarr;</Link>
+          <Link to="/delivery/available" className="btn btn-secondary btn-sm">{t('available_pickups')} &rarr;</Link>
         </div>
 
         <div className="card">
           <KeyRound size={32} color="var(--accent-saffron)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Active Delivery & OTP Verification</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('recipient_otp')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Enter recipient OTP to verify food dropoff and mark delivery as completed.
+            {t('delivery_feature_2')}
           </p>
-          <Link to="/delivery/active" className="btn btn-secondary btn-sm">Active Orders &rarr;</Link>
+          <Link to="/delivery/active" className="btn btn-secondary btn-sm">{t('verify_and_complete')} &rarr;</Link>
         </div>
       </div>
     </div>

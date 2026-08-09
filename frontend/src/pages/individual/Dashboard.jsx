@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HeartHandshake, ShieldCheck, History, ArrowRight } from 'lucide-react'
+import { HeartHandshake, ShieldCheck, History } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import api from '../../api/api'
 
@@ -21,10 +21,10 @@ export default function IndividualDashboard() {
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 className="page-title">{t('dashboard')}</h1>
-          <p className="page-subtitle">Individual Portal — Claim surplus food donations for personal or community use</p>
+          <p className="page-subtitle">{t('welcome_back_individual')}</p>
         </div>
         <Link to="/individual/available" className="btn btn-primary">
-          <HeartHandshake size={18} /> Browse Food Available
+          <HeartHandshake size={18} /> {t('available_donations')}
         </Link>
       </div>
 
@@ -34,7 +34,7 @@ export default function IndividualDashboard() {
             <HeartHandshake size={24} />
           </div>
           <div>
-            <div className="stat-label">Food Claimed</div>
+            <div className="stat-label">{t('food_saved')}</div>
             <div className="stat-value">{stats?.food_received_kg || 0} kg</div>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function IndividualDashboard() {
             <ShieldCheck size={24} />
           </div>
           <div>
-            <div className="stat-label">Accepted Donations</div>
+            <div className="stat-label">{t('accepted_donations')}</div>
             <div className="stat-value">{stats?.total_accepted || 0}</div>
           </div>
         </div>
@@ -54,7 +54,7 @@ export default function IndividualDashboard() {
             <History size={24} />
           </div>
           <div>
-            <div className="stat-label">Completed Deliveries</div>
+            <div className="stat-label">{t('completed_deliveries')}</div>
             <div className="stat-value">{stats?.total_delivered || 0}</div>
           </div>
         </div>
@@ -63,20 +63,20 @@ export default function IndividualDashboard() {
       <div className="grid-2">
         <div className="card">
           <HeartHandshake size={32} color="var(--accent-green)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Find Free Food Near You</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('available_donations_near_you')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Browse food items donated by local bakeries, restaurants, and grocery stores.
+            {t('individual_desc')}
           </p>
-          <Link to="/individual/available" className="btn btn-secondary btn-sm">Explore Food &rarr;</Link>
+          <Link to="/individual/available" className="btn btn-secondary btn-sm">{t('available_donations')} &rarr;</Link>
         </div>
 
         <div className="card">
           <History size={32} color="var(--accent-saffron)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Claim History</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('donation_history')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Review past food items claimed and delivered to your location.
+            {t('individual_feature_2')}
           </p>
-          <Link to="/individual/history" className="btn btn-secondary btn-sm">View History &rarr;</Link>
+          <Link to="/individual/history" className="btn btn-secondary btn-sm">{t('donation_history')} &rarr;</Link>
         </div>
       </div>
     </div>

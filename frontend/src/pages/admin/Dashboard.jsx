@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Users, HeartHandshake, Truck, Shield, AlertTriangle, Leaf, Award } from 'lucide-react'
+import { Users, HeartHandshake, Truck, Shield, Leaf, Award } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import api from '../../api/api'
 
@@ -23,10 +23,10 @@ export default function AdminDashboard() {
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 className="page-title">{t('admin')} {t('dashboard')}</h1>
-          <p className="page-subtitle">Platform-wide overview, user management, and AI impact metrics</p>
+          <p className="page-subtitle">{t('welcome_back_admin')}</p>
         </div>
         <Link to="/admin/notifications" className="btn btn-primary">
-          <Shield size={18} /> Broadcast Notification
+          <Shield size={18} /> {t('broadcast_notice')}
         </Link>
       </div>
 
@@ -37,7 +37,7 @@ export default function AdminDashboard() {
             <Users size={24} />
           </div>
           <div>
-            <div className="stat-label">Total Users</div>
+            <div className="stat-label">{t('users')}</div>
             <div className="stat-value">{stats?.total_users || 0}</div>
             <div className="stat-sub">{stats?.businesses || 0} Biz | {stats?.ngos || 0} NGO</div>
           </div>
@@ -48,9 +48,9 @@ export default function AdminDashboard() {
             <HeartHandshake size={24} />
           </div>
           <div>
-            <div className="stat-label">Total Donations</div>
+            <div className="stat-label">{t('total_donations')}</div>
             <div className="stat-value">{stats?.total_donations || 0}</div>
-            <div className="stat-sub">{stats?.delivered_donations || 0} delivered</div>
+            <div className="stat-sub">{stats?.delivered_donations || 0} {t('delivered_count')}</div>
           </div>
         </div>
 
@@ -59,9 +59,9 @@ export default function AdminDashboard() {
             <Leaf size={24} />
           </div>
           <div>
-            <div className="stat-label">Food Saved</div>
+            <div className="stat-label">{t('food_saved')}</div>
             <div className="stat-value">{stats?.total_food_saved_kg || 0} kg</div>
-            <div className="stat-sub">CO₂ Saved: {stats?.co2_saved_kg || 0} kg</div>
+            <div className="stat-sub">{t('co2_saved')}: {stats?.co2_saved_kg || 0} kg</div>
           </div>
         </div>
 
@@ -70,9 +70,9 @@ export default function AdminDashboard() {
             <Award size={24} />
           </div>
           <div>
-            <div className="stat-label">Delivery Success</div>
+            <div className="stat-label">{t('status')}</div>
             <div className="stat-value">{stats?.delivery_success_rate || 0}%</div>
-            <div className="stat-sub">OTP authenticated</div>
+            <div className="stat-sub">{t('verify_otp')}</div>
           </div>
         </div>
       </div>
@@ -80,29 +80,29 @@ export default function AdminDashboard() {
       <div className="grid-3">
         <div className="card">
           <Users size={32} color="var(--accent-blue)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>User Management</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('user_audit')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Approve, suspend, or manage roles for Businesses, NGOs, Individuals, and Delivery partners.
+            {t('admin_desc')}
           </p>
-          <Link to="/admin/users" className="btn btn-secondary btn-sm">Manage Users &rarr;</Link>
+          <Link to="/admin/users" className="btn btn-secondary btn-sm">{t('users')} &rarr;</Link>
         </div>
 
         <div className="card">
           <HeartHandshake size={32} color="var(--accent-green)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>All Donations Overview</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('total_donations')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Monitor food surplus listings across all registered business accounts.
+            {t('business_desc')}
           </p>
-          <Link to="/admin/donations" className="btn btn-secondary btn-sm">View Donations &rarr;</Link>
+          <Link to="/admin/donations" className="btn btn-secondary btn-sm">{t('donations')} &rarr;</Link>
         </div>
 
         <div className="card">
           <Truck size={32} color="var(--accent-saffron)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Delivery Oversight</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('completed_deliveries')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Track real-time delivery progress and OTP confirmation logs.
+            {t('delivery_desc')}
           </p>
-          <Link to="/admin/deliveries" className="btn btn-secondary btn-sm">View Deliveries &rarr;</Link>
+          <Link to="/admin/deliveries" className="btn btn-secondary btn-sm">{t('completed_deliveries')} &rarr;</Link>
         </div>
       </div>
     </div>

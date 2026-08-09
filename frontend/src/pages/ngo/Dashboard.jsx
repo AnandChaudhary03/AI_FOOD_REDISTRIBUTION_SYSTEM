@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HeartHandshake, ShieldCheck, Users, Calendar, ArrowRight, MapPin } from 'lucide-react'
+import { HeartHandshake, ShieldCheck, Users, Calendar } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import api from '../../api/api'
 
@@ -23,10 +23,10 @@ export default function NGODashboard() {
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 className="page-title">{t('dashboard')}</h1>
-          <p className="page-subtitle">NGO Portal — Receive surplus food, manage beneficiaries & scheduled pickups</p>
+          <p className="page-subtitle">{t('welcome_back_ngo')}</p>
         </div>
         <Link to="/ngo/available" className="btn btn-primary">
-          <HeartHandshake size={18} /> Browse Available Donations
+          <HeartHandshake size={18} /> {t('available_donations')}
         </Link>
       </div>
 
@@ -36,9 +36,9 @@ export default function NGODashboard() {
             <HeartHandshake size={24} />
           </div>
           <div>
-            <div className="stat-label">Food Received</div>
+            <div className="stat-label">{t('food_saved')}</div>
             <div className="stat-value">{stats?.food_received_kg || 0} <span style={{ fontSize: '1rem' }}>kg</span></div>
-            <div className="stat-sub">{stats?.total_delivered || 0} donations completed</div>
+            <div className="stat-sub">{stats?.total_delivered || 0} {t('delivered_count')}</div>
           </div>
         </div>
 
@@ -47,9 +47,9 @@ export default function NGODashboard() {
             <Users size={24} />
           </div>
           <div>
-            <div className="stat-label">People Fed</div>
+            <div className="stat-label">{t('beneficiaries')}</div>
             <div className="stat-value">{stats?.total_beneficiaries || 0}</div>
-            <div className="stat-sub">Active beneficiaries</div>
+            <div className="stat-sub">{t('beneficiary_count')}</div>
           </div>
         </div>
 
@@ -58,9 +58,9 @@ export default function NGODashboard() {
             <Calendar size={24} />
           </div>
           <div>
-            <div className="stat-label">Pending Pickups</div>
+            <div className="stat-label">{t('pickup_schedule')}</div>
             <div className="stat-value">{stats?.pending_pickups || 0}</div>
-            <div className="stat-sub">Scheduled for delivery</div>
+            <div className="stat-sub">{t('pending')}</div>
           </div>
         </div>
 
@@ -69,9 +69,9 @@ export default function NGODashboard() {
             <ShieldCheck size={24} />
           </div>
           <div>
-            <div className="stat-label">Total Accepted</div>
+            <div className="stat-label">{t('accepted_donations')}</div>
             <div className="stat-value">{stats?.total_accepted || 0}</div>
-            <div className="stat-sub">Across all food donors</div>
+            <div className="stat-sub">{t('accepted')}</div>
           </div>
         </div>
       </div>
@@ -80,29 +80,29 @@ export default function NGODashboard() {
       <div className="grid-3">
         <div className="card">
           <HeartHandshake size={32} color="var(--accent-green)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Available Food Surplus</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('available_donations_near_you')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Browse nearby donations sorted by AI suitability score and distance.
+            {t('ngo_desc')}
           </p>
-          <Link to="/ngo/available" className="btn btn-secondary btn-sm">Browse Donations &rarr;</Link>
+          <Link to="/ngo/available" className="btn btn-secondary btn-sm">{t('available_donations')} &rarr;</Link>
         </div>
 
         <div className="card">
           <Calendar size={32} color="var(--accent-saffron)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Pickup Schedules</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('pickup_schedule')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            View pickup dates and delivery OTP codes for accepted donations.
+            {t('delivery_desc')}
           </p>
-          <Link to="/ngo/schedule" className="btn btn-secondary btn-sm">View Schedule &rarr;</Link>
+          <Link to="/ngo/schedule" className="btn btn-secondary btn-sm">{t('pickup_schedule')} &rarr;</Link>
         </div>
 
         <div className="card">
           <Users size={32} color="var(--accent-blue)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Beneficiaries Management</h3>
+          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('beneficiaries')}</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Register community centers, orphanages, and headcount data.
+            {t('ngo_feature_2')}
           </p>
-          <Link to="/ngo/beneficiaries" className="btn btn-secondary btn-sm">Manage Beneficiaries &rarr;</Link>
+          <Link to="/ngo/beneficiaries" className="btn btn-secondary btn-sm">{t('beneficiaries')} &rarr;</Link>
         </div>
       </div>
     </div>
