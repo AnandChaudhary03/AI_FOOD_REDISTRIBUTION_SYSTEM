@@ -123,51 +123,31 @@ export default function LandingPage() {
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #35135F 0%, #4B176F 25%, #B42B72 55%, #FF6B52 80%, #FF875F 100%)',
-        padding: '2.5rem 1.5rem',
+        padding: '1.5rem 0.75rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justify: 'center',
         fontFamily: "'Inter', -apple-system, sans-serif",
         position: 'relative',
-        overflow: 'hidden'
+        overflowX: 'hidden'
       }}
     >
       {/* Dynamic Background Canvas */}
       <ThreeDBackground />
 
-      {/* CENTRAL WEBSITE PANEL - Perfectly Centered */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '1280px',
-          margin: '0 auto',
-          background: '#FFF8E9',
-          borderRadius: '28px',
-          boxShadow: '0 35px 90px rgba(0, 0, 0, 0.4)',
-          overflow: 'hidden',
-          border: '1px solid rgba(255, 255, 255, 0.5)',
-          position: 'relative',
-          zIndex: 1
-        }}
-      >
-        {/* NAVBAR — Far Right Action Controls */}
-        <header
-          style={{
-            padding: '1.4rem 3rem',
-            display: 'flex',
-            alignItems: 'center',
-            justify: 'space-between',
-            background: 'transparent'
-          }}
-        >
+      {/* CENTRAL WEBSITE PANEL - Fully Responsive */}
+      <div className="landing-panel">
+        
+        {/* NAVBAR */}
+        <header className="landing-header">
           {/* Far Left Brand Logo */}
           <Link to="/" style={{ textDecoration: 'none' }}>
-            <AnnaSetuLogo size={40} />
+            <AnnaSetuLogo size={38} />
           </Link>
 
-          {/* Far Right Action Controls (Multilingual, Login, Sign Up) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginLeft: 'auto' }}>
+          {/* Far Right Action Controls */}
+          <div className="landing-header-right">
             {/* Multilingual Language Selector */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#FFFFFF', padding: '0.4rem 0.85rem', borderRadius: '99px', border: '1px solid rgba(53,19,95,0.12)', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
               <Globe size={15} color="#FF6B52" />
@@ -215,21 +195,12 @@ export default function LandingPage() {
           </div>
         </header>
 
-        {/* HERO SECTION — Perfectly Aligned Columns */}
-        <div style={{ padding: '3rem 3rem 3.5rem', display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '3rem', alignItems: 'center', position: 'relative' }}>
+        {/* HERO SECTION — Fully Responsive Grid */}
+        <div className="landing-hero">
           
           {/* LEFT SIDE CONTENT */}
           <div>
-            <h1
-              style={{
-                fontSize: '3.5rem',
-                fontWeight: 900,
-                lineHeight: 1.08,
-                letterSpacing: '-0.03em',
-                color: '#35135F',
-                marginBottom: '1.5rem'
-              }}
-            >
+            <h1 className="landing-title">
               {t('hero_headline_1')}
               <br />
               <span style={{ background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -255,7 +226,7 @@ export default function LandingPage() {
             </p>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+            <div className="landing-btn-group">
               <button
                 onClick={() => navigate('/register')}
                 style={{
@@ -297,7 +268,7 @@ export default function LandingPage() {
           <div style={{ position: 'relative' }}>
             
             {/* Floating Network Decoration */}
-            <div style={{ position: 'absolute', right: '-20px', bottom: '-30px', width: '260px', height: '220px', pointerEvents: 'none', zIndex: 0, opacity: 0.8 }}>
+            <div style={{ position: 'absolute', right: '-20px', bottom: '-30px', width: '260px', height: '220px', pointerEvents: 'none', zIndex: 0, opacity: 0.8 }} className="mobile-hide">
               <svg width="260" height="220" viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M40 160 C90 100, 160 190, 220 130" stroke="#FF6B52" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
                 <circle cx="40" cy="160" r="5" fill="#FF6B52" />
@@ -309,7 +280,7 @@ export default function LandingPage() {
             </div>
 
             {/* Role Cards Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.15rem', position: 'relative', zIndex: 1 }}>
+            <div className="landing-role-grid">
               {roleCards.slice(0, 4).map((card) => {
                 const Icon = card.icon
                 return (
@@ -383,7 +354,7 @@ export default function LandingPage() {
                 )
               })}
 
-              {/* CARD 5 — Admin (Centered below Row 1 & 2) */}
+              {/* CARD 5 — Admin (Centered on Desktop, Full Width on Mobile) */}
               <div
                 style={{
                   gridColumn: '1 / -1',
