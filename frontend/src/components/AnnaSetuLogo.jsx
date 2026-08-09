@@ -3,7 +3,7 @@ import React from 'react'
 export default function AnnaSetuLogo({ size = 40, showText = true, subtitle = null }) {
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.65rem' }}>
-      {/* Lotus/Sprout Icon matching reference image */}
+      {/* Lotus/Sprout Icon */}
       <div
         style={{
           width: size,
@@ -27,14 +27,9 @@ export default function AnnaSetuLogo({ size = 40, showText = true, subtitle = nu
 
       {showText && (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-            <span style={{ fontSize: size * 0.52, fontWeight: 900, color: '#35135F', letterSpacing: '-0.02em', lineHeight: 1 }}>
-              AnnaSetu
-            </span>
-            <span style={{ fontSize: size * 0.52, fontWeight: 900, color: '#B42B72', letterSpacing: '-0.02em', lineHeight: 1 }}>
-              AI
-            </span>
-          </div>
+          <span style={{ fontSize: size * 0.52, fontWeight: 900, color: '#35135F', letterSpacing: '-0.02em', lineHeight: 1 }}>
+            AnnaSetu
+          </span>
           {subtitle && (
             <span style={{ fontSize: size * 0.22, color: '#FF6B52', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '0.2rem' }}>
               {subtitle}

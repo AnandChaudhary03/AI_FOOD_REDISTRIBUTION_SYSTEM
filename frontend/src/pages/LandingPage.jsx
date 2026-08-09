@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  Utensils, HeartHandshake, Truck, TrendingUp, Settings2, ArrowRight, Download, Globe,
-  Copy, Layers, Share2, Send, CheckCircle2, X, Sparkles, UserCheck, ShieldCheck
+  Utensils, HeartHandshake, Truck, User, Settings2, Download, Globe,
+  CheckCircle2, X, ChevronRight
 } from 'lucide-react'
 import AnnaSetuLogo from '../components/AnnaSetuLogo'
 import ThreeDBackground from '../components/ThreeDBackground'
@@ -54,54 +54,65 @@ export default function LandingPage() {
     }, 2000)
   }
 
+  // 5 Role Portals with updated names & bullet features
   const roleCards = [
     {
       id: 'business',
       role: 'business',
-      title: 'Food Donors',
-      subtitle: 'Hospitality, Retail',
-      description: 'Easily list and schedule food surplus pickups',
-      btnText: 'Donate Surplus',
+      titleKey: 'business',
+      subtitleKey: 'business_subtitle',
+      descKey: 'business_desc',
+      feat1Key: 'business_feature_1',
+      feat2Key: 'business_feature_2',
+      btnKey: 'business_btn',
       icon: Utensils,
       color: '#FF6B52'
     },
     {
       id: 'ngo',
       role: 'ngo',
-      title: 'Non-Profit Partners',
-      subtitle: 'NGOs, Food Banks',
-      description: 'Access reliable food donations for local communities',
-      btnText: 'Partner with Us',
+      titleKey: 'ngo',
+      subtitleKey: 'ngo_subtitle',
+      descKey: 'ngo_desc',
+      feat1Key: 'ngo_feature_1',
+      feat2Key: 'ngo_feature_2',
+      btnKey: 'ngo_btn',
       icon: HeartHandshake,
       color: '#B42B72'
     },
     {
       id: 'delivery',
       role: 'delivery',
-      title: 'Logistics Providers',
-      subtitle: 'Fleet Owners, Couriers',
-      description: 'Join our network for efficient food delivery',
-      btnText: 'Partner on Delivery',
+      titleKey: 'delivery',
+      subtitleKey: 'delivery_subtitle',
+      descKey: 'delivery_desc',
+      feat1Key: 'delivery_feature_1',
+      feat2Key: 'delivery_feature_2',
+      btnKey: 'delivery_btn',
       icon: Truck,
       color: '#4B176F'
     },
     {
       id: 'individual',
       role: 'individual',
-      title: 'Corporate Sustainability',
-      subtitle: 'ESG Teams',
-      description: 'Drive impact, track waste reduction, and generate reports',
-      btnText: 'Track Impact',
-      icon: TrendingUp,
+      titleKey: 'individual',
+      subtitleKey: 'individual_subtitle',
+      descKey: 'individual_desc',
+      feat1Key: 'individual_feature_1',
+      feat2Key: 'individual_feature_2',
+      btnKey: 'individual_btn',
+      icon: User,
       color: '#35135F'
     },
     {
       id: 'admin',
       role: 'admin',
-      title: 'Platform Admin',
-      subtitle: 'Platform Operations',
-      description: 'Manage users, optimize routes, and oversee the network',
-      btnText: 'Manage Platform',
+      titleKey: 'admin',
+      subtitleKey: 'admin_subtitle',
+      descKey: 'admin_desc',
+      feat1Key: 'admin_feature_1',
+      feat2Key: 'admin_feature_2',
+      btnKey: 'admin_btn',
       icon: Settings2,
       color: '#FF875F'
     }
@@ -115,16 +126,16 @@ export default function LandingPage() {
         padding: '2.5rem 1.5rem',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justify: 'center',
         fontFamily: "'Inter', -apple-system, sans-serif",
         position: 'relative',
         overflow: 'hidden'
       }}
     >
-      {/* Dynamic Ambient Canvas & Network Grid */}
+      {/* Dynamic Background Canvas */}
       <ThreeDBackground />
 
-      {/* CENTRAL WEBSITE PANEL - Exact Reference Image Composition */}
+      {/* CENTRAL WEBSITE PANEL */}
       <div
         style={{
           width: '100%',
@@ -138,7 +149,7 @@ export default function LandingPage() {
           zIndex: 1
         }}
       >
-        {/* NAVBAR */}
+        {/* NAVBAR — Clean layout without center nav links */}
         <header
           style={{
             padding: '1.4rem 2.75rem',
@@ -148,36 +159,14 @@ export default function LandingPage() {
             background: 'transparent'
           }}
         >
-          {/* Left Brand Logo */}
+          {/* Left Brand Logo (Without "AI" text) */}
           <Link to="/" style={{ textDecoration: 'none' }}>
             <AnnaSetuLogo size={38} />
           </Link>
 
-          {/* Center/Right Nav Links */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-            <a href="#home" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 600, fontSize: '0.9rem' }}>
-              Home
-            </a>
-            <a href="#platform" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 600, fontSize: '0.9rem' }}>
-              Platform
-            </a>
-            <a href="#impact" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 600, fontSize: '0.9rem' }}>
-              Impact
-            </a>
-            <a href="#case-studies" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 600, fontSize: '0.9rem' }}>
-              Case Studies
-            </a>
-            <a href="#pricing" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 600, fontSize: '0.9rem' }}>
-              Pricing
-            </a>
-            <a href="#resources" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 600, fontSize: '0.9rem' }}>
-              Resources
-            </a>
-          </nav>
-
           {/* Right Action Controls */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-            {/* Language Dropdown */}
+            {/* Language Selector */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: '#FFFFFF', padding: '0.38rem 0.75rem', borderRadius: '99px', border: '1px solid rgba(53,19,95,0.1)' }}>
               <Globe size={14} color="#FF6B52" />
               <select
@@ -199,7 +188,7 @@ export default function LandingPage() {
             )}
 
             <Link to="/login" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 700, fontSize: '0.9rem' }}>
-              Login
+              {t('login')}
             </Link>
 
             <button
@@ -217,16 +206,16 @@ export default function LandingPage() {
                 transition: 'all 0.25s ease'
               }}
             >
-              Request Demo
+              {t('request_demo')}
             </button>
           </div>
         </header>
 
         {/* HERO SECTION */}
-        <div style={{ padding: '2.5rem 2.75rem 3.5rem', display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '3rem', alignItems: 'flex-start', position: 'relative' }}>
+        <div style={{ padding: '2.5rem 2.75rem 3.5rem', display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '3rem', alignItems: 'center', position: 'relative' }}>
           
           {/* LEFT SIDE CONTENT */}
-          <div style={{ paddingTop: '0.5rem' }}>
+          <div>
             <h1
               style={{
                 fontSize: '3.5rem',
@@ -237,14 +226,14 @@ export default function LandingPage() {
                 marginBottom: '1.5rem'
               }}
             >
-              AI food salvage
+              {t('hero_headline_1')}
               <br />
               <span style={{ background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                for real-time
+                {t('hero_headline_2')}
               </span>
               <br />
               <span style={{ background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                redistribution.
+                {t('hero_headline_3')}
               </span>
             </h1>
 
@@ -255,10 +244,10 @@ export default function LandingPage() {
                 lineHeight: 1.6,
                 maxWidth: '460px',
                 marginBottom: '2.25rem',
-                opacity: 0.9
+                opacity: 0.95
               }}
             >
-              Leverage intelligence to bridge surplus food with community needs—predict, match, and deliver efficiently with our real-time, AI-driven redistribution platform.
+              {t('hero_description')}
             </p>
 
             {/* Action Buttons */}
@@ -278,7 +267,7 @@ export default function LandingPage() {
                   transition: 'all 0.25s ease'
                 }}
               >
-                Start Saving Food
+                {t('start_saving_food')}
               </button>
 
               <button
@@ -295,39 +284,27 @@ export default function LandingPage() {
                   transition: 'all 0.25s ease'
                 }}
               >
-                Learn More
+                {t('learn_more')}
               </button>
             </div>
           </div>
 
-          {/* RIGHT SIDE — 5 ROLE CARDS GRID & DECORATION */}
+          {/* RIGHT SIDE — 5 ROLE CARDS WITH FEATURES */}
           <div style={{ position: 'relative' }}>
             
-            {/* Lower Right Decorative AI Floating Network Nodes */}
-            <div style={{ position: 'absolute', right: '-20px', bottom: '-40px', width: '280px', height: '240px', pointerEvents: 'none', zIndex: 0, opacity: 0.85 }}>
-              <svg width="280" height="240" viewBox="0 0 280 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Curved Connection Lines */}
-                <path d="M40 180 C90 120, 160 210, 220 150" stroke="#FF6B52" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
-                <path d="M80 80 C140 140, 180 60, 250 110" stroke="#B42B72" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.5" />
-                
-                {/* Glowing Nodes */}
-                <circle cx="40" cy="180" r="14" fill="rgba(255,107,82,0.2)" />
-                <circle cx="40" cy="180" r="5" fill="#FF6B52" />
-                
-                <circle cx="160" cy="150" r="18" fill="rgba(180,43,114,0.25)" />
-                <circle cx="160" cy="150" r="6" fill="#B42B72" />
-                
-                <circle cx="220" cy="150" r="12" fill="rgba(255,135,95,0.25)" />
-                <circle cx="220" cy="150" r="4" fill="#FF875F" />
-
-                {/* Floating Icons inside decorative nodes */}
-                <text x="34" y="184" fontSize="10" fill="#ffffff">🌾</text>
-                <text x="153" y="155" fontSize="12" fill="#ffffff">🍎</text>
-                <text x="214" y="154" fontSize="10" fill="#ffffff">📦</text>
+            {/* Floating Network Decoration */}
+            <div style={{ position: 'absolute', right: '-20px', bottom: '-30px', width: '260px', height: '220px', pointerEvents: 'none', zIndex: 0, opacity: 0.8 }}>
+              <svg width="260" height="220" viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 160 C90 100, 160 190, 220 130" stroke="#FF6B52" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+                <circle cx="40" cy="160" r="5" fill="#FF6B52" />
+                <circle cx="160" cy="130" r="6" fill="#B42B72" />
+                <circle cx="220" cy="130" r="4" fill="#FF875F" />
+                <text x="34" y="164" fontSize="10" fill="#ffffff">🌾</text>
+                <text x="153" y="135" fontSize="12" fill="#ffffff">🍎</text>
               </svg>
             </div>
 
-            {/* Role Cards Container */}
+            {/* Role Cards Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.15rem', position: 'relative', zIndex: 1 }}>
               {roleCards.slice(0, 4).map((card) => {
                 const Icon = card.icon
@@ -343,7 +320,7 @@ export default function LandingPage() {
                       display: 'flex',
                       flexDirection: 'column',
                       justify: 'space-between',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                      transition: 'all 0.3s ease'
                     }}
                   >
                     <div>
@@ -354,17 +331,27 @@ export default function LandingPage() {
                         </div>
                         <div>
                           <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', lineHeight: 1.2 }}>
-                            {card.title}
+                            {t(card.titleKey)}
                           </div>
                           <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600, marginTop: '0.15rem' }}>
-                            {card.subtitle}
+                            {t(card.subtitleKey)}
                           </div>
                         </div>
                       </div>
 
-                      <p style={{ fontSize: '0.8rem', color: '#4B176F', lineHeight: 1.45, marginBottom: '1.1rem', opacity: 0.95 }}>
-                        {card.description}
+                      <p style={{ fontSize: '0.78rem', color: '#4B176F', lineHeight: 1.4, marginBottom: '0.75rem', opacity: 0.95 }}>
+                        {t(card.descKey)}
                       </p>
+
+                      {/* Included Features List inside Card */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1.1rem' }}>
+                        <div style={{ fontSize: '0.725rem', fontWeight: 600, color: '#64748b' }}>
+                          {t(card.feat1Key)}
+                        </div>
+                        <div style={{ fontSize: '0.725rem', fontWeight: 600, color: '#64748b' }}>
+                          {t(card.feat2Key)}
+                        </div>
+                      </div>
                     </div>
 
                     <button
@@ -379,16 +366,20 @@ export default function LandingPage() {
                         fontWeight: 700,
                         fontSize: '0.8rem',
                         cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justify: 'space-between',
                         transition: 'all 0.2s ease'
                       }}
                     >
-                      {card.btnText}
+                      <span>{t(card.btnKey)}</span>
+                      <ChevronRight size={14} color={card.color} />
                     </button>
                   </div>
                 )
               })}
 
-              {/* CARD 5 — Platform Admin (Centered below Row 1 & 2 matching reference layout) */}
+              {/* CARD 5 — Admin (Centered below Row 1 & 2) */}
               <div
                 style={{
                   gridColumn: '1 / -1',
@@ -403,7 +394,7 @@ export default function LandingPage() {
                   display: 'flex',
                   flexDirection: 'column',
                   justify: 'space-between',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                  transition: 'all 0.3s ease'
                 }}
               >
                 <div>
@@ -413,17 +404,26 @@ export default function LandingPage() {
                     </div>
                     <div>
                       <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', lineHeight: 1.2 }}>
-                        Platform Admin
+                        {t('admin')}
                       </div>
                       <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600, marginTop: '0.15rem' }}>
-                        Platform Operations
+                        {t('admin_subtitle')}
                       </div>
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '0.8rem', color: '#4B176F', lineHeight: 1.45, marginBottom: '1.1rem', opacity: 0.95 }}>
-                    Manage users, optimize routes, and oversee the network
+                  <p style={{ fontSize: '0.78rem', color: '#4B176F', lineHeight: 1.4, marginBottom: '0.75rem', opacity: 0.95 }}>
+                    {t('admin_desc')}
                   </p>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1.1rem' }}>
+                    <div style={{ fontSize: '0.725rem', fontWeight: 600, color: '#64748b' }}>
+                      {t('admin_feature_1')}
+                    </div>
+                    <div style={{ fontSize: '0.725rem', fontWeight: 600, color: '#64748b' }}>
+                      {t('admin_feature_2')}
+                    </div>
+                  </div>
                 </div>
 
                 <button
@@ -438,45 +438,20 @@ export default function LandingPage() {
                     fontWeight: 700,
                     fontSize: '0.8rem',
                     cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justify: 'space-between',
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  Manage Platform
+                  <span>{t('admin_btn')}</span>
+                  <ChevronRight size={14} color="#FF875F" />
                 </button>
               </div>
 
             </div>
           </div>
         </div>
-
-        {/* BOTTOM FOOTER BAR */}
-        <footer
-          style={{
-            padding: '1.1rem 2.75rem',
-            background: '#FFF8E9',
-            borderTop: '1px solid rgba(53, 19, 95, 0.06)',
-            display: 'flex',
-            alignItems: 'center',
-            justify: 'space-between'
-          }}
-        >
-          {/* Left Social Icons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', color: '#35135F' }}>
-            <Share2 size={16} style={{ cursor: 'pointer' }} />
-            <Send size={16} style={{ cursor: 'pointer' }} />
-          </div>
-
-          {/* Right Action Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', fontSize: '0.8rem', color: '#35135F', fontWeight: 600 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer' }}>
-              <Copy size={14} /> Copy
-            </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer' }}>
-              <Layers size={14} color="#B42B72" /> Visual design
-            </span>
-          </div>
-        </footer>
-
       </div>
 
       {/* DEMO REQUEST MODAL */}
@@ -500,7 +475,7 @@ export default function LandingPage() {
               </div>
             ) : (
               <form onSubmit={handleDemoSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#35135F', marginBottom: '0.25rem' }}>Request Platform Demo</h3>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#35135F', marginBottom: '0.25rem' }}>{t('request_demo')}</h3>
                 <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem' }}>Experience real-time AI food salvage & redistribution in action.</p>
 
                 <div className="input-group">
@@ -523,17 +498,6 @@ export default function LandingPage() {
                     value={demoForm.email}
                     onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
                     placeholder="jane@organization.org"
-                    className="input"
-                  />
-                </div>
-
-                <div className="input-group">
-                  <label className="input-label">Organization Name</label>
-                  <input
-                    type="text"
-                    value={demoForm.org}
-                    onChange={(e) => setDemoForm({ ...demoForm, org: e.target.value })}
-                    placeholder="Food Bank / Hotel / NGO"
                     className="input"
                   />
                 </div>
