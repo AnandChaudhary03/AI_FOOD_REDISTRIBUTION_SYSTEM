@@ -7,13 +7,13 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
         name: 'AnnaSetu - Food Redistribution',
         short_name: 'AnnaSetu',
         description: 'Bridging Surplus. Ending Hunger.',
-        theme_color: '#1B5E20',
-        background_color: '#0a1628',
+        theme_color: '#35135F',
+        background_color: '#FFF8E9',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',
@@ -27,7 +27,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\.annasetu\.com\/.*/i,
+            urlPattern: /^https:\/\/.*\/api\/.*/i,
             handler: 'NetworkFirst',
             options: { cacheName: 'api-cache', networkTimeoutSeconds: 10 }
           }
