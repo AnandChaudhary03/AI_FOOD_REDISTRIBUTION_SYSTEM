@@ -192,7 +192,7 @@ export default function LandingPage() {
             </Link>
 
             <button
-              onClick={() => setDemoModalOpen(true)}
+              onClick={() => navigate('/register')}
               style={{
                 background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)',
                 color: '#ffffff',
@@ -206,7 +206,7 @@ export default function LandingPage() {
                 transition: 'all 0.25s ease'
               }}
             >
-              {t('request_demo')}
+              {t('sign_up')}
             </button>
           </div>
         </header>
