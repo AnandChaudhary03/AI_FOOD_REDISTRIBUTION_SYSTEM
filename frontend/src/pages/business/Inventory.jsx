@@ -430,9 +430,18 @@ export default function BusinessInventory() {
                     {csvFile ? csvFile.name : 'Click to Select CSV File'}
                   </div>
                   <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                    Columns: product_name, quantity, category, unit, barcode
+                    Columns: product_name, quantity, category, unit, barcode, expiry_date
                   </div>
                 </label>
+                <a
+                  href="/sample_inventory_import.csv"
+                  download="sample_inventory_import.csv"
+                  className="btn btn-ghost btn-sm"
+                  style={{ fontSize: '0.75rem', marginTop: '0.5rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Download size={14} /> Download Sample CSV Template
+                </a>
               </div>
 
               <button type="submit" className="btn btn-primary" disabled={csvUploading || !csvFile} style={{ width: '100%', justifyContent: 'center', padding: '0.75rem', marginTop: '0.75rem' }}>
