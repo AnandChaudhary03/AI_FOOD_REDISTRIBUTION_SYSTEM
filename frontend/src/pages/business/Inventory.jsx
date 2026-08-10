@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { Package, Plus, Search, Trash2, HeartHandshake, Barcode, Upload, Camera, CheckCircle, X, Sparkles } from 'lucide-react'
+import { Package, Plus, Search, Trash2, HeartHandshake, Barcode, Upload, Camera, CheckCircle, X, Sparkles, FileSpreadsheet } from 'lucide-react'
 import BarcodeScanner from '../../components/BarcodeScanner'
 import api from '../../api/api'
 
@@ -11,11 +11,12 @@ export default function BusinessInventory() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
 
+  // Active Tab state above Inventory List: 'barcode' or 'csv'
+  const [activeTab, setActiveTab] = useState('barcode')
+
   // Modals state
   const [showModal, setShowModal] = useState(false)
-  const [showBarcodeModal, setShowBarcodeModal] = useState(false)
   const [showCameraScanner, setShowCameraScanner] = useState(false)
-  const [showCsvModal, setShowCsvModal] = useState(false)
 
   // Form states
   const [formData, setFormData] = useState({
@@ -103,7 +104,7 @@ export default function BusinessInventory() {
       const res = await api.get(`/business/barcode/${cleanCode}`)
       if (res.data) {
         setScannedProduct(res.data)
-        toast.success(`Scanned: ${res.data.product_name}`, { icon: '📦' })
+        toast.success(`Found product: ${res.data.product_name}`, { icon: '📦' })
       }
     } catch (err) {
       toast.error('Failed to look up barcode')
@@ -143,7 +144,6 @@ export default function BusinessInventory() {
       toast.success(`🎉 '${scannedProduct.product_name}' saved to inventory!`)
       setScannedProduct(null)
       setBarcodeInput('')
-      setShowBarcodeModal(false)
       fetchInventory()
     } catch (err) {
       toast.error('Failed to add to inventory')
@@ -163,7 +163,6 @@ export default function BusinessInventory() {
       })
       toast.success(res.data.message)
       setCsvFile(null)
-      setShowCsvModal(false)
       fetchInventory()
     } catch (err) {
       toast.error(err.response?.data?.detail || 'CSV upload failed')
@@ -177,28 +176,196 @@ export default function BusinessInventory() {
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 className="page-title">{t('inventory')}</h1>
-          <p className="page-subtitle">Track food stock, expiry dates, AI urgency scores, scan barcodes & CSV import</p>
+          <p className="page-subtitle">Manage food stock, scan barcodes, bulk import CSV & track AI urgency scores</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <button onClick={() => setShowBarcodeModal(true)} className="btn btn-secondary">
-            <Barcode size={18} /> Barcode Scanner
-          </button>
-          <button onClick={() => setShowCsvModal(true)} className="btn btn-secondary">
-            <Upload size={18} /> Bulk CSV Upload
-          </button>
           <button onClick={() => setShowModal(true)} className="btn btn-primary">
             <Plus size={18} /> {t('add_item')}
           </button>
         </div>
       </div>
 
-      {/* Search Bar */}
+      {/* TWO SEPARATE MEDIUM TABS ABOVE INVENTORY LIST */}
+      <div style={{ marginBottom: '2rem' }}>
+        {/* Tab Selection Bar */}
+        <div style={{ display: 'flex', gap: '0.5rem', background: '#FFF3DD', padding: '0.35rem', borderRadius: '16px', border: '1px solid rgba(53,19,95,0.08)', marginBottom: '1.25rem', maxWidth: '540px' }}>
+          <button
+            type="button"
+            onClick={() => setActiveTab('barcode')}
+            style={{
+              flex: 1, padding: '0.65rem 1rem', borderRadius: '12px', border: 'none',
+              background: activeTab === 'barcode' ? 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)' : 'transparent',
+              color: activeTab === 'barcode' ? '#ffffff' : '#35135F',
+              fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+              boxShadow: activeTab === 'barcode' ? '0 4px 12px rgba(255,107,82,0.3)' : 'none',
+              transition: 'all 0.25s ease'
+            }}
+          >
+            <Barcode size={18} /> Barcode Scanner Tab
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('csv')}
+            style={{
+              flex: 1, padding: '0.65rem 1rem', borderRadius: '12px', border: 'none',
+              background: activeTab === 'csv' ? 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)' : 'transparent',
+              color: activeTab === 'csv' ? '#ffffff' : '#35135F',
+              fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+              boxShadow: activeTab === 'csv' ? '0 4px 12px rgba(255,107,82,0.3)' : 'none',
+              transition: 'all 0.25s ease'
+            }}
+          >
+            <Upload size={18} /> Bulk CSV Upload Tab
+          </button>
+        </div>
+
+        {/* TWO MEDIUM CONTENT PANELS */}
+        <div className="grid-2">
+          
+          {/* TAB 1: BARCODE SCANNER MEDIUM PANEL */}
+          <div
+            className="card"
+            style={{
+              background: '#FFFFFF',
+              border: activeTab === 'barcode' ? '2px solid #FF6B52' : '1px solid rgba(53,19,95,0.08)',
+              boxShadow: activeTab === 'barcode' ? '0 10px 30px rgba(255,107,82,0.15)' : 'none',
+              padding: '1.5rem',
+              borderRadius: '20px'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(255,107,82,0.12)', color: '#FF6B52', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Barcode size={22} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Barcode Scanner Panel</h3>
+                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Scan real-world barcodes to auto-register products</p>
+                </div>
+              </div>
+              <span className="badge badge-green"><Sparkles size={12} /> AI Powered</span>
+            </div>
+
+            <button
+              onClick={() => setShowCameraScanner(true)}
+              className="btn btn-primary"
+              style={{ width: '100%', justifyContent: 'center', marginBottom: '1rem', padding: '0.75rem' }}
+            >
+              <Camera size={18} /> Open Live Camera Scanner
+            </button>
+
+            {/* Manual Lookup Bar */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: scannedProduct ? '1rem' : '0' }}>
+              <input
+                type="text"
+                placeholder="Enter barcode e.g. 8901058000185"
+                value={barcodeInput}
+                onChange={(e) => setBarcodeInput(e.target.value)}
+                className="input"
+              />
+              <button onClick={() => handleBarcodeLookup(barcodeInput)} className="btn btn-secondary" disabled={barcodeLoading}>
+                <Search size={18} />
+              </button>
+            </div>
+
+            {/* Scanned Product Result Auto-Fill Form */}
+            {scannedProduct && (
+              <form onSubmit={handleAddScannedProduct} style={{ padding: '1rem', background: '#FFF8E9', borderRadius: '14px', border: '1px solid rgba(53,19,95,0.08)' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FF6B52', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <CheckCircle size={16} /> Scanned Product Recognized
+                </div>
+                <div className="input-group" style={{ marginBottom: '0.65rem' }}>
+                  <label className="input-label">Product Name *</label>
+                  <input
+                    type="text"
+                    className="input"
+                    value={scannedProduct.product_name}
+                    onChange={(e) => setScannedProduct({ ...scannedProduct, product_name: e.target.value })}
+                    required
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                  <div className="input-group" style={{ flex: 1 }}>
+                    <label className="input-label">Category</label>
+                    <input
+                      type="text"
+                      className="input"
+                      value={scannedProduct.category || 'General'}
+                      onChange={(e) => setScannedProduct({ ...scannedProduct, category: e.target.value })}
+                    />
+                  </div>
+                  <div className="input-group" style={{ flex: 1 }}>
+                    <label className="input-label">Quantity</label>
+                    <input
+                      type="number"
+                      className="input"
+                      value={scannedProduct.quantity || 1}
+                      onChange={(e) => setScannedProduct({ ...scannedProduct, quantity: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                  Add Product to Inventory
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* TAB 2: BULK CSV UPLOAD MEDIUM PANEL */}
+          <div
+            className="card"
+            style={{
+              background: '#FFFFFF',
+              border: activeTab === 'csv' ? '2px solid #FF6B52' : '1px solid rgba(53,19,95,0.08)',
+              boxShadow: activeTab === 'csv' ? '0 10px 30px rgba(255,107,82,0.15)' : 'none',
+              padding: '1.5rem',
+              borderRadius: '20px'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(180,43,114,0.12)', color: '#B42B72', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <FileSpreadsheet size={22} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Bulk CSV Upload Panel</h3>
+                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Import batch food inventory from Excel/CSV files</p>
+                </div>
+              </div>
+              <span className="badge badge-purple">Batch Import</span>
+            </div>
+
+            <form onSubmit={handleCsvUpload} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ border: '2px dashed rgba(53,19,95,0.15)', borderRadius: '14px', padding: '1.35rem 1rem', textAlign: 'center', cursor: 'pointer', background: '#FFF8E9' }}>
+                <input type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files[0])} style={{ display: 'none' }} id="tab-csv-input" />
+                <label htmlFor="tab-csv-input" style={{ cursor: 'pointer' }}>
+                  <Upload size={28} color="#FF6B52" style={{ marginBottom: '0.4rem' }} />
+                  <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#35135F' }}>
+                    {csvFile ? csvFile.name : 'Click to Select CSV File'}
+                  </div>
+                  <div style={{ fontSize: '0.725rem', color: '#64748b', marginTop: '0.2rem' }}>
+                    Columns: product_name, quantity, category, unit, barcode
+                  </div>
+                </label>
+              </div>
+
+              <button type="submit" className="btn btn-primary" disabled={csvUploading || !csvFile} style={{ width: '100%', justifyContent: 'center', padding: '0.75rem' }}>
+                {csvUploading ? 'Uploading CSV...' : 'Import CSV into Inventory'}
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      {/* SEARCH BAR ABOVE INVENTORY LIST TABLE */}
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
         <div style={{ position: 'relative', flex: 1 }}>
           <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input
             type="text"
-            placeholder="Search products by name or barcode..."
+            placeholder="Search inventory items by product name or barcode..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="input"
@@ -207,7 +374,7 @@ export default function BusinessInventory() {
         </div>
       </div>
 
-      {/* Inventory Table */}
+      {/* INVENTORY LIST TABLE */}
       <div className="table-wrapper">
         <table className="table">
           <thead>
@@ -322,121 +489,9 @@ export default function BusinessInventory() {
         </div>
       )}
 
-      {/* 2. Real-World Barcode Scanner Modal */}
-      {showBarcodeModal && (
-        <div className="modal-overlay">
-          <div className="modal" style={{ maxWidth: '520px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', fontWeight: 800, color: '#35135F' }}>
-                <Barcode color="#FF6B52" size={22} /> Barcode Scanner & Real Product Lookup
-              </h3>
-              <button onClick={() => setShowBarcodeModal(false)} className="btn btn-ghost btn-sm">
-                <X size={18} />
-              </button>
-            </div>
-
-            <button onClick={() => setShowCameraScanner(true)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginBottom: '1rem', padding: '0.85rem' }}>
-              <Camera size={20} /> Open Camera Scanner
-            </button>
-
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-              <input
-                type="text"
-                placeholder="Enter or scan barcode (e.g. 8901058000185)"
-                value={barcodeInput}
-                onChange={(e) => setBarcodeInput(e.target.value)}
-                className="input"
-              />
-              <button onClick={() => handleBarcodeLookup(barcodeInput)} className="btn btn-secondary" disabled={barcodeLoading}>
-                <Search size={18} />
-              </button>
-            </div>
-
-            {scannedProduct && (
-              <form onSubmit={handleAddScannedProduct} style={{ padding: '1.25rem', background: '#FFF8E9', borderRadius: '16px', border: '1px solid rgba(53,19,95,0.1)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.85rem', color: '#FF6B52', fontWeight: 800, fontSize: '0.95rem' }}>
-                  <Sparkles size={18} /> Product Recognized via Barcode
-                </div>
-
-                <div className="input-group" style={{ marginBottom: '0.75rem' }}>
-                  <label className="input-label">Product Name *</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={scannedProduct.product_name}
-                    onChange={(e) => setScannedProduct({ ...scannedProduct, product_name: e.target.value })}
-                    placeholder="e.g. Britannia Good Day Biscuit"
-                    required
-                  />
-                </div>
-
-                <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                  <div className="input-group" style={{ flex: 1 }}>
-                    <label className="input-label">Category</label>
-                    <input
-                      type="text"
-                      className="input"
-                      value={scannedProduct.category || 'Packaged Goods'}
-                      onChange={(e) => setScannedProduct({ ...scannedProduct, category: e.target.value })}
-                    />
-                  </div>
-                  <div className="input-group" style={{ flex: 1 }}>
-                    <label className="input-label">Quantity</label>
-                    <input
-                      type="number"
-                      className="input"
-                      value={scannedProduct.quantity || 1}
-                      onChange={(e) => setScannedProduct({ ...scannedProduct, quantity: e.target.value })}
-                    />
-                  </div>
-                </div>
-
-                <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginTop: '0.5rem' }}>
-                  <CheckCircle size={18} /> Add Scanned Product to Inventory
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Camera Live Scanner Popup */}
       {showCameraScanner && (
         <BarcodeScanner onDetected={handleCameraDetected} onClose={() => setShowCameraScanner(false)} />
-      )}
-
-      {/* 3. Bulk CSV Upload Modal */}
-      {showCsvModal && (
-        <div className="modal-overlay">
-          <div className="modal" style={{ maxWidth: '480px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', fontWeight: 800 }}>
-                <Upload color="var(--accent-saffron)" size={22} /> Bulk CSV Import
-              </h3>
-              <button onClick={() => setShowCsvModal(false)} className="btn btn-ghost btn-sm">
-                <X size={18} />
-              </button>
-            </div>
-
-            <form onSubmit={handleCsvUpload} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div style={{ border: '2px dashed var(--border)', borderRadius: 'var(--radius)', padding: '2rem', textAlign: 'center', cursor: 'pointer', background: 'var(--bg-secondary)' }}>
-                <input type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files[0])} style={{ display: 'none' }} id="inv-csv-input" />
-                <label htmlFor="inv-csv-input" style={{ cursor: 'pointer' }}>
-                  <Upload size={32} color="var(--accent-saffron)" style={{ marginBottom: '0.5rem' }} />
-                  <div style={{ fontWeight: 600 }}>{csvFile ? csvFile.name : 'Click to select CSV file'}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Columns: product_name, quantity, category, unit, barcode</div>
-                </label>
-              </div>
-
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <button type="button" onClick={() => setShowCsvModal(false)} className="btn btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>Cancel</button>
-                <button type="submit" className="btn btn-primary" disabled={csvUploading || !csvFile} style={{ flex: 1, justifyContent: 'center' }}>
-                  {csvUploading ? 'Uploading...' : 'Import Inventory'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
       )}
     </div>
   )
