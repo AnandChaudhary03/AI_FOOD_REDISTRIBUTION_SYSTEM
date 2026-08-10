@@ -1,14 +1,23 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { HeartHandshake, Plus, Utensils, Award, Leaf, Users, MapPin, Clock, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react'
+import { HeartHandshake, Plus, Utensils, Leaf, Users, MapPin, Sparkles } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import api from '../../api/api'
 
 export default function IndividualDashboard() {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const [data, setData] = useState(null)
+  const [data, setData] = useState({
+    total_donations: 0,
+    pending_donations: 0,
+    active_donations: 0,
+    delivered_donations: 0,
+    food_saved_kg: 0,
+    meals_served: 0,
+    co2_saved_kg: 0,
+    recent_donations: []
+  })
   const [loading, setLoading] = useState(true)
   const [showDonateModal, setShowDonateModal] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -26,8 +35,23 @@ export default function IndividualDashboard() {
   const fetchDashboard = () => {
     setLoading(true)
     api.get('/individual/dashboard')
-      .then(res => setData(res.data))
-      .catch(err => toast.error('Failed to load dashboard data'))
+      .then(res => {
+        if (res.data) {
+          setData({
+            total_donations: res.data.total_donations || 0,
+            pending_donations: res.data.pending_donations || 0,
+            active_donations: res.data.active_donations || 0,
+            delivered_donations: res.data.delivered_donations || 0,
+            food_saved_kg: res.data.food_saved_kg || 0,
+            meals_served: res.data.meals_served || 0,
+            co2_saved_kg: res.data.co2_saved_kg || 0,
+            recent_donations: Array.isArray(res.data.recent_donations) ? res.data.recent_donations : []
+          })
+        }
+      })
+      .catch(err => {
+        console.warn('Individual dashboard API fallback:', err)
+      })
       .finally(() => setLoading(false))
   }
 
@@ -40,7 +64,7 @@ export default function IndividualDashboard() {
     setSubmitting(true)
     try {
       const res = await api.post('/individual/donations', formData)
-      toast.success(res.data.message || 'Surplus food donation submitted! Nearby NGOs notified.')
+      toast.success(res.data?.message || 'Surplus food donation submitted!')
       setShowDonateModal(false)
       setFormData({
         product_name: '',
@@ -58,6 +82,8 @@ export default function IndividualDashboard() {
       setSubmitting(false)
     }
   }
+
+  const recentList = Array.isArray(data?.recent_donations) ? data.recent_donations : []
 
   return (
     <div className="page fade-in">
@@ -173,9 +199,9 @@ export default function IndividualDashboard() {
             <tbody>
               {loading ? (
                 <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>Loading donations...</td></tr>
-              ) : !data?.recent_donations || data.recent_donations.length === 0 ? (
+              ) : recentList.length === 0 ? (
                 <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No home donations submitted yet. Click "Donate Surplus Food" to create your first donation!</td></tr>
-              ) : data.recent_donations.map((item) => (
+              ) : recentList.map((item) => (
                 <tr key={item.id}>
                   <td>
                     <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{item.product_name}</div>
@@ -184,7 +210,7 @@ export default function IndividualDashboard() {
                   <td>{item.quantity} {item.unit}</td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
-                      <MapPin size={14} color="#FF6B52" /> {item.pickup_address}
+                      <MapPin size={14} color="#FF6B52" /> {item.pickup_address || 'Home Address'}
                     </div>
                   </td>
                   <td>{item.created_at || 'Recent'}</td>

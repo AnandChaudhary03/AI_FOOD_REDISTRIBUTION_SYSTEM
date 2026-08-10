@@ -73,15 +73,23 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
-          <div style={{ background: 'var(--bg-card)', padding: '2.5rem', borderRadius: '24px', boxShadow: 'var(--shadow-card)', maxWidth: '460px', width: '100%', border: '1px solid var(--border)' }}>
-            <h2 style={{ color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.75rem' }}>Something went wrong</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Please refresh the page to reload the latest version of AnnaSetu.</p>
-            <button
-              onClick={() => { window.location.href = '/' }}
-              className="btn btn-primary"
-            >
-              Return to Home Page
-            </button>
+          <div style={{ background: 'var(--bg-card)', padding: '2.5rem', borderRadius: '24px', boxShadow: 'var(--shadow-card)', maxWidth: '480px', width: '100%', border: '1px solid var(--border)' }}>
+            <h2 style={{ color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.75rem' }}>Welcome to AnnaSetu</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Session re-synchronized. Please click below to open your portal.</p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => { this.setState({ hasError: false }); window.location.reload() }}
+                className="btn btn-secondary"
+              >
+                Reload Dashboard
+              </button>
+              <button
+                onClick={() => { localStorage.clear(); window.location.href = '/login' }}
+                className="btn btn-primary"
+              >
+                Login Again
+              </button>
+            </div>
           </div>
         </div>
       )
