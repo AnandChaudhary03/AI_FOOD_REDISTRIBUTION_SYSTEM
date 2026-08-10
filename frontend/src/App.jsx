@@ -73,7 +73,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
-          <div style={{ background: 'var(--bg-card)', padding: '2.5rem', borderRadius: '24px', boxShadow: 'var(--shadow-card)', maxWidth: '480px', width: '100%', border: '1px solid var(--border)' }}>
+          <div style={{ background: 'var(--bg-card)', padding: '2.5rem', borderRadius: '24px', boxShadow: 'var(--shadow-card)', maxWidth: '520px', width: '100%', border: '1px solid var(--border)' }}>
             <h2 style={{ color: 'var(--text-primary)', fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.75rem' }}>Welcome to AnnaSetu</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>
               {this.state.error?.message ? `Notice: ${this.state.error.message}` : 'Session re-synchronized.'}
@@ -83,7 +83,7 @@ class ErrorBoundary extends React.Component {
                 onClick={() => this.setState({ hasError: false, error: null })}
                 className="btn btn-primary"
               >
-                Continue to Portal
+                Open Dashboard
               </button>
               <button
                 onClick={() => { localStorage.clear(); window.location.href = '/login' }}
