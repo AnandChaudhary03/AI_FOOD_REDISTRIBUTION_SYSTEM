@@ -1,13 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  LayoutDashboard, Package, HeartHandshake, Receipt, Barcode, MapPin,
-  Settings, User, LogOut, Calendar, History, Users, FileText, Truck, ShieldCheck, Bell
+  LayoutDashboard, Package, HeartHandshake, Receipt, MapPin,
+  Settings, User, LogOut, Calendar, History, Users, FileText, Truck, ShieldCheck, Bell, X
 } from 'lucide-react'
 import AnnaSetuLogo from './AnnaSetuLogo'
 import { useAuth } from '../contexts/AuthContext'
 
-export default function Sidebar({ collapsed, role }) {
+export default function Sidebar({ collapsed, isOpen, onClose, role }) {
   const { t } = useTranslation()
   const location = useLocation()
   const { logout } = useAuth()
@@ -68,32 +68,59 @@ export default function Sidebar({ collapsed, role }) {
   const items = getNavItems()
 
   return (
-    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-      <div className="sidebar-header">
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <AnnaSetuLogo size={collapsed ? 36 : 40} showText={!collapsed} subtitle={role.toUpperCase()} />
-        </Link>
-      </div>
+    <>
+      {/* Mobile Semi-Transparent Backdrop */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(53, 19, 95, 0.5)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 149
+          }}
+        />
+      )}
 
-      <nav className="sidebar-nav">
-        {items.map((item) => {
-          const Icon = item.icon
-          const isActive = location.pathname === item.path
-          return (
-            <Link key={item.path} to={item.path} className={`nav-item ${isActive ? 'active' : ''}`}>
-              <Icon className="nav-icon" />
-              {!collapsed && <span className="nav-label">{item.label}</span>}
-            </Link>
-          )
-        })}
-      </nav>
+      {/* Sidebar Drawer */}
+      <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-header" style={{ justifyContent: 'space-between' }}>
+          <Link to="/" onClick={onClose} style={{ textDecoration: 'none' }}>
+            <AnnaSetuLogo size={collapsed && !isOpen ? 36 : 40} showText={!collapsed || isOpen} subtitle={role?.toUpperCase()} />
+          </Link>
+          {isOpen && (
+            <button onClick={onClose} className="btn btn-ghost btn-sm" style={{ padding: '0.25rem' }}>
+              <X size={20} color="#35135F" />
+            </button>
+          )}
+        </div>
 
-      <div style={{ padding: '0.5rem', borderTop: '1px solid var(--border)' }}>
-        <button onClick={logout} className="nav-item" style={{ width: '100%', color: 'var(--accent-red)' }}>
-          <LogOut className="nav-icon" />
-          {!collapsed && <span className="nav-label">{t('logout')}</span>}
-        </button>
-      </div>
-    </aside>
+        <nav className="sidebar-nav">
+          {items.map((item) => {
+            const Icon = item.icon
+            const isActive = location.pathname === item.path
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={onClose}
+                className={`nav-item ${isActive ? 'active' : ''}`}
+              >
+                <Icon className="nav-icon" />
+                {(!collapsed || isOpen) && <span className="nav-label">{item.label}</span>}
+              </Link>
+            )
+          })}
+        </nav>
+
+        <div style={{ padding: '0.5rem', borderTop: '1px solid var(--border)' }}>
+          <button onClick={() => { logout(); if (onClose) onClose(); }} className="nav-item" style={{ width: '100%', color: 'var(--accent-red)' }}>
+            <LogOut className="nav-icon" />
+            {(!collapsed || isOpen) && <span className="nav-label">{t('logout')}</span>}
+          </button>
+        </div>
+      </aside>
+    </>
   )
 }

@@ -5,12 +5,24 @@ import TopBar from '../../components/TopBar'
 
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  const handleToggle = () => {
+    if (window.innerWidth <= 768) {
+      setMobileOpen(!mobileOpen)
+    } else {
+      setCollapsed(!collapsed)
+    }
+  }
+
   return (
     <div className="app-layout">
-      <Sidebar collapsed={collapsed} role="admin" />
+      <Sidebar collapsed={collapsed} isOpen={mobileOpen} onClose={() => setMobileOpen(false)} role="admin" />
       <div className={`main-content ${collapsed ? 'collapsed' : ''}`}>
-        <TopBar onToggleSidebar={() => setCollapsed(!collapsed)} />
-        <main className="content-area"><Outlet /></main>
+        <TopBar onToggleSidebar={handleToggle} />
+        <main className="content-area">
+          <Outlet />
+        </main>
       </div>
     </div>
   )
