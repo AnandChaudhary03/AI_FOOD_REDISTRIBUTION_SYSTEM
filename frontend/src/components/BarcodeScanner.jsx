@@ -6,7 +6,6 @@ export default function BarcodeScanner({ onDetected, onClose, inline = false }) 
   const scannerRef = useRef(null)
   const videoRef = useRef(null)
   const [facingMode, setFacingMode] = useState('environment')
-  const [manualCode, setManualCode] = useState('')
   const [error, setError] = useState(null)
   const [nativeDetectorUsed, setNativeDetectorUsed] = useState(false)
 
@@ -136,48 +135,41 @@ export default function BarcodeScanner({ onDetected, onClose, inline = false }) 
     setFacingMode(prev => (prev === 'environment' ? 'user' : 'environment'))
   }
 
-  const handleManualSubmit = (e) => {
-    e.preventDefault()
-    if (manualCode.trim()) {
-      onDetected(manualCode.trim())
-    }
-  }
-
   const scannerContent = (
-    <div style={{ position: 'relative' }}>
-      {/* Header Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+    <div style={{ position: 'relative', width: '100%' }}>
+      {/* Top Controls Bar inside Tab */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
           <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF6B52', display: 'inline-block', animation: 'pulse-dot 1.5s infinite' }} />
-          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#FF6B52', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Live Camera Scanning Active
+          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#FF6B52', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Camera Active
           </span>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button onClick={toggleCamera} className="btn btn-secondary btn-sm" title="Switch Camera">
-            <RefreshCw size={14} />
+        <div style={{ display: 'flex', gap: '0.4rem' }}>
+          <button onClick={toggleCamera} className="btn btn-secondary btn-sm" style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }} title="Switch Camera">
+            <RefreshCw size={13} /> Switch
           </button>
           {onClose && (
-            <button onClick={onClose} className="btn btn-ghost btn-sm">
-              <X size={16} />
+            <button onClick={onClose} className="btn btn-ghost btn-sm" style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>
+              <X size={15} /> Close
             </button>
           )}
         </div>
       </div>
 
       {error ? (
-        <div style={{ padding: '1rem', textAlign: 'center', color: '#ef4444' }}>
-          <p style={{ fontWeight: 600, fontSize: '0.85rem' }}>{error}</p>
+        <div style={{ padding: '0.85rem', textAlign: 'center', color: '#ef4444' }}>
+          <p style={{ fontWeight: 600, fontSize: '0.8rem' }}>{error}</p>
           {onClose && (
-            <button onClick={onClose} className="btn btn-secondary btn-sm" style={{ marginTop: '0.5rem' }}>
-              Close Scanner
+            <button onClick={onClose} className="btn btn-secondary btn-sm" style={{ marginTop: '0.4rem' }}>
+              Close Camera
             </button>
           )}
         </div>
       ) : (
         <div>
-          {/* Live Camera Viewport with Upward & Downward Moving Horizontal Scan Line */}
-          <div className="scanner-viewport" style={{ height: '240px', position: 'relative', borderRadius: '16px', overflow: 'hidden', background: '#000', border: '2px solid rgba(255,107,82,0.4)' }}>
+          {/* Fixed-Height Live Camera Viewport to Keep Tab Card Size Constant */}
+          <div className="scanner-viewport" style={{ height: inline ? '185px' : '240px', position: 'relative', borderRadius: '14px', overflow: 'hidden', background: '#000', border: '2px solid rgba(255,107,82,0.4)' }}>
             {nativeDetectorUsed ? (
               <video ref={videoRef} style={{ width: '100%', height: '100%', objectFit: 'cover' }} playsInline muted />
             ) : (
@@ -185,21 +177,21 @@ export default function BarcodeScanner({ onDetected, onClose, inline = false }) 
             )}
 
             {/* 4 Corner Target Brackets */}
-            <div style={{ position: 'absolute', top: '16px', left: '16px', width: '28px', height: '28px', borderTop: '4px solid #FF6B52', borderLeft: '4px solid #FF6B52', borderRadius: '6px 0 0 0', pointerEvents: 'none', zIndex: 12 }} />
-            <div style={{ position: 'absolute', top: '16px', right: '16px', width: '28px', height: '28px', borderTop: '4px solid #FF6B52', borderRight: '4px solid #FF6B52', borderRadius: '0 6px 0 0', pointerEvents: 'none', zIndex: 12 }} />
-            <div style={{ position: 'absolute', bottom: '16px', left: '16px', width: '28px', height: '28px', borderBottom: '4px solid #FF6B52', borderLeft: '4px solid #FF6B52', borderRadius: '0 0 0 6px', pointerEvents: 'none', zIndex: 12 }} />
-            <div style={{ position: 'absolute', bottom: '16px', right: '16px', width: '28px', height: '28px', borderBottom: '4px solid #FF6B52', borderRight: '4px solid #FF6B52', borderRadius: '0 0 6px 0', pointerEvents: 'none', zIndex: 12 }} />
+            <div style={{ position: 'absolute', top: '12px', left: '12px', width: '24px', height: '24px', borderTop: '3px solid #FF6B52', borderLeft: '3px solid #FF6B52', borderRadius: '4px 0 0 0', pointerEvents: 'none', zIndex: 12 }} />
+            <div style={{ position: 'absolute', top: '12px', right: '12px', width: '24px', height: '24px', borderTop: '3px solid #FF6B52', borderRight: '3px solid #FF6B52', borderRadius: '0 4px 0 0', pointerEvents: 'none', zIndex: 12 }} />
+            <div style={{ position: 'absolute', bottom: '12px', left: '12px', width: '24px', height: '24px', borderBottom: '3px solid #FF6B52', borderLeft: '3px solid #FF6B52', borderRadius: '0 0 0 4px', pointerEvents: 'none', zIndex: 12 }} />
+            <div style={{ position: 'absolute', bottom: '12px', right: '12px', width: '24px', height: '24px', borderBottom: '3px solid #FF6B52', borderRight: '3px solid #FF6B52', borderRadius: '0 0 4px 0', pointerEvents: 'none', zIndex: 12 }} />
 
-            {/* Outer Dim Mask */}
-            <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 0 15px rgba(0,0,0,0.4)', pointerEvents: 'none', zIndex: 11 }} />
+            {/* Dim Overlay */}
+            <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 0 12px rgba(0,0,0,0.35)', pointerEvents: 'none', zIndex: 11 }} />
 
             {/* HORIZONTAL LASER BEAM MOVING UPWARD AND DOWNWARD */}
             <div className="scanner-line" />
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '0.65rem', marginBottom: '0.65rem' }}>
-            <span className="badge badge-green" style={{ background: 'rgba(255,107,82,0.12)', color: '#FF6B52', fontSize: '0.725rem', padding: '0.25rem 0.65rem' }}>
-              <Sparkles size={12} /> Point camera at product barcode
+          <div style={{ textAlign: 'center', marginTop: '0.4rem' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#64748b' }}>
+              Hold barcode steady inside the box
             </span>
           </div>
         </div>

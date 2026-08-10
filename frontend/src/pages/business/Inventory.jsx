@@ -220,138 +220,156 @@ export default function BusinessInventory() {
           </button>
         </div>
 
-        {/* TWO MEDIUM CONTENT PANELS */}
+        {/* TWO MEDIUM CONTENT PANELS (FIXED 340px HEIGHT) */}
         <div className="grid-2">
           
-          {/* TAB 1: BARCODE SCANNER MEDIUM PANEL */}
+          {/* TAB 1: BARCODE SCANNER MEDIUM PANEL (FIXED HEIGHT 340px) */}
           <div
             className="card"
             style={{
               background: '#FFFFFF',
               border: activeTab === 'barcode' ? '2px solid #FF6B52' : '1px solid rgba(53,19,95,0.08)',
               boxShadow: activeTab === 'barcode' ? '0 10px 30px rgba(255,107,82,0.15)' : 'none',
-              padding: '1.5rem',
-              borderRadius: '20px'
+              padding: '1.25rem',
+              borderRadius: '20px',
+              height: '340px',
+              minHeight: '340px',
+              maxHeight: '340px',
+              display: 'flex',
+              flexDirection: 'column',
+              justify: 'space-between',
+              overflow: 'hidden'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(255,107,82,0.12)', color: '#FF6B52', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Barcode size={22} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(255,107,82,0.12)', color: '#FF6B52', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Barcode size={20} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Barcode Scanner Panel</h3>
-                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Scan real-world barcodes directly inside this tab</p>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Barcode Scanner Panel</h3>
+                  <p style={{ fontSize: '0.725rem', color: '#64748b', margin: 0 }}>Scan barcodes directly inside this tab</p>
                 </div>
               </div>
-              <span className="badge badge-green"><Sparkles size={12} /> AI Powered</span>
+              <span className="badge badge-green" style={{ fontSize: '0.7rem' }}><Sparkles size={11} /> AI Powered</span>
             </div>
 
-            {/* LIVE CAMERA SCANNER EMBEDDED INLINE INSIDE BARCODE TAB */}
+            {/* LIVE CAMERA EMBEDDED INSIDE FIXED 340px TAB CARD */}
             {showCameraScanner ? (
-              <div style={{ marginBottom: '1rem' }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <BarcodeScanner
                   inline={true}
                   onDetected={handleCameraDetected}
                   onClose={() => setShowCameraScanner(false)}
                 />
               </div>
-            ) : (
-              <button
-                onClick={() => setShowCameraScanner(true)}
-                className="btn btn-primary"
-                style={{ width: '100%', justifyContent: 'center', marginBottom: '1rem', padding: '0.75rem' }}
-              >
-                <Camera size={18} /> Open Live Camera Scanner inside Tab
-              </button>
-            )}
-
-            {/* Manual Lookup Bar */}
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: scannedProduct ? '1rem' : '0' }}>
-              <input
-                type="text"
-                placeholder="Or type barcode e.g. 8901058000185"
-                value={barcodeInput}
-                onChange={(e) => setBarcodeInput(e.target.value)}
-                className="input"
-              />
-              <button onClick={() => handleBarcodeLookup(barcodeInput)} className="btn btn-secondary" disabled={barcodeLoading}>
-                <Search size={18} />
-              </button>
-            </div>
-
-            {/* Scanned Product Result Auto-Fill Form */}
-            {scannedProduct && (
-              <form onSubmit={handleAddScannedProduct} style={{ padding: '1rem', background: '#FFF8E9', borderRadius: '14px', border: '1px solid rgba(53,19,95,0.08)' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FF6B52', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <CheckCircle size={16} /> Scanned Product Recognized
+            ) : scannedProduct ? (
+              /* Scanned Product Auto-Fill Form */
+              <form onSubmit={handleAddScannedProduct} style={{ padding: '0.85rem', background: '#FFF8E9', borderRadius: '14px', border: '1px solid rgba(53,19,95,0.08)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#FF6B52', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <CheckCircle size={15} /> Product Recognized
                 </div>
-                <div className="input-group" style={{ marginBottom: '0.65rem' }}>
-                  <label className="input-label">Product Name *</label>
+                <div className="input-group">
+                  <label className="input-label" style={{ fontSize: '0.75rem' }}>Product Name *</label>
                   <input
                     type="text"
                     className="input"
+                    style={{ padding: '0.45rem 0.75rem', fontSize: '0.85rem' }}
                     value={scannedProduct.product_name}
                     onChange={(e) => setScannedProduct({ ...scannedProduct, product_name: e.target.value })}
                     required
                   />
                 </div>
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <div style={{ display: 'flex', gap: '0.4rem' }}>
                   <div className="input-group" style={{ flex: 1 }}>
-                    <label className="input-label">Category</label>
+                    <label className="input-label" style={{ fontSize: '0.75rem' }}>Category</label>
                     <input
                       type="text"
                       className="input"
+                      style={{ padding: '0.45rem 0.75rem', fontSize: '0.85rem' }}
                       value={scannedProduct.category || 'General'}
                       onChange={(e) => setScannedProduct({ ...scannedProduct, category: e.target.value })}
                     />
                   </div>
                   <div className="input-group" style={{ flex: 1 }}>
-                    <label className="input-label">Quantity</label>
+                    <label className="input-label" style={{ fontSize: '0.75rem' }}>Quantity</label>
                     <input
                       type="number"
                       className="input"
+                      style={{ padding: '0.45rem 0.75rem', fontSize: '0.85rem' }}
                       value={scannedProduct.quantity || 1}
                       onChange={(e) => setScannedProduct({ ...scannedProduct, quantity: e.target.value })}
                     />
                   </div>
                 </div>
-                <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                  Add Product to Inventory
+                <button type="submit" className="btn btn-primary btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
+                  Add to Inventory
                 </button>
               </form>
+            ) : (
+              /* Idle Tab View: Camera Trigger & Manual Entry */
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0.85rem' }}>
+                <button
+                  onClick={() => setShowCameraScanner(true)}
+                  className="btn btn-primary"
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.75rem' }}
+                >
+                  <Camera size={18} /> Open Camera Scanner
+                </button>
+
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="text"
+                    placeholder="Enter barcode e.g. 8901058000185"
+                    value={barcodeInput}
+                    onChange={(e) => setBarcodeInput(e.target.value)}
+                    className="input"
+                    style={{ fontSize: '0.85rem' }}
+                  />
+                  <button onClick={() => handleBarcodeLookup(barcodeInput)} className="btn btn-secondary" disabled={barcodeLoading}>
+                    <Search size={16} />
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 
-          {/* TAB 2: BULK CSV UPLOAD MEDIUM PANEL */}
+          {/* TAB 2: BULK CSV UPLOAD MEDIUM PANEL (FIXED HEIGHT 340px) */}
           <div
             className="card"
             style={{
               background: '#FFFFFF',
               border: activeTab === 'csv' ? '2px solid #FF6B52' : '1px solid rgba(53,19,95,0.08)',
               boxShadow: activeTab === 'csv' ? '0 10px 30px rgba(255,107,82,0.15)' : 'none',
-              padding: '1.5rem',
-              borderRadius: '20px'
+              padding: '1.25rem',
+              borderRadius: '20px',
+              height: '340px',
+              minHeight: '340px',
+              maxHeight: '340px',
+              display: 'flex',
+              flexDirection: 'column',
+              justify: 'space-between',
+              overflow: 'hidden'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(180,43,114,0.12)', color: '#B42B72', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <FileSpreadsheet size={22} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(180,43,114,0.12)', color: '#B42B72', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <FileSpreadsheet size={20} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Bulk CSV Upload Panel</h3>
-                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Import batch food inventory from Excel/CSV files</p>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Bulk CSV Upload Panel</h3>
+                  <p style={{ fontSize: '0.725rem', color: '#64748b', margin: 0 }}>Import batch food inventory from CSV files</p>
                 </div>
               </div>
-              <span className="badge badge-purple">Batch Import</span>
+              <span className="badge badge-purple" style={{ fontSize: '0.7rem' }}>Batch Import</span>
             </div>
 
-            <form onSubmit={handleCsvUpload} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div style={{ border: '2px dashed rgba(53,19,95,0.15)', borderRadius: '14px', padding: '1.35rem 1rem', textAlign: 'center', cursor: 'pointer', background: '#FFF8E9' }}>
+            <form onSubmit={handleCsvUpload} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div style={{ border: '2px dashed rgba(53,19,95,0.15)', borderRadius: '14px', padding: '1.5rem 1rem', textAlign: 'center', cursor: 'pointer', background: '#FFF8E9', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <input type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files[0])} style={{ display: 'none' }} id="tab-csv-input" />
-                <label htmlFor="tab-csv-input" style={{ cursor: 'pointer' }}>
-                  <Upload size={28} color="#FF6B52" style={{ marginBottom: '0.4rem' }} />
+                <label htmlFor="tab-csv-input" style={{ cursor: 'pointer', width: '100%' }}>
+                  <Upload size={32} color="#FF6B52" style={{ marginBottom: '0.4rem' }} />
                   <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#35135F' }}>
                     {csvFile ? csvFile.name : 'Click to Select CSV File'}
                   </div>
@@ -361,7 +379,7 @@ export default function BusinessInventory() {
                 </label>
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={csvUploading || !csvFile} style={{ width: '100%', justifyContent: 'center', padding: '0.75rem' }}>
+              <button type="submit" className="btn btn-primary" disabled={csvUploading || !csvFile} style={{ width: '100%', justifyContent: 'center', padding: '0.75rem', marginTop: '0.75rem' }}>
                 {csvUploading ? 'Uploading CSV...' : 'Import CSV into Inventory'}
               </button>
             </form>
