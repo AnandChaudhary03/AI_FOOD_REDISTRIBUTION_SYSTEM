@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import Quagga from 'quagga'
-import { Camera, X, RefreshCw, Sparkles, CheckCircle2 } from 'lucide-react'
+import { Camera, X, RefreshCw, Sparkles, Search } from 'lucide-react'
 
-export default function BarcodeScanner({ onDetected, onClose }) {
+export default function BarcodeScanner({ onDetected, onClose, inline = false }) {
   const scannerRef = useRef(null)
   const videoRef = useRef(null)
   const [facingMode, setFacingMode] = useState('environment')
-  const [scanning, setScanning] = useState(true)
+  const [manualCode, setManualCode] = useState('')
   const [error, setError] = useState(null)
   const [nativeDetectorUsed, setNativeDetectorUsed] = useState(false)
 
@@ -47,7 +47,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
                 }
               } catch (e) {}
             }
-          }, 200)
+          }, 180)
         })
         .catch((err) => {
           console.warn('Native BarcodeDetector camera error, falling back to Quagga:', err)
@@ -82,7 +82,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
           halfSample: true
         },
         numOfWorkers: navigator.hardwareConcurrency || 4,
-        frequency: 10,
+        frequency: 12,
         decoder: {
           readers: [
             'ean_reader',
@@ -100,7 +100,6 @@ export default function BarcodeScanner({ onDetected, onClose }) {
         if (err) {
           console.error('Quagga init error:', err)
           setError('Camera permission denied or camera not accessible.')
-          setScanning(false)
           return
         }
         Quagga.start()
@@ -119,10 +118,8 @@ export default function BarcodeScanner({ onDetected, onClose }) {
           lastCode = code
           count = 1
         }
-        // Verify detection confidence across consecutive frames
-        if (count >= 2 || (data.codeResult.confidence && data.codeResult.confidence > 0.6)) {
+        if (count >= 2 || (data.codeResult.confidence && data.codeResult.confidence > 0.55)) {
           Quagga.stop()
-          setScanning(false)
           onDetected(code)
         }
       }
@@ -139,63 +136,85 @@ export default function BarcodeScanner({ onDetected, onClose }) {
     setFacingMode(prev => (prev === 'environment' ? 'user' : 'environment'))
   }
 
-  return (
-    <div className="modal-overlay" style={{ zIndex: 300 }}>
-      <div className="modal" style={{ maxWidth: '520px', padding: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.15rem', color: '#35135F', fontWeight: 800 }}>
-            <Camera size={22} color="#FF6B52" /> Real-World Barcode Scanner
-          </h3>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button onClick={toggleCamera} className="btn btn-secondary btn-sm" title="Switch Camera">
-              <RefreshCw size={16} />
-            </button>
-            <button onClick={onClose} className="btn btn-ghost btn-sm">
-              <X size={20} />
-            </button>
-          </div>
-        </div>
+  const handleManualSubmit = (e) => {
+    e.preventDefault()
+    if (manualCode.trim()) {
+      onDetected(manualCode.trim())
+    }
+  }
 
-        {error ? (
-          <div style={{ padding: '1.5rem', textAlign: 'center', color: '#ef4444' }}>
-            <p style={{ fontWeight: 600 }}>{error}</p>
-            <button onClick={onClose} className="btn btn-secondary btn-sm" style={{ marginTop: '1rem' }}>
+  const scannerContent = (
+    <div style={{ position: 'relative' }}>
+      {/* Header Bar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF6B52', display: 'inline-block', animation: 'pulse-dot 1.5s infinite' }} />
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#FF6B52', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Live Camera Scanning Active
+          </span>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button onClick={toggleCamera} className="btn btn-secondary btn-sm" title="Switch Camera">
+            <RefreshCw size={14} />
+          </button>
+          {onClose && (
+            <button onClick={onClose} className="btn btn-ghost btn-sm">
+              <X size={16} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {error ? (
+        <div style={{ padding: '1rem', textAlign: 'center', color: '#ef4444' }}>
+          <p style={{ fontWeight: 600, fontSize: '0.85rem' }}>{error}</p>
+          {onClose && (
+            <button onClick={onClose} className="btn btn-secondary btn-sm" style={{ marginTop: '0.5rem' }}>
               Close Scanner
             </button>
-          </div>
-        ) : (
-          <div>
-            <div className="scanner-viewport" style={{ height: '310px', position: 'relative', borderRadius: '16px', overflow: 'hidden', background: '#000' }}>
-              {nativeDetectorUsed ? (
-                <video ref={videoRef} style={{ width: '100%', height: '100%', objectFit: 'cover' }} playsInline muted />
-              ) : (
-                <div ref={scannerRef} style={{ width: '100%', height: '100%' }} />
-              )}
+          )}
+        </div>
+      ) : (
+        <div>
+          {/* Live Camera Viewport with Upward & Downward Moving Horizontal Scan Line */}
+          <div className="scanner-viewport" style={{ height: '240px', position: 'relative', borderRadius: '16px', overflow: 'hidden', background: '#000', border: '2px solid rgba(255,107,82,0.4)' }}>
+            {nativeDetectorUsed ? (
+              <video ref={videoRef} style={{ width: '100%', height: '100%', objectFit: 'cover' }} playsInline muted />
+            ) : (
+              <div ref={scannerRef} style={{ width: '100%', height: '100%' }} />
+            )}
 
-              {/* Target Scan Frame */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: '20px',
-                  border: '2px dashed #FF6B52',
-                  borderRadius: '16px',
-                  boxShadow: '0 0 0 1000px rgba(0,0,0,0.4)',
-                  pointerEvents: 'none'
-                }}
-              />
-              <div className="scanner-line" style={{ background: '#FF6B52', boxShadow: '0 0 12px #FF6B52' }} />
-            </div>
+            {/* 4 Corner Target Brackets */}
+            <div style={{ position: 'absolute', top: '16px', left: '16px', width: '28px', height: '28px', borderTop: '4px solid #FF6B52', borderLeft: '4px solid #FF6B52', borderRadius: '6px 0 0 0', pointerEvents: 'none', zIndex: 12 }} />
+            <div style={{ position: 'absolute', top: '16px', right: '16px', width: '28px', height: '28px', borderTop: '4px solid #FF6B52', borderRight: '4px solid #FF6B52', borderRadius: '0 6px 0 0', pointerEvents: 'none', zIndex: 12 }} />
+            <div style={{ position: 'absolute', bottom: '16px', left: '16px', width: '28px', height: '28px', borderBottom: '4px solid #FF6B52', borderLeft: '4px solid #FF6B52', borderRadius: '0 0 0 6px', pointerEvents: 'none', zIndex: 12 }} />
+            <div style={{ position: 'absolute', bottom: '16px', right: '16px', width: '28px', height: '28px', borderBottom: '4px solid #FF6B52', borderRight: '4px solid #FF6B52', borderRadius: '0 0 6px 0', pointerEvents: 'none', zIndex: 12 }} />
 
-            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-              <span className="badge badge-green" style={{ background: 'rgba(255,107,82,0.15)', color: '#FF6B52' }}>
-                <Sparkles size={12} /> {nativeDetectorUsed ? 'Hardware Barcode Detector Active' : 'Quagga Scan Engine Active'}
-              </span>
-              <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.4rem' }}>
-                Hold camera steady over any product barcode (EAN-13, UPC, EAN-8)
-              </p>
-            </div>
+            {/* Outer Dim Mask */}
+            <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 0 15px rgba(0,0,0,0.4)', pointerEvents: 'none', zIndex: 11 }} />
+
+            {/* HORIZONTAL LASER BEAM MOVING UPWARD AND DOWNWARD */}
+            <div className="scanner-line" />
           </div>
-        )}
+
+          <div style={{ textAlign: 'center', marginTop: '0.65rem', marginBottom: '0.65rem' }}>
+            <span className="badge badge-green" style={{ background: 'rgba(255,107,82,0.12)', color: '#FF6B52', fontSize: '0.725rem', padding: '0.25rem 0.65rem' }}>
+              <Sparkles size={12} /> Point camera at product barcode
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+
+  if (inline) {
+    return scannerContent
+  }
+
+  return (
+    <div className="modal-overlay" style={{ zIndex: 300, background: 'rgba(35, 12, 63, 0.75)', backdropFilter: 'blur(8px)' }}>
+      <div className="modal" style={{ maxWidth: '480px', padding: '1.25rem', background: '#FFFFFF', borderRadius: '24px' }}>
+        {scannerContent}
       </div>
     </div>
   )

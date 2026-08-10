@@ -241,25 +241,36 @@ export default function BusinessInventory() {
                 </div>
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Barcode Scanner Panel</h3>
-                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Scan real-world barcodes to auto-register products</p>
+                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Scan real-world barcodes directly inside this tab</p>
                 </div>
               </div>
               <span className="badge badge-green"><Sparkles size={12} /> AI Powered</span>
             </div>
 
-            <button
-              onClick={() => setShowCameraScanner(true)}
-              className="btn btn-primary"
-              style={{ width: '100%', justifyContent: 'center', marginBottom: '1rem', padding: '0.75rem' }}
-            >
-              <Camera size={18} /> Open Live Camera Scanner
-            </button>
+            {/* LIVE CAMERA SCANNER EMBEDDED INLINE INSIDE BARCODE TAB */}
+            {showCameraScanner ? (
+              <div style={{ marginBottom: '1rem' }}>
+                <BarcodeScanner
+                  inline={true}
+                  onDetected={handleCameraDetected}
+                  onClose={() => setShowCameraScanner(false)}
+                />
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowCameraScanner(true)}
+                className="btn btn-primary"
+                style={{ width: '100%', justifyContent: 'center', marginBottom: '1rem', padding: '0.75rem' }}
+              >
+                <Camera size={18} /> Open Live Camera Scanner inside Tab
+              </button>
+            )}
 
             {/* Manual Lookup Bar */}
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: scannedProduct ? '1rem' : '0' }}>
               <input
                 type="text"
-                placeholder="Enter barcode e.g. 8901058000185"
+                placeholder="Or type barcode e.g. 8901058000185"
                 value={barcodeInput}
                 onChange={(e) => setBarcodeInput(e.target.value)}
                 className="input"
@@ -487,11 +498,6 @@ export default function BusinessInventory() {
             </form>
           </div>
         </div>
-      )}
-
-      {/* Camera Live Scanner Popup */}
-      {showCameraScanner && (
-        <BarcodeScanner onDetected={handleCameraDetected} onClose={() => setShowCameraScanner(false)} />
       )}
     </div>
   )
