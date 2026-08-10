@@ -34,9 +34,10 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      await login(email, password, activeRole)
+      const userData = await login(email, password, activeRole)
       toast.success(`Welcome back!`)
-      navigate(`/${activeRole}`)
+      const targetRole = (userData?.role || activeRole).toLowerCase()
+      navigate(`/${targetRole}`, { replace: true })
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Login failed')
     } finally {
