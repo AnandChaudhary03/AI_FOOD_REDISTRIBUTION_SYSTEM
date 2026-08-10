@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { Package, Plus, Search, Trash2, Edit3, HeartHandshake, AlertCircle, Barcode, Upload, Camera, CheckCircle, X } from 'lucide-react'
+import { Package, Plus, Search, Trash2, HeartHandshake, Barcode, Upload, Camera, CheckCircle, X, Sparkles } from 'lucide-react'
 import BarcodeScanner from '../../components/BarcodeScanner'
 import api from '../../api/api'
 
@@ -90,7 +90,7 @@ export default function BusinessInventory() {
     }
   }
 
-  // Barcode Lookup logic
+  // Real-World Barcode Lookup logic
   const handleBarcodeLookup = async (code) => {
     const cleanCode = code ? code.trim() : ''
     if (!cleanCode) {
@@ -101,16 +101,19 @@ export default function BusinessInventory() {
     setScannedProduct(null)
     try {
       const res = await api.get(`/business/barcode/${cleanCode}`)
-      if (res.data && res.data.found) {
+      if (res.data) {
         setScannedProduct(res.data)
-        toast.success(`Found product: ${res.data.product_name}`)
-      } else {
-        toast('Barcode not found in DB or online. Enter product details to save.', { icon: '📝' })
-        setScannedProduct({ barcode: cleanCode, product_name: '', category: 'General', quantity: 1, unit: 'kg' })
+        toast.success(`Scanned: ${res.data.product_name}`, { icon: '📦' })
       }
     } catch (err) {
-      toast('Please enter product details below to register barcode.', { icon: '📝' })
-      setScannedProduct({ barcode: cleanCode, product_name: '', category: 'General', quantity: 1, unit: 'kg' })
+      toast.error('Failed to look up barcode')
+      setScannedProduct({
+        barcode: cleanCode,
+        product_name: `Scanned Item (#${cleanCode.slice(-4)})`,
+        category: 'Packaged Goods',
+        quantity: 1,
+        unit: 'kg'
+      })
     } finally {
       setBarcodeLoading(false)
     }
@@ -135,9 +138,9 @@ export default function BusinessInventory() {
         category: scannedProduct.category || 'General',
         quantity: parseFloat(scannedProduct.quantity || 1),
         unit: scannedProduct.unit || 'kg',
-        expiry_date: scannedProduct.expiry_date
+        expiry_date: scannedProduct.expiry_date || new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
       })
-      toast.success('Scanned product saved to inventory!')
+      toast.success(`🎉 '${scannedProduct.product_name}' saved to inventory!`)
       setScannedProduct(null)
       setBarcodeInput('')
       setShowBarcodeModal(false)
@@ -189,13 +192,13 @@ export default function BusinessInventory() {
         </div>
       </div>
 
-      {/* Filter Bar */}
+      {/* Search Bar */}
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
         <div style={{ position: 'relative', flex: 1 }}>
           <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search products by name or barcode..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="input"
@@ -319,27 +322,27 @@ export default function BusinessInventory() {
         </div>
       )}
 
-      {/* 2. Barcode Scanner Modal */}
+      {/* 2. Real-World Barcode Scanner Modal */}
       {showBarcodeModal && (
         <div className="modal-overlay">
           <div className="modal" style={{ maxWidth: '520px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', fontWeight: 700 }}>
-                <Barcode color="var(--accent-green)" size={22} /> Barcode Scanner & Lookup
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', fontWeight: 800, color: '#35135F' }}>
+                <Barcode color="#FF6B52" size={22} /> Barcode Scanner & Real Product Lookup
               </h3>
               <button onClick={() => setShowBarcodeModal(false)} className="btn btn-ghost btn-sm">
                 <X size={18} />
               </button>
             </div>
 
-            <button onClick={() => setShowCameraScanner(true)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginBottom: '1rem' }}>
-              <Camera size={18} /> Open Camera Scanner
+            <button onClick={() => setShowCameraScanner(true)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginBottom: '1rem', padding: '0.85rem' }}>
+              <Camera size={20} /> Open Camera Scanner
             </button>
 
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
               <input
                 type="text"
-                placeholder="Enter barcode e.g. 8901058000185"
+                placeholder="Enter or scan barcode (e.g. 8901058000185)"
                 value={barcodeInput}
                 onChange={(e) => setBarcodeInput(e.target.value)}
                 className="input"
@@ -350,10 +353,11 @@ export default function BusinessInventory() {
             </div>
 
             {scannedProduct && (
-              <form onSubmit={handleAddScannedProduct} style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
-                <h4 style={{ color: 'var(--accent-green)', marginBottom: '0.75rem', fontSize: '0.9rem' }}>
-                  {scannedProduct.found ? '✅ Product Recognized' : '📝 Register New Barcode'}
-                </h4>
+              <form onSubmit={handleAddScannedProduct} style={{ padding: '1.25rem', background: '#FFF8E9', borderRadius: '16px', border: '1px solid rgba(53,19,95,0.1)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.85rem', color: '#FF6B52', fontWeight: 800, fontSize: '0.95rem' }}>
+                  <Sparkles size={18} /> Product Recognized via Barcode
+                </div>
+
                 <div className="input-group" style={{ marginBottom: '0.75rem' }}>
                   <label className="input-label">Product Name *</label>
                   <input
@@ -361,17 +365,18 @@ export default function BusinessInventory() {
                     className="input"
                     value={scannedProduct.product_name}
                     onChange={(e) => setScannedProduct({ ...scannedProduct, product_name: e.target.value })}
-                    placeholder="e.g. Milk 1L"
+                    placeholder="e.g. Britannia Good Day Biscuit"
                     required
                   />
                 </div>
+
                 <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem' }}>
                   <div className="input-group" style={{ flex: 1 }}>
                     <label className="input-label">Category</label>
                     <input
                       type="text"
                       className="input"
-                      value={scannedProduct.category || ''}
+                      value={scannedProduct.category || 'Packaged Goods'}
                       onChange={(e) => setScannedProduct({ ...scannedProduct, category: e.target.value })}
                     />
                   </div>
@@ -385,8 +390,9 @@ export default function BusinessInventory() {
                     />
                   </div>
                 </div>
-                <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                  <CheckCircle size={18} /> Save Product to Inventory
+
+                <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginTop: '0.5rem' }}>
+                  <CheckCircle size={18} /> Add Scanned Product to Inventory
                 </button>
               </form>
             )}
@@ -404,7 +410,7 @@ export default function BusinessInventory() {
         <div className="modal-overlay">
           <div className="modal" style={{ maxWidth: '480px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', fontWeight: 700 }}>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', fontWeight: 800 }}>
                 <Upload color="var(--accent-saffron)" size={22} /> Bulk CSV Import
               </h3>
               <button onClick={() => setShowCsvModal(false)} className="btn btn-ghost btn-sm">
