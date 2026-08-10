@@ -1,6 +1,10 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function AnnaSetuLogo({ size = 40, showText = true, subtitle = null }) {
+  const { t } = useTranslation()
+  const displaySubtitle = subtitle !== null ? subtitle : t('tagline')
+
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.65rem' }}>
       {/* Lotus/Sprout Icon */}
@@ -27,12 +31,12 @@ export default function AnnaSetuLogo({ size = 40, showText = true, subtitle = nu
 
       {showText && (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: size * 0.52, fontWeight: 900, color: '#35135F', letterSpacing: '-0.02em', lineHeight: 1 }}>
+          <span style={{ fontSize: Math.max(14, size * 0.48), fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1 }}>
             AnnaSetu
           </span>
-          {subtitle && (
-            <span style={{ fontSize: size * 0.22, color: '#FF6B52', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '0.2rem' }}>
-              {subtitle}
+          {displaySubtitle && (
+            <span style={{ fontSize: Math.max(9, size * 0.22), color: '#FF6B52', fontWeight: 700, letterSpacing: '0.01em', marginTop: '0.2rem', whiteSpace: 'nowrap' }}>
+              {displaySubtitle}
             </span>
           )}
         </div>
