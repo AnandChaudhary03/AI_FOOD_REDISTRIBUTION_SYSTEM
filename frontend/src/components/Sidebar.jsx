@@ -38,10 +38,10 @@ export default function Sidebar({ collapsed, isOpen, onClose, role }) {
       case 'individual':
         return [
           { path: '/individual', label: t('dashboard'), icon: LayoutDashboard },
-          { path: '/individual/donations', label: 'My Donations', icon: HeartHandshake },
-          { path: '/individual/map', label: 'Nearby NGOs', icon: MapPin },
-          { path: '/individual/impact', label: 'Food Saved & Impact', icon: Award },
-          { path: '/individual/profile', label: t('profile'), icon: User },
+          { path: '/individual/donations', label: t('my_donations'), icon: HeartHandshake },
+          { path: '/individual/map', label: t('nearby_ngos'), icon: MapPin },
+          { path: '/individual/impact', label: t('food_saved_impact'), icon: Award },
+          { path: '/individual/profile', label: t('my_profile'), icon: User },
         ]
       case 'delivery':
         return [
@@ -86,7 +86,6 @@ export default function Sidebar({ collapsed, isOpen, onClose, role }) {
       <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header" style={{ justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            {/* Single clean brand logo + text rendering */}
             <AnnaSetuLogo size={32} showText={!collapsed} />
           </div>
           {isOpen && (

@@ -64,7 +64,7 @@ export default function IndividualDashboard() {
     setSubmitting(true)
     try {
       const res = await api.post('/individual/donations', formData)
-      toast.success(res.data?.message || 'Surplus food donation submitted!')
+      toast.success(res.data?.message || t('success'))
       setShowDonateModal(false)
       setFormData({
         product_name: '',
@@ -77,7 +77,7 @@ export default function IndividualDashboard() {
       })
       fetchDashboard()
     } catch (err) {
-      toast.error('Failed to submit donation')
+      toast.error(t('error'))
     } finally {
       setSubmitting(false)
     }
@@ -89,11 +89,11 @@ export default function IndividualDashboard() {
     <div className="page fade-in">
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 className="page-title">Household & Event Food Donation Portal</h1>
-          <p className="page-subtitle">Donate surplus food from weddings, parties, functions & home cooking to nearby NGOs</p>
+          <h1 className="page-title">{t('individual_portal_title')}</h1>
+          <p className="page-subtitle">{t('welcome_back_individual')}</p>
         </div>
         <button onClick={() => setShowDonateModal(true)} className="btn btn-primary btn-lg">
-          <Plus size={20} /> Donate Surplus Food
+          <Plus size={20} /> {t('donate_surplus_food')}
         </button>
       </div>
 
@@ -104,7 +104,7 @@ export default function IndividualDashboard() {
             <Utensils size={26} />
           </div>
           <div>
-            <div className="stat-label">Food Saved</div>
+            <div className="stat-label">{t('food_saved')}</div>
             <div className="stat-value">{data?.food_saved_kg || 0} <span style={{ fontSize: '1rem', fontWeight: 600 }}>kg</span></div>
             <div className="stat-sub">From home & event surplus</div>
           </div>
@@ -117,7 +117,7 @@ export default function IndividualDashboard() {
           <div>
             <div className="stat-label">Meals Served</div>
             <div className="stat-value">{data?.meals_served || 0}</div>
-            <div className="stat-sub">Hungry people fed</div>
+            <div className="stat-sub">{t('beneficiary_count')}</div>
           </div>
         </div>
 
@@ -126,7 +126,7 @@ export default function IndividualDashboard() {
             <Leaf size={26} />
           </div>
           <div>
-            <div className="stat-label">CO₂ Saved</div>
+            <div className="stat-label">{t('co2_saved')}</div>
             <div className="stat-value">{data?.co2_saved_kg || 0} <span style={{ fontSize: '1rem', fontWeight: 600 }}>kg</span></div>
             <div className="stat-sub">Landfill waste offset</div>
           </div>
@@ -137,9 +137,9 @@ export default function IndividualDashboard() {
             <HeartHandshake size={26} />
           </div>
           <div>
-            <div className="stat-label">Total Donations</div>
+            <div className="stat-label">{t('total_donations')}</div>
             <div className="stat-value">{data?.total_donations || 0}</div>
-            <div className="stat-sub">{data?.active_donations || 0} active pickups</div>
+            <div className="stat-sub">{data?.active_donations || 0} {t('pending')}</div>
           </div>
         </div>
       </div>
@@ -166,41 +166,41 @@ export default function IndividualDashboard() {
           </div>
           <div>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-              Have Extra Leftover Food From a Wedding or Party?
+              {t('wedding_party_banner_title')}
             </h3>
             <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: '0.25rem 0 0 0' }}>
-              Don't let good food spoil! List your excess meals and nearby NGOs will arrange instant pickup.
+              {t('wedding_party_banner_desc')}
             </p>
           </div>
         </div>
         <button onClick={() => setShowDonateModal(true)} className="btn btn-primary btn-lg">
-          <Plus size={18} /> Submit Food Donation
+          <Plus size={18} /> {t('donate_surplus_food')}
         </button>
       </div>
 
       {/* RECENT DONATIONS TABLE */}
       <div className="card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>My Recent Home & Event Surplus Donations</h3>
-          <span className="badge badge-green"><Sparkles size={12} /> Real-Time Pickup Status</span>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{t('my_recent_donations')}</h3>
+          <span className="badge badge-green"><Sparkles size={12} /> {t('real_time_status')}</span>
         </div>
 
         <div className="table-wrapper">
           <table className="table">
             <thead>
               <tr>
-                <th>Donation Item / Event</th>
-                <th>Quantity</th>
-                <th>Pickup Location</th>
-                <th>Date & Time</th>
-                <th>Status</th>
+                <th>{t('product_name')}</th>
+                <th>{t('quantity')}</th>
+                <th>{t('pickup_address')}</th>
+                <th>{t('expiry_date')}</th>
+                <th>{t('status')}</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>Loading donations...</td></tr>
+                <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
               ) : recentList.length === 0 ? (
-                <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No home donations submitted yet. Click "Donate Surplus Food" to create your first donation!</td></tr>
+                <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>{t('no_data')}</td></tr>
               ) : recentList.map((item) => (
                 <tr key={item.id}>
                   <td>
@@ -210,7 +210,7 @@ export default function IndividualDashboard() {
                   <td>{item.quantity} {item.unit}</td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
-                      <MapPin size={14} color="#FF6B52" /> {item.pickup_address || 'Home Address'}
+                      <MapPin size={14} color="#FF6B52" /> {item.pickup_address || t('address')}
                     </div>
                   </td>
                   <td>{item.created_at || 'Recent'}</td>
@@ -219,9 +219,9 @@ export default function IndividualDashboard() {
                       item.status === 'delivered' ? 'badge-green' :
                       item.status === 'in_transit' || item.status === 'accepted' ? 'badge-saffron' : 'badge-purple'
                     }`}>
-                      {item.status === 'pending' ? '⏳ Waiting for NGO' :
-                       item.status === 'accepted' ? '✅ NGO Accepted' :
-                       item.status === 'in_transit' ? '🚚 Pickup In Transit' : '🎉 Delivered'}
+                      {item.status === 'pending' ? `⏳ ${t('pending')}` :
+                       item.status === 'accepted' ? `✅ ${t('accepted')}` :
+                       item.status === 'in_transit' ? `🚚 ${t('in_transit')}` : `🎉 ${t('delivered')}`}
                     </span>
                   </td>
                 </tr>
@@ -235,10 +235,10 @@ export default function IndividualDashboard() {
       {showDonateModal && (
         <div className="modal-overlay">
           <div className="modal" style={{ maxWidth: '520px' }}>
-            <h3 className="modal-title">Donate Household / Event Surplus Food</h3>
+            <h3 className="modal-title">{t('donate_surplus_food')}</h3>
             <form onSubmit={handleSubmitDonation} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div className="input-group">
-                <label className="input-label">Event / Food Description *</label>
+                <label className="input-label">{t('product_name')} *</label>
                 <input
                   type="text"
                   className="input"
@@ -251,7 +251,7 @@ export default function IndividualDashboard() {
 
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <div className="input-group" style={{ flex: 1 }}>
-                  <label className="input-label">Category</label>
+                  <label className="input-label">{t('category')}</label>
                   <select className="input" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
                     <option value="Wedding Surplus">Wedding Surplus</option>
                     <option value="Party Leftovers">Party & Event Leftovers</option>
@@ -262,7 +262,7 @@ export default function IndividualDashboard() {
                 </div>
 
                 <div className="input-group" style={{ flex: 1 }}>
-                  <label className="input-label">Est. Quantity *</label>
+                  <label className="input-label">{t('quantity')} *</label>
                   <input
                     type="number"
                     className="input"
@@ -275,7 +275,7 @@ export default function IndividualDashboard() {
 
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <div className="input-group" style={{ flex: 1 }}>
-                  <label className="input-label">Unit</label>
+                  <label className="input-label">{t('unit')}</label>
                   <select className="input" value={formData.unit} onChange={(e) => setFormData({ ...formData, unit: e.target.value })}>
                     <option value="kg">kg (weight)</option>
                     <option value="servings">servings / plates</option>
@@ -284,7 +284,7 @@ export default function IndividualDashboard() {
                 </div>
 
                 <div className="input-group" style={{ flex: 1 }}>
-                  <label className="input-label">Must Pickup By (Date)</label>
+                  <label className="input-label">{t('expiry_date')}</label>
                   <input
                     type="date"
                     className="input"
@@ -295,7 +295,7 @@ export default function IndividualDashboard() {
               </div>
 
               <div className="input-group">
-                <label className="input-label">Pickup Address *</label>
+                <label className="input-label">{t('pickup_address')} *</label>
                 <input
                   type="text"
                   className="input"
@@ -307,7 +307,7 @@ export default function IndividualDashboard() {
               </div>
 
               <div className="input-group">
-                <label className="input-label">Special Pickup Notes / Instructions</label>
+                <label className="input-label">{t('description')}</label>
                 <textarea
                   className="input"
                   rows="2"
@@ -318,9 +318,9 @@ export default function IndividualDashboard() {
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
-                <button type="button" onClick={() => setShowDonateModal(false)} className="btn btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>Cancel</button>
+                <button type="button" onClick={() => setShowDonateModal(false)} className="btn btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>{t('cancel')}</button>
                 <button type="submit" className="btn btn-primary" disabled={submitting} style={{ flex: 1, justifyContent: 'center' }}>
-                  {submitting ? 'Submitting...' : 'Submit Donation'}
+                  {submitting ? t('loading') : t('submit')}
                 </button>
               </div>
             </form>
