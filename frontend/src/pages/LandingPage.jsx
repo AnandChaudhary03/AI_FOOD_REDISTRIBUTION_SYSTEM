@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   Utensils, HeartHandshake, Truck, User, Settings2, Download, Globe,
-  CheckCircle2, X, ChevronRight
+  CheckCircle2, X, ChevronRight, Sun, Moon
 } from 'lucide-react'
 import AnnaSetuLogo from '../components/AnnaSetuLogo'
 import ThreeDBackground from '../components/ThreeDBackground'
@@ -16,6 +16,25 @@ export default function LandingPage() {
   const [demoModalOpen, setDemoModalOpen] = useState(false)
   const [demoForm, setDemoForm] = useState({ name: '', email: '', org: '', role: 'business' })
   const [demoSubmitted, setDemoSubmitted] = useState(false)
+
+  // Light / Dark Theme State
+  const [theme, setTheme] = useState(() => localStorage.getItem('annasetu_theme') || 'light')
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark')
+      document.body.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      document.body.classList.remove('dark')
+    }
+    localStorage.setItem('annasetu_theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'))
+  }
 
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -54,7 +73,7 @@ export default function LandingPage() {
     }, 2000)
   }
 
-  // 5 Role Portals with updated names & bullet features
+  // 5 Role Portals
   const roleCards = [
     {
       id: 'business',
@@ -122,7 +141,7 @@ export default function LandingPage() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #35135F 0%, #4B176F 25%, #B42B72 55%, #FF6B52 80%, #FF875F 100%)',
+        background: theme === 'dark' ? 'linear-gradient(135deg, #0B132B 0%, #1C2541 40%, #3A506B 100%)' : 'linear-gradient(135deg, #35135F 0%, #4B176F 25%, #B42B72 55%, #FF6B52 80%, #FF875F 100%)',
         padding: '1.5rem 0.75rem',
         display: 'flex',
         flexDirection: 'column',
@@ -136,7 +155,7 @@ export default function LandingPage() {
       {/* Dynamic Background Canvas */}
       <ThreeDBackground />
 
-      {/* CENTRAL WEBSITE PANEL - Fully Responsive */}
+      {/* CENTRAL WEBSITE PANEL */}
       <div className="landing-panel">
         
         {/* NAVBAR */}
@@ -148,13 +167,43 @@ export default function LandingPage() {
 
           {/* Far Right Action Controls */}
           <div className="landing-header-right">
+            {/* Light / Dark Mode Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              style={{
+                background: 'var(--bg-card)',
+                color: 'var(--text-primary)',
+                padding: '0.45rem 0.85rem',
+                borderRadius: '99px',
+                border: '1px solid var(--border)',
+                fontWeight: 600,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem'
+              }}
+            >
+              {theme === 'light' ? (
+                <>
+                  <Moon size={15} color="#FF6B52" />
+                  <span>Dark</span>
+                </>
+              ) : (
+                <>
+                  <Sun size={15} color="#f59e0b" />
+                  <span>Light</span>
+                </>
+              )}
+            </button>
+
             {/* Multilingual Language Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#FFFFFF', padding: '0.4rem 0.85rem', borderRadius: '99px', border: '1px solid rgba(53,19,95,0.12)', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--bg-card)', padding: '0.4rem 0.85rem', borderRadius: '99px', border: '1px solid var(--border)' }}>
               <Globe size={15} color="#FF6B52" />
               <select
                 value={i18n.language || 'en'}
                 onChange={(e) => changeLanguage(e.target.value)}
-                style={{ background: 'transparent', color: '#35135F', border: 'none', outline: 'none', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
+                style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
               >
                 <option value="en">English</option>
                 <option value="hi">हिन्दी (Hindi)</option>
@@ -170,7 +219,7 @@ export default function LandingPage() {
             )}
 
             {/* Login Link */}
-            <Link to="/login" style={{ textDecoration: 'none', color: '#35135F', fontWeight: 700, fontSize: '0.925rem', padding: '0.25rem 0.5rem' }}>
+            <Link to="/login" style={{ textDecoration: 'none', color: 'var(--text-primary)', fontWeight: 700, fontSize: '0.925rem', padding: '0.25rem 0.5rem' }}>
               {t('login')}
             </Link>
 
@@ -195,7 +244,7 @@ export default function LandingPage() {
           </div>
         </header>
 
-        {/* HERO SECTION — Fully Responsive Grid */}
+        {/* HERO SECTION */}
         <div className="landing-hero">
           
           {/* LEFT SIDE CONTENT */}
@@ -215,7 +264,7 @@ export default function LandingPage() {
             <p
               style={{
                 fontSize: '1rem',
-                color: '#4B176F',
+                color: 'var(--text-secondary)',
                 lineHeight: 1.6,
                 maxWidth: '460px',
                 marginBottom: '2.25rem',
@@ -249,7 +298,7 @@ export default function LandingPage() {
                 onClick={() => navigate('/login')}
                 style={{
                   background: 'transparent',
-                  color: '#35135F',
+                  color: 'var(--text-primary)',
                   padding: '0.85rem 1.75rem',
                   borderRadius: '99px',
                   fontWeight: 700,
@@ -274,8 +323,6 @@ export default function LandingPage() {
                 <circle cx="40" cy="160" r="5" fill="#FF6B52" />
                 <circle cx="160" cy="130" r="6" fill="#B42B72" />
                 <circle cx="220" cy="130" r="4" fill="#FF875F" />
-                <text x="34" y="164" fontSize="10" fill="#ffffff">🌾</text>
-                <text x="153" y="135" fontSize="12" fill="#ffffff">🍎</text>
               </svg>
             </div>
 
@@ -287,11 +334,11 @@ export default function LandingPage() {
                   <div
                     key={card.id}
                     style={{
-                      background: '#FFFFFF',
-                      border: '1px solid rgba(53, 19, 95, 0.08)',
+                      background: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
                       borderRadius: '20px',
                       padding: '1.35rem 1.4rem',
-                      boxShadow: '0 10px 25px rgba(53, 19, 95, 0.05)',
+                      boxShadow: 'var(--shadow-card)',
                       display: 'flex',
                       flexDirection: 'column',
                       justify: 'space-between',
@@ -305,25 +352,25 @@ export default function LandingPage() {
                           <Icon size={20} />
                         </div>
                         <div>
-                          <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', lineHeight: 1.2 }}>
+                          <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>
                             {t(card.titleKey)}
                           </div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600, marginTop: '0.15rem' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.15rem' }}>
                             {t(card.subtitleKey)}
                           </div>
                         </div>
                       </div>
 
-                      <p style={{ fontSize: '0.78rem', color: '#4B176F', lineHeight: 1.4, marginBottom: '0.75rem', opacity: 0.95 }}>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '0.75rem', opacity: 0.95 }}>
                         {t(card.descKey)}
                       </p>
 
                       {/* Included Features List inside Card */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1.1rem' }}>
-                        <div style={{ fontSize: '0.725rem', fontWeight: 600, color: '#64748b' }}>
+                        <div style={{ fontSize: '0.725rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                           {t(card.feat1Key)}
                         </div>
-                        <div style={{ fontSize: '0.725rem', fontWeight: 600, color: '#64748b' }}>
+                        <div style={{ fontSize: '0.725rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                           {t(card.feat2Key)}
                         </div>
                       </div>
@@ -335,9 +382,9 @@ export default function LandingPage() {
                         width: '100%',
                         padding: '0.55rem 0.85rem',
                         borderRadius: '99px',
-                        background: '#FFF8E9',
-                        color: '#35135F',
-                        border: '1px solid rgba(53, 19, 95, 0.1)',
+                        background: 'var(--bg-card-hover)',
+                        color: 'var(--text-primary)',
+                        border: '1px solid var(--border)',
                         fontWeight: 700,
                         fontSize: '0.8rem',
                         cursor: 'pointer',
@@ -354,18 +401,18 @@ export default function LandingPage() {
                 )
               })}
 
-              {/* CARD 5 — Admin (Centered on Desktop, Full Width on Mobile) */}
+              {/* CARD 5 — Admin */}
               <div
                 style={{
                   gridColumn: '1 / -1',
                   maxWidth: '310px',
                   margin: '0 auto',
                   width: '100%',
-                  background: '#FFFFFF',
-                  border: '1px solid rgba(53, 19, 95, 0.08)',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
                   borderRadius: '20px',
                   padding: '1.35rem 1.4rem',
-                  boxShadow: '0 10px 25px rgba(53, 19, 95, 0.05)',
+                  boxShadow: 'var(--shadow-card)',
                   display: 'flex',
                   flexDirection: 'column',
                   justify: 'space-between',
@@ -378,24 +425,24 @@ export default function LandingPage() {
                       <Settings2 size={20} />
                     </div>
                     <div>
-                      <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#35135F', lineHeight: 1.2 }}>
+                      <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>
                         {t('admin')}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600, marginTop: '0.15rem' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.15rem' }}>
                         {t('admin_subtitle')}
                       </div>
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '0.78rem', color: '#4B176F', lineHeight: 1.4, marginBottom: '0.75rem', opacity: 0.95 }}>
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '0.75rem', opacity: 0.95 }}>
                     {t('admin_desc')}
                   </p>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1.1rem' }}>
-                    <div style={{ fontSize: '0.725rem', fontWeight: 600, color: '#64748b' }}>
+                    <div style={{ fontSize: '0.725rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                       {t('admin_feature_1')}
                     </div>
-                    <div style={{ fontSize: '0.725rem', fontWeight: 600, color: '#64748b' }}>
+                    <div style={{ fontSize: '0.725rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                       {t('admin_feature_2')}
                     </div>
                   </div>
@@ -407,9 +454,9 @@ export default function LandingPage() {
                     width: '100%',
                     padding: '0.55rem 0.85rem',
                     borderRadius: '99px',
-                    background: '#FFF8E9',
-                    color: '#35135F',
-                    border: '1px solid rgba(53, 19, 95, 0.1)',
+                    background: 'var(--bg-card-hover)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border)',
                     fontWeight: 700,
                     fontSize: '0.8rem',
                     cursor: 'pointer',
@@ -432,10 +479,10 @@ export default function LandingPage() {
       {/* DEMO REQUEST MODAL */}
       {demoModalOpen && (
         <div className="modal-overlay" onClick={() => setDemoModalOpen(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()} style={{ background: '#FFFFFF', borderRadius: '24px', padding: '2.25rem' }}>
+          <div className="modal" onClick={(e) => e.stopPropagation()} style={{ background: 'var(--bg-card)', borderRadius: '24px', padding: '2.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <AnnaSetuLogo size={36} />
-              <button onClick={() => setDemoModalOpen(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}>
+              <button onClick={() => setDemoModalOpen(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
                 <X size={20} />
               </button>
             </div>
@@ -445,13 +492,13 @@ export default function LandingPage() {
                 <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,107,82,0.15)', color: '#FF6B52', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
                   <CheckCircle2 size={32} />
                 </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#35135F', marginBottom: '0.5rem' }}>Request Submitted!</h3>
-                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>Our team will reach out shortly to schedule your demo.</p>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Request Submitted!</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Our team will reach out shortly to schedule your demo.</p>
               </div>
             ) : (
               <form onSubmit={handleDemoSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#35135F', marginBottom: '0.25rem' }}>Request Platform Demo</h3>
-                <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem' }}>Experience real-time AI food salvage & redistribution in action.</p>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Request Platform Demo</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Experience real-time AI food salvage & redistribution in action.</p>
 
                 <div className="input-group">
                   <label className="input-label">Full Name *</label>

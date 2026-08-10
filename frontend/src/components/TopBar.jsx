@@ -1,12 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Globe, Bell, Menu, User, Sparkles } from 'lucide-react'
+import { Globe, Menu, Sparkles, Sun, Moon } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function TopBar({ onToggleSidebar }) {
   const { i18n } = useTranslation()
   const { user, updateLanguage } = useAuth()
   const [langOpen, setLangOpen] = useState(false)
+  const [theme, setTheme] = useState(() => localStorage.getItem('annasetu_theme') || 'light')
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark')
+      document.body.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      document.body.classList.remove('dark')
+    }
+    localStorage.setItem('annasetu_theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'))
+  }
 
   const languages = [
     { code: 'en', name: 'English' },
@@ -36,8 +53,28 @@ export default function TopBar({ onToggleSidebar }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        {/* Language Selector */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        {/* Light / Dark Mode Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          className="btn btn-secondary btn-sm"
+          title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+          style={{ padding: '0.45rem 0.75rem', borderRadius: '99px', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+        >
+          {theme === 'light' ? (
+            <>
+              <Moon size={16} color="#FF6B52" />
+              <span className="mobile-hide" style={{ fontSize: '0.78rem', fontWeight: 600 }}>Dark</span>
+            </>
+          ) : (
+            <>
+              <Sun size={16} color="#f59e0b" />
+              <span className="mobile-hide" style={{ fontSize: '0.78rem', fontWeight: 600 }}>Light</span>
+            </>
+          )}
+        </button>
+
+        {/* Multilingual Language Selector */}
         <div style={{ position: 'relative' }}>
           <button onClick={() => setLangOpen(!langOpen)} className="btn btn-secondary btn-sm" style={{ gap: '0.4rem' }}>
             <Globe size={16} />
@@ -57,8 +94,8 @@ export default function TopBar({ onToggleSidebar }) {
                   onClick={() => handleLangChange(l.code)}
                   style={{
                     width: '100%', textAlign: 'left', padding: '0.5rem 0.75rem',
-                    background: i18n.language === l.code ? 'var(--accent-green-glow)' : 'transparent',
-                    color: i18n.language === l.code ? 'var(--accent-green)' : 'var(--text-primary)',
+                    background: i18n.language === l.code ? 'rgba(255,107,82,0.15)' : 'transparent',
+                    color: i18n.language === l.code ? '#FF6B52' : 'var(--text-primary)',
                     border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem'
                   }}
                 >
@@ -73,13 +110,13 @@ export default function TopBar({ onToggleSidebar }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <div style={{
             width: '36px', height: '36px', borderRadius: '50%',
-            background: 'var(--gradient-saffron)', display: 'flex',
+            background: 'var(--gradient-brand)', color: '#ffffff', display: 'flex',
             alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'
           }}>
             {user?.name?.[0] || 'U'}
           </div>
           <div className="mobile-hide" style={{ fontSize: '0.85rem' }}>
-            <div style={{ fontWeight: 600 }}>{user?.name}</div>
+            <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{user?.name}</div>
             <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>{user?.organization_name || user?.role}</div>
           </div>
         </div>

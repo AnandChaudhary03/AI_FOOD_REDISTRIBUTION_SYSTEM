@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { Package, Plus, Search, Trash2, HeartHandshake, Barcode, Upload, Camera, CheckCircle, X, Sparkles, FileSpreadsheet } from 'lucide-react'
+import { Package, Plus, Search, Trash2, HeartHandshake, Barcode, Upload, Camera, CheckCircle, X, Sparkles, FileSpreadsheet, AlertTriangle, Clock } from 'lucide-react'
 import BarcodeScanner from '../../components/BarcodeScanner'
 import api from '../../api/api'
 
@@ -38,10 +38,36 @@ export default function BusinessInventory() {
   const [csvFile, setCsvFile] = useState(null)
   const [csvUploading, setCsvUploading] = useState(false)
 
+  // Calculate Expiry Status & Days Remaining
+  const getItemExpiryInfo = (expiryDateStr) => {
+    if (!expiryDateStr) return { isExpired: false, isExpiringSoon: false, diffDays: null, label: 'No Expiry' }
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    const exp = new Date(expiryDateStr)
+    exp.setHours(0, 0, 0, 0)
+    const diffDays = Math.ceil((exp - now) / (1000 * 60 * 60 * 24))
+
+    if (diffDays < 0) {
+      return { isExpired: true, isExpiringSoon: false, diffDays, label: 'EXPIRED' }
+    } else if (diffDays <= 3) {
+      return { isExpired: false, isExpiringSoon: true, diffDays, label: diffDays === 0 ? 'Expires Today' : `${diffDays} days left` }
+    }
+    return { isExpired: false, isExpiringSoon: false, diffDays, label: `${diffDays} days left` }
+  }
+
   const fetchInventory = () => {
     setLoading(true)
     api.get(`/business/inventory?search=${search}`)
-      .then(res => setItems(res.data))
+      .then(res => {
+        setItems(res.data)
+        const alerts = res.data.filter(item => {
+          const info = getItemExpiryInfo(item.expiry_date)
+          return info.isExpired || info.isExpiringSoon
+        })
+        if (alerts.length > 0) {
+          toast(`⚠️ Notice: ${alerts.length} item(s) are expiring soon or expired!`, { icon: '🚨', duration: 4000 })
+        }
+      })
       .catch(err => toast.error('Failed to load inventory'))
       .finally(() => setLoading(false))
   }
@@ -171,6 +197,12 @@ export default function BusinessInventory() {
     }
   }
 
+  // Calculate total alert count
+  const warningList = items.filter(item => {
+    const info = getItemExpiryInfo(item.expiry_date)
+    return info.isExpired || info.isExpiringSoon
+  })
+
   return (
     <div className="page fade-in">
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
@@ -185,17 +217,43 @@ export default function BusinessInventory() {
         </div>
       </div>
 
+      {/* EXPIRY ALERT BANNER NOTIFICATION */}
+      {warningList.length > 0 && (
+        <div style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '16px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <AlertTriangle color="#ef4444" size={24} />
+            <div>
+              <div style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '0.95rem' }}>
+                Alert: {warningList.length} Food Item(s) Expired or Expiring Soon!
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                Donate these items to NGOs immediately to prevent food waste.
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              const first = warningList[0]
+              if (first) handleDonate(first)
+            }}
+            className="btn btn-danger btn-sm"
+          >
+            Donate Expiring Stock Now
+          </button>
+        </div>
+      )}
+
       {/* TWO SEPARATE MEDIUM TABS ABOVE INVENTORY LIST */}
       <div style={{ marginBottom: '2rem' }}>
         {/* Tab Selection Bar */}
-        <div style={{ display: 'flex', gap: '0.5rem', background: '#FFF3DD', padding: '0.35rem', borderRadius: '16px', border: '1px solid rgba(53,19,95,0.08)', marginBottom: '1.25rem', maxWidth: '540px' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card-hover)', padding: '0.35rem', borderRadius: '16px', border: '1px solid var(--border)', marginBottom: '1.25rem', maxWidth: '540px' }}>
           <button
             type="button"
             onClick={() => setActiveTab('barcode')}
             style={{
               flex: 1, padding: '0.65rem 1rem', borderRadius: '12px', border: 'none',
               background: activeTab === 'barcode' ? 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)' : 'transparent',
-              color: activeTab === 'barcode' ? '#ffffff' : '#35135F',
+              color: activeTab === 'barcode' ? '#ffffff' : 'var(--text-primary)',
               fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
               boxShadow: activeTab === 'barcode' ? '0 4px 12px rgba(255,107,82,0.3)' : 'none',
               transition: 'all 0.25s ease'
@@ -210,7 +268,7 @@ export default function BusinessInventory() {
             style={{
               flex: 1, padding: '0.65rem 1rem', borderRadius: '12px', border: 'none',
               background: activeTab === 'csv' ? 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)' : 'transparent',
-              color: activeTab === 'csv' ? '#ffffff' : '#35135F',
+              color: activeTab === 'csv' ? '#ffffff' : 'var(--text-primary)',
               fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
               boxShadow: activeTab === 'csv' ? '0 4px 12px rgba(255,107,82,0.3)' : 'none',
               transition: 'all 0.25s ease'
@@ -223,12 +281,11 @@ export default function BusinessInventory() {
         {/* TWO MEDIUM CONTENT PANELS (FIXED 340px HEIGHT) */}
         <div className="grid-2">
           
-          {/* TAB 1: BARCODE SCANNER MEDIUM PANEL (FIXED HEIGHT 340px) */}
+          {/* TAB 1: BARCODE SCANNER MEDIUM PANEL */}
           <div
             className="card"
             style={{
-              background: '#FFFFFF',
-              border: activeTab === 'barcode' ? '2px solid #FF6B52' : '1px solid rgba(53,19,95,0.08)',
+              border: activeTab === 'barcode' ? '2px solid #FF6B52' : '1px solid var(--border)',
               boxShadow: activeTab === 'barcode' ? '0 10px 30px rgba(255,107,82,0.15)' : 'none',
               padding: '1.25rem',
               borderRadius: '20px',
@@ -247,8 +304,8 @@ export default function BusinessInventory() {
                   <Barcode size={20} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Barcode Scanner Panel</h3>
-                  <p style={{ fontSize: '0.725rem', color: '#64748b', margin: 0 }}>Scan barcodes directly inside this tab</p>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>Barcode Scanner Panel</h3>
+                  <p style={{ fontSize: '0.725rem', color: 'var(--text-muted)', margin: 0 }}>Scan barcodes directly inside this tab</p>
                 </div>
               </div>
               <span className="badge badge-green" style={{ fontSize: '0.7rem' }}><Sparkles size={11} /> AI Powered</span>
@@ -265,7 +322,7 @@ export default function BusinessInventory() {
               </div>
             ) : scannedProduct ? (
               /* Scanned Product Auto-Fill Form */
-              <form onSubmit={handleAddScannedProduct} style={{ padding: '0.85rem', background: '#FFF8E9', borderRadius: '14px', border: '1px solid rgba(53,19,95,0.08)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <form onSubmit={handleAddScannedProduct} style={{ padding: '0.85rem', background: 'var(--bg-card-hover)', borderRadius: '14px', border: '1px solid var(--border)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#FF6B52', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                   <CheckCircle size={15} /> Product Recognized
                 </div>
@@ -334,12 +391,11 @@ export default function BusinessInventory() {
             )}
           </div>
 
-          {/* TAB 2: BULK CSV UPLOAD MEDIUM PANEL (FIXED HEIGHT 340px) */}
+          {/* TAB 2: BULK CSV UPLOAD MEDIUM PANEL */}
           <div
             className="card"
             style={{
-              background: '#FFFFFF',
-              border: activeTab === 'csv' ? '2px solid #FF6B52' : '1px solid rgba(53,19,95,0.08)',
+              border: activeTab === 'csv' ? '2px solid #FF6B52' : '1px solid var(--border)',
               boxShadow: activeTab === 'csv' ? '0 10px 30px rgba(255,107,82,0.15)' : 'none',
               padding: '1.25rem',
               borderRadius: '20px',
@@ -358,22 +414,22 @@ export default function BusinessInventory() {
                   <FileSpreadsheet size={20} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#35135F', margin: 0 }}>Bulk CSV Upload Panel</h3>
-                  <p style={{ fontSize: '0.725rem', color: '#64748b', margin: 0 }}>Import batch food inventory from CSV files</p>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>Bulk CSV Upload Panel</h3>
+                  <p style={{ fontSize: '0.725rem', color: 'var(--text-muted)', margin: 0 }}>Import batch food inventory from CSV files</p>
                 </div>
               </div>
               <span className="badge badge-purple" style={{ fontSize: '0.7rem' }}>Batch Import</span>
             </div>
 
             <form onSubmit={handleCsvUpload} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div style={{ border: '2px dashed rgba(53,19,95,0.15)', borderRadius: '14px', padding: '1.5rem 1rem', textAlign: 'center', cursor: 'pointer', background: '#FFF8E9', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ border: '2px dashed var(--border)', borderRadius: '14px', padding: '1.5rem 1rem', textAlign: 'center', cursor: 'pointer', background: 'var(--bg-card-hover)', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <input type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files[0])} style={{ display: 'none' }} id="tab-csv-input" />
                 <label htmlFor="tab-csv-input" style={{ cursor: 'pointer', width: '100%' }}>
                   <Upload size={32} color="#FF6B52" style={{ marginBottom: '0.4rem' }} />
-                  <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#35135F' }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                     {csvFile ? csvFile.name : 'Click to Select CSV File'}
                   </div>
-                  <div style={{ fontSize: '0.725rem', color: '#64748b', marginTop: '0.2rem' }}>
+                  <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
                     Columns: product_name, quantity, category, unit, barcode
                   </div>
                 </label>
@@ -403,7 +459,7 @@ export default function BusinessInventory() {
         </div>
       </div>
 
-      {/* INVENTORY LIST TABLE */}
+      {/* INVENTORY LIST TABLE WITH AI URGENCY & EXPIRY BADGES */}
       <div className="table-wrapper">
         <table className="table">
           <thead>
@@ -411,8 +467,8 @@ export default function BusinessInventory() {
               <th>Product</th>
               <th>Category</th>
               <th>Quantity</th>
-              <th>Expiry Date</th>
-              <th>AI Urgency</th>
+              <th>Expiry Date & Alerts</th>
+              <th>AI Urgency Score</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -422,55 +478,76 @@ export default function BusinessInventory() {
               <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
             ) : items.length === 0 ? (
               <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>{t('no_data')}</td></tr>
-            ) : items.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <div style={{ fontWeight: 600 }}>{item.product_name}</div>
-                  {item.barcode && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>BC: {item.barcode}</div>}
-                </td>
-                <td><span className="badge badge-gray">{item.category || 'General'}</span></td>
-                <td>{item.quantity} {item.unit}</td>
-                <td>
-                  {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : 'N/A'}
-                </td>
-                <td>
-                  <div style={{ width: '120px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700 }}>
-                      <span>{item.ai_urgency_score}%</span>
-                      <span>{item.ai_urgency_score > 70 ? 'High' : item.ai_urgency_score > 40 ? 'Med' : 'Low'}</span>
+            ) : items.map((item) => {
+              const expInfo = getItemExpiryInfo(item.expiry_date)
+              // AI Urgency override: if expired -> 100%, if expiring soon -> Math.max(score, 85%)
+              const urgencyScore = expInfo.isExpired ? 100 : expInfo.isExpiringSoon ? Math.max(item.ai_urgency_score || 0, 85) : (item.ai_urgency_score || 35)
+
+              return (
+                <tr key={item.id} style={{ background: expInfo.isExpired ? 'rgba(239,68,68,0.05)' : expInfo.isExpiringSoon ? 'rgba(245,158,11,0.04)' : 'transparent' }}>
+                  <td>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{item.product_name}</div>
+                    {item.barcode && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>BC: {item.barcode}</div>}
+                  </td>
+                  <td><span className="badge badge-gray">{item.category || 'General'}</span></td>
+                  <td>{item.quantity} {item.unit}</td>
+                  <td>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                      <div style={{ fontSize: '0.85rem' }}>
+                        {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : 'N/A'}
+                      </div>
+                      {expInfo.isExpired ? (
+                        <span className="badge badge-red" style={{ fontSize: '0.7rem', width: 'fit-content' }}>
+                          <AlertTriangle size={11} /> EXPIRED
+                        </span>
+                      ) : expInfo.isExpiringSoon ? (
+                        <span className="badge badge-saffron" style={{ fontSize: '0.7rem', width: 'fit-content' }}>
+                          <Clock size={11} /> {expInfo.label}
+                        </span>
+                      ) : null}
                     </div>
-                    <div className="urgency-bar">
-                      <div
-                        className={`urgency-fill ${item.ai_urgency_score > 70 ? 'urgency-high' : item.ai_urgency_score > 40 ? 'urgency-medium' : 'urgency-low'}`}
-                        style={{ width: `${item.ai_urgency_score}%` }}
-                      />
+                  </td>
+                  <td>
+                    <div style={{ width: '130px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 800, marginBottom: '0.2rem' }}>
+                        <span>{urgencyScore}%</span>
+                        <span style={{ color: urgencyScore > 70 ? '#ef4444' : urgencyScore > 40 ? '#f59e0b' : '#FF6B52' }}>
+                          {urgencyScore >= 95 ? 'Critical' : urgencyScore > 70 ? 'High' : urgencyScore > 40 ? 'Med' : 'Low'}
+                        </span>
+                      </div>
+                      <div className="urgency-bar">
+                        <div
+                          className={`urgency-fill ${urgencyScore > 70 ? 'urgency-high' : urgencyScore > 40 ? 'urgency-medium' : 'urgency-low'}`}
+                          style={{ width: `${urgencyScore}%` }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <span className={`badge ${item.status === 'available' ? 'badge-green' : 'badge-saffron'}`}>
-                    {item.status}
-                  </span>
-                </td>
-                <td>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    {item.status === 'available' && (
-                      <button onClick={() => handleDonate(item)} className="btn btn-primary btn-sm" title="Donate">
-                        <HeartHandshake size={14} /> Donate
+                  </td>
+                  <td>
+                    <span className={`badge ${item.status === 'available' ? 'badge-green' : 'badge-saffron'}`}>
+                      {item.status}
+                    </span>
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      {item.status === 'available' && (
+                        <button onClick={() => handleDonate(item)} className="btn btn-primary btn-sm" title="Donate">
+                          <HeartHandshake size={14} /> Donate
+                        </button>
+                      )}
+                      <button onClick={() => handleDelete(item.id)} className="btn btn-danger btn-sm" title="Delete">
+                        <Trash2 size={14} />
                       </button>
-                    )}
-                    <button onClick={() => handleDelete(item.id)} className="btn btn-danger btn-sm" title="Delete">
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* 1. Add Item Modal */}
+      {/* Add Item Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
