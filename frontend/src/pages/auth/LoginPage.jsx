@@ -18,11 +18,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
 
   const roles = [
-    { id: 'business', label: 'Business', icon: Building2 },
-    { id: 'ngo', label: 'NGO', icon: Heart },
-    { id: 'individual', label: 'Individual', icon: User },
-    { id: 'delivery', label: 'Delivery', icon: Truck },
-    { id: 'admin', label: 'Admin', icon: Shield },
+    { id: 'business', label: 'Business', icon: Building2, color: '#FF6B52' },
+    { id: 'ngo', label: 'NGO', icon: Heart, color: '#B42B72' },
+    { id: 'individual', label: 'Individual', icon: User, color: '#35135F' },
+    { id: 'delivery', label: 'Delivery', icon: Truck, color: '#22c55e' },
+    { id: 'admin', label: 'Admin', icon: Shield, color: '#f59e0b' },
   ]
 
   const handleSubmit = async (e) => {
@@ -62,18 +62,19 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* Spacious 5-Role Login Tabs */}
+        {/* Spacious 5-Role Login Tabs with Dedicated Role Icons */}
         <div className="role-tabs">
           {roles.map((r) => {
             const Icon = r.icon
+            const isActive = activeRole === r.id
             return (
               <button
                 key={r.id}
                 type="button"
                 onClick={() => setActiveRole(r.id)}
-                className={`role-tab ${activeRole === r.id ? 'active' : ''}`}
+                className={`role-tab ${isActive ? 'active' : ''}`}
               >
-                <Icon size={15} />
+                <Icon size={16} color={isActive ? '#ffffff' : r.color} style={{ flexShrink: 0 }} />
                 <span>{r.label}</span>
               </button>
             )
@@ -116,17 +117,26 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Quick Demo Fill Buttons */}
+        {/* Quick Demo Fill Buttons with Role Icons */}
         <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', textAlign: 'center' }}>
           <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.6rem' }}>
             Quick Demo Accounts (Click to test):
           </p>
           <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            {['business', 'ngo', 'individual', 'delivery', 'admin'].map(r => (
-              <button key={r} onClick={() => fillDemo(r)} className="btn btn-ghost btn-sm" style={{ fontSize: '0.75rem', textTransform: 'capitalize' }}>
-                {r}
-              </button>
-            ))}
+            {roles.map(r => {
+              const Icon = r.icon
+              return (
+                <button
+                  key={r.id}
+                  onClick={() => fillDemo(r.id)}
+                  className="btn btn-ghost btn-sm"
+                  style={{ fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                >
+                  <Icon size={13} color={r.color} />
+                  <span>{r.label}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
 
