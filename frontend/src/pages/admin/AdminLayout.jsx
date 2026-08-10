@@ -9,9 +9,9 @@ export default function AdminLayout() {
 
   const handleToggle = () => {
     if (window.innerWidth <= 768) {
-      setMobileOpen(!mobileOpen)
+      setMobileOpen((prev) => !prev)
     } else {
-      setCollapsed(!collapsed)
+      setCollapsed((prev) => !prev)
     }
   }
 

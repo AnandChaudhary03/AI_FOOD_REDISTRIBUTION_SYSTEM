@@ -85,9 +85,9 @@ export default function Sidebar({ collapsed, isOpen, onClose, role }) {
 
       <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header" style={{ justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <AnnaSetuLogo size={32} />
-            {!collapsed && <span className="sidebar-brand">AnnaSetu</span>}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {/* Single clean brand logo + text rendering */}
+            <AnnaSetuLogo size={32} showText={!collapsed} />
           </div>
           {isOpen && (
             <button onClick={onClose} className="btn btn-ghost btn-sm" style={{ padding: '0.2rem 0.4rem' }}>
