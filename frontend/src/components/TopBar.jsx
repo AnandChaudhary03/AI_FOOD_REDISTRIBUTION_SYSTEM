@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Globe, Menu, Sparkles, Sun, Moon } from 'lucide-react'
+import { Globe, Menu, Sparkles, Sun, Moon, Download } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function TopBar({ onToggleSidebar }) {
@@ -8,7 +8,10 @@ export default function TopBar({ onToggleSidebar }) {
   const { user, updateLanguage } = useAuth()
   const [langOpen, setLangOpen] = useState(false)
   const [theme, setTheme] = useState(() => localStorage.getItem('annasetu_theme') || 'light')
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [isStandalone, setIsStandalone] = useState(false)
 
+  // 1. Detect Theme & Apply
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     if (theme === 'dark') {
@@ -21,8 +24,42 @@ export default function TopBar({ onToggleSidebar }) {
     localStorage.setItem('annasetu_theme', theme)
   }, [theme])
 
+  // 2. Detect Standalone App Mode (Hide install button when opened in App)
+  useEffect(() => {
+    const checkStandalone = () => {
+      const standalone = window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true ||
+        document.referrer.includes('android-app://')
+      setIsStandalone(standalone)
+    }
+
+    checkStandalone()
+
+    const handleBeforeInstall = (e) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall)
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall)
+  }, [])
+
   const toggleTheme = () => {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'))
+  }
+
+  const handleInstallApp = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt()
+      deferredPrompt.userChoice.then((choice) => {
+        if (choice.outcome === 'accepted') {
+          setIsStandalone(true)
+        }
+        setDeferredPrompt(null)
+      })
+    } else {
+      alert('To install AnnaSetu App:\n• Android / Chrome: Tap "Add to Home Screen" or Install\n• iOS Safari: Tap Share -> "Add to Home Screen"\n• Desktop: Click the Install icon in browser address bar.')
+    }
   }
 
   const languages = [
@@ -53,7 +90,19 @@ export default function TopBar({ onToggleSidebar }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+        {/* INSTALL APP BUTTON — ONLY SHOW WHEN OPENED IN BROWSER, HIDE WHEN OPENED IN APP */}
+        {!isStandalone && (
+          <button
+            onClick={handleInstallApp}
+            className="btn btn-primary btn-sm"
+            style={{ borderRadius: '99px', fontSize: '0.78rem', padding: '0.4rem 0.85rem' }}
+            title="Install AnnaSetu App to Home Screen"
+          >
+            <Download size={14} /> <span className="mobile-hide">Install App</span>
+          </button>
+        )}
+
         {/* Light / Dark Mode Toggle Button */}
         <button
           onClick={toggleTheme}

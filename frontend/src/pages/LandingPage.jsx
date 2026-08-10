@@ -12,7 +12,7 @@ export default function LandingPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [deferredPrompt, setDeferredPrompt] = useState(null)
-  const [isPwaInstalled, setIsPwaInstalled] = useState(false)
+  const [isStandalone, setIsStandalone] = useState(false)
   const [demoModalOpen, setDemoModalOpen] = useState(false)
   const [demoForm, setDemoForm] = useState({ name: '', email: '', org: '', role: 'business' })
   const [demoSubmitted, setDemoSubmitted] = useState(false)
@@ -36,15 +36,24 @@ export default function LandingPage() {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'))
   }
 
+  // Detect Standalone App Mode vs Browser Mode
   useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
+    const checkStandalone = () => {
+      const standalone = window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true ||
+        document.referrer.includes('android-app://')
+      setIsStandalone(standalone)
+    }
+
+    checkStandalone()
+
+    const handleBeforeInstall = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
-    })
-    window.addEventListener('appinstalled', () => {
-      setIsPwaInstalled(true)
-      setDeferredPrompt(null)
-    })
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall)
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall)
   }, [])
 
   const handleInstallPwa = () => {
@@ -52,10 +61,12 @@ export default function LandingPage() {
       deferredPrompt.prompt()
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
-          setIsPwaInstalled(true)
+          setIsStandalone(true)
         }
         setDeferredPrompt(null)
       })
+    } else {
+      alert('To install AnnaSetu App:\n• Mobile: Tap Share / Options -> "Add to Home Screen"\n• Desktop: Click the Install icon in your browser address bar.')
     }
   }
 
@@ -167,6 +178,18 @@ export default function LandingPage() {
 
           {/* Far Right Action Controls */}
           <div className="landing-header-right">
+            {/* INSTALL APP BUTTON — ONLY SHOW WHEN OPENED IN BROWSER, HIDE WHEN OPENED IN APP */}
+            {!isStandalone && (
+              <button
+                onClick={handleInstallPwa}
+                className="btn btn-primary btn-sm"
+                style={{ borderRadius: '99px', fontSize: '0.8rem', padding: '0.45rem 0.85rem' }}
+                title="Install AnnaSetu App"
+              >
+                <Download size={14} /> Install App
+              </button>
+            )}
+
             {/* Light / Dark Mode Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -211,12 +234,6 @@ export default function LandingPage() {
                 <option value="te">తెలుగు (Telugu)</option>
               </select>
             </div>
-
-            {deferredPrompt && !isPwaInstalled && (
-              <button onClick={handleInstallPwa} className="btn btn-secondary btn-sm" style={{ borderRadius: '99px', fontSize: '0.8rem' }}>
-                <Download size={14} /> PWA
-              </button>
-            )}
 
             {/* Login Link */}
             <Link to="/login" style={{ textDecoration: 'none', color: 'var(--text-primary)', fontWeight: 700, fontSize: '0.925rem', padding: '0.25rem 0.5rem' }}>
