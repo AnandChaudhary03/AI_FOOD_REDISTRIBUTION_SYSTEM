@@ -1,64 +1,94 @@
-import { lazy, Suspense } from 'react'
+import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './contexts/AuthContext.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
-// Core Pages (Loaded eagerly for instant landing experience)
+// Pages (Static Imports to guarantee 100% route loading reliability across Vercel & Render)
 import LandingPage from './pages/LandingPage.jsx'
 import LoginPage from './pages/auth/LoginPage.jsx'
 import RegisterPage from './pages/auth/RegisterPage.jsx'
 
-// Lazy Loaded Dashboard Routes for Instant Load Speed
-const BusinessLayout = lazy(() => import('./pages/business/BusinessLayout.jsx'))
-const BusinessDashboard = lazy(() => import('./pages/business/Dashboard.jsx'))
-const BusinessInventory = lazy(() => import('./pages/business/Inventory.jsx'))
-const BusinessDonations = lazy(() => import('./pages/business/Donations.jsx'))
-const BusinessTransactions = lazy(() => import('./pages/business/Transactions.jsx'))
-const BusinessMap = lazy(() => import('./pages/business/Map.jsx'))
-const BusinessSettings = lazy(() => import('./pages/business/Settings.jsx'))
-const BusinessProfile = lazy(() => import('./pages/business/Profile.jsx'))
+// Business
+import BusinessLayout from './pages/business/BusinessLayout.jsx'
+import BusinessDashboard from './pages/business/Dashboard.jsx'
+import BusinessInventory from './pages/business/Inventory.jsx'
+import BusinessDonations from './pages/business/Donations.jsx'
+import BusinessTransactions from './pages/business/Transactions.jsx'
+import BusinessMap from './pages/business/Map.jsx'
+import BusinessSettings from './pages/business/Settings.jsx'
+import BusinessProfile from './pages/business/Profile.jsx'
 
-const NGOLayout = lazy(() => import('./pages/ngo/NGOLayout.jsx'))
-const NGODashboard = lazy(() => import('./pages/ngo/Dashboard.jsx'))
-const AvailableDonations = lazy(() => import('./pages/ngo/AvailableDonations.jsx'))
-const AcceptedDonations = lazy(() => import('./pages/ngo/AcceptedDonations.jsx'))
-const PickupSchedule = lazy(() => import('./pages/ngo/PickupSchedule.jsx'))
-const DonationHistory = lazy(() => import('./pages/ngo/DonationHistory.jsx'))
-const Beneficiaries = lazy(() => import('./pages/ngo/Beneficiaries.jsx'))
-const NGOReports = lazy(() => import('./pages/ngo/Reports.jsx'))
-const NGOProfile = lazy(() => import('./pages/ngo/Profile.jsx'))
+// NGO
+import NGOLayout from './pages/ngo/NGOLayout.jsx'
+import NGODashboard from './pages/ngo/Dashboard.jsx'
+import AvailableDonations from './pages/ngo/AvailableDonations.jsx'
+import AcceptedDonations from './pages/ngo/AcceptedDonations.jsx'
+import PickupSchedule from './pages/ngo/PickupSchedule.jsx'
+import DonationHistory from './pages/ngo/DonationHistory.jsx'
+import Beneficiaries from './pages/ngo/Beneficiaries.jsx'
+import NGOReports from './pages/ngo/Reports.jsx'
+import NGOProfile from './pages/ngo/Profile.jsx'
 
-const IndividualLayout = lazy(() => import('./pages/individual/IndividualLayout.jsx'))
-const IndividualDashboard = lazy(() => import('./pages/individual/Dashboard.jsx'))
-const IndividualAvailableDonations = lazy(() => import('./pages/individual/AvailableDonations.jsx'))
-const IndividualAccepted = lazy(() => import('./pages/individual/AcceptedDonations.jsx'))
-const IndividualHistory = lazy(() => import('./pages/individual/DonationHistory.jsx'))
-const IndividualProfile = lazy(() => import('./pages/individual/Profile.jsx'))
+// Individual
+import IndividualLayout from './pages/individual/IndividualLayout.jsx'
+import IndividualDashboard from './pages/individual/Dashboard.jsx'
+import IndividualAvailableDonations from './pages/individual/AvailableDonations.jsx'
+import IndividualAccepted from './pages/individual/AcceptedDonations.jsx'
+import IndividualHistory from './pages/individual/DonationHistory.jsx'
+import IndividualProfile from './pages/individual/Profile.jsx'
 
-const DeliveryLayout = lazy(() => import('./pages/delivery/DeliveryLayout.jsx'))
-const DeliveryDashboard = lazy(() => import('./pages/delivery/Dashboard.jsx'))
-const AvailablePickups = lazy(() => import('./pages/delivery/AvailablePickups.jsx'))
-const ActiveDelivery = lazy(() => import('./pages/delivery/ActiveDelivery.jsx'))
-const CompletedDeliveries = lazy(() => import('./pages/delivery/CompletedDeliveries.jsx'))
-const DeliveryProfile = lazy(() => import('./pages/delivery/Profile.jsx'))
+// Delivery
+import DeliveryLayout from './pages/delivery/DeliveryLayout.jsx'
+import DeliveryDashboard from './pages/delivery/Dashboard.jsx'
+import AvailablePickups from './pages/delivery/AvailablePickups.jsx'
+import ActiveDelivery from './pages/delivery/ActiveDelivery.jsx'
+import CompletedDeliveries from './pages/delivery/CompletedDeliveries.jsx'
+import DeliveryProfile from './pages/delivery/Profile.jsx'
 
-const AdminLayout = lazy(() => import('./pages/admin/AdminLayout.jsx'))
-const AdminDashboard = lazy(() => import('./pages/admin/Dashboard.jsx'))
-const AdminUsers = lazy(() => import('./pages/admin/Users.jsx'))
-const AdminDonations = lazy(() => import('./pages/admin/Donations.jsx'))
-const AdminDeliveries = lazy(() => import('./pages/admin/Deliveries.jsx'))
-const AdminReports = lazy(() => import('./pages/admin/Reports.jsx'))
-const AdminNotifications = lazy(() => import('./pages/admin/Notifications.jsx'))
+// Admin
+import AdminLayout from './pages/admin/AdminLayout.jsx'
+import AdminDashboard from './pages/admin/Dashboard.jsx'
+import AdminUsers from './pages/admin/Users.jsx'
+import AdminDonations from './pages/admin/Donations.jsx'
+import AdminDeliveries from './pages/admin/Deliveries.jsx'
+import AdminReports from './pages/admin/Reports.jsx'
+import AdminNotifications from './pages/admin/Notifications.jsx'
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 60000 } } })
 
-const PageLoader = () => (
-  <div className="page fade-in" style={{ padding: '1.5rem' }}>
-    <div className="skeleton" style={{ height: 220, borderRadius: 20 }} />
-  </div>
-)
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false, error: null }
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error }
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("App Route Error caught by ErrorBoundary:", error, errorInfo)
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ minHeight: '100vh', background: '#FFF8E9', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
+          <div style={{ background: '#ffffff', padding: '2.5rem', borderRadius: '24px', boxShadow: '0 20px 60px rgba(53,19,95,0.15)', maxWidth: '460px', width: '100%', border: '1px solid rgba(53,19,95,0.1)' }}>
+            <h2 style={{ color: '#35135F', fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.75rem' }}>Something went wrong</h2>
+            <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Please refresh the page to reload the latest version of AnnaSetu.</p>
+            <button
+              onClick={() => { window.location.href = '/' }}
+              style={{ background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)', color: '#fff', padding: '0.75rem 1.75rem', borderRadius: '99px', fontWeight: 700, border: 'none', cursor: 'pointer' }}
+            >
+              Return to Home Page
+            </button>
+          </div>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
 
 export default function App() {
   return (
@@ -66,7 +96,7 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <Toaster position="top-right" toastOptions={{ style: { background: '#35135F', color: '#fff', border: '1px solid rgba(255,107,82,0.3)' } }} />
-          <Suspense fallback={<PageLoader />}>
+          <ErrorBoundary>
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
@@ -126,7 +156,7 @@ export default function App() {
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </Suspense>
+          </ErrorBoundary>
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>
