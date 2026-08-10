@@ -267,6 +267,48 @@ body {
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
 }
 
+/* Role Tabs on Login Page */
+.role-tabs {
+  display: flex;
+  gap: 0.65rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.5rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.role-tab {
+  flex: 1;
+  min-width: 85px;
+  padding: 0.65rem 0.85rem;
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 0.825rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+.role-tab.active {
+  background: var(--gradient-btn);
+  color: #ffffff;
+  border-color: rgba(255, 107, 82, 0.4);
+  box-shadow: 0 4px 15px rgba(255, 107, 82, 0.35);
+}
+.role-tab:hover:not(.active) {
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+
 /* Responsive Landing Page Utilities */
 .landing-panel {
   width: 100%;
