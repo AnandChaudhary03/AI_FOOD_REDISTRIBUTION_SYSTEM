@@ -1,84 +1,306 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HeartHandshake, ShieldCheck, History } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import toast from 'react-hot-toast'
+import { HeartHandshake, Plus, Utensils, Award, Leaf, Users, MapPin, Clock, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react'
+import { useAuth } from '../../contexts/AuthContext'
 import api from '../../api/api'
 
 export default function IndividualDashboard() {
   const { t } = useTranslation()
-  const [stats, setStats] = useState(null)
+  const { user } = useAuth()
+  const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [showDonateModal, setShowDonateModal] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
+  const [formData, setFormData] = useState({
+    product_name: '',
+    category: 'Wedding Surplus',
+    quantity: 15,
+    unit: 'kg',
+    expiry_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    pickup_address: user?.address || '',
+    description: ''
+  })
+
+  const fetchDashboard = () => {
+    setLoading(true)
+    api.get('/individual/dashboard')
+      .then(res => setData(res.data))
+      .catch(err => toast.error('Failed to load dashboard data'))
+      .finally(() => setLoading(false))
+  }
 
   useEffect(() => {
-    api.get('/ngo/dashboard')
-      .then(res => setStats(res.data))
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false))
+    fetchDashboard()
   }, [])
+
+  const handleSubmitDonation = async (e) => {
+    e.preventDefault()
+    setSubmitting(true)
+    try {
+      const res = await api.post('/individual/donations', formData)
+      toast.success(res.data.message || 'Surplus food donation submitted! Nearby NGOs notified.')
+      setShowDonateModal(false)
+      setFormData({
+        product_name: '',
+        category: 'Wedding Surplus',
+        quantity: 15,
+        unit: 'kg',
+        expiry_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+        pickup_address: user?.address || '',
+        description: ''
+      })
+      fetchDashboard()
+    } catch (err) {
+      toast.error('Failed to submit donation')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <div className="page fade-in">
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 className="page-title">{t('dashboard')}</h1>
-          <p className="page-subtitle">{t('welcome_back_individual')}</p>
+          <h1 className="page-title">Household & Event Food Donation Portal</h1>
+          <p className="page-subtitle">Donate surplus food from weddings, parties, functions & home cooking to nearby NGOs</p>
         </div>
-        <Link to="/individual/available" className="btn btn-primary">
-          <HeartHandshake size={18} /> {t('available_donations')}
-        </Link>
+        <button onClick={() => setShowDonateModal(true)} className="btn btn-primary btn-lg">
+          <Plus size={20} /> Donate Surplus Food
+        </button>
       </div>
 
-      <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
+      {/* STAT CARDS OVERVIEW */}
+      <div className="grid-4" style={{ marginBottom: '2rem' }}>
         <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>
-            <HeartHandshake size={24} />
+          <div className="stat-icon" style={{ background: 'rgba(255,107,82,0.12)', color: '#FF6B52' }}>
+            <Utensils size={26} />
           </div>
           <div>
-            <div className="stat-label">{t('food_saved')}</div>
-            <div className="stat-value">{stats?.food_received_kg || 0} kg</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(59,130,246,0.15)', color: '#3b82f6' }}>
-            <ShieldCheck size={24} />
-          </div>
-          <div>
-            <div className="stat-label">{t('accepted_donations')}</div>
-            <div className="stat-value">{stats?.total_accepted || 0}</div>
+            <div className="stat-label">Food Saved</div>
+            <div className="stat-value">{data?.food_saved_kg || 0} <span style={{ fontSize: '1rem', fontWeight: 600 }}>kg</span></div>
+            <div className="stat-sub">From home & event surplus</div>
           </div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b' }}>
-            <History size={24} />
+          <div className="stat-icon" style={{ background: 'rgba(53,19,95,0.12)', color: '#35135F' }}>
+            <Users size={26} />
           </div>
           <div>
-            <div className="stat-label">{t('completed_deliveries')}</div>
-            <div className="stat-value">{stats?.total_delivered || 0}</div>
+            <div className="stat-label">Meals Served</div>
+            <div className="stat-value">{data?.meals_served || 0}</div>
+            <div className="stat-sub">Hungry people fed</div>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon" style={{ background: 'rgba(34,197,94,0.12)', color: '#22c55e' }}>
+            <Leaf size={26} />
+          </div>
+          <div>
+            <div className="stat-label">CO₂ Saved</div>
+            <div className="stat-value">{data?.co2_saved_kg || 0} <span style={{ fontSize: '1rem', fontWeight: 600 }}>kg</span></div>
+            <div className="stat-sub">Landfill waste offset</div>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.12)', color: '#f59e0b' }}>
+            <HeartHandshake size={26} />
+          </div>
+          <div>
+            <div className="stat-label">Total Donations</div>
+            <div className="stat-value">{data?.total_donations || 0}</div>
+            <div className="stat-sub">{data?.active_donations || 0} active pickups</div>
           </div>
         </div>
       </div>
 
-      <div className="grid-2">
-        <div className="card">
-          <HeartHandshake size={32} color="var(--accent-green)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('available_donations_near_you')}</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            {t('individual_desc')}
-          </p>
-          <Link to="/individual/available" className="btn btn-secondary btn-sm">{t('available_donations')} &rarr;</Link>
+      {/* QUICK DONATION BANNER */}
+      <div
+        className="card"
+        style={{
+          background: 'linear-gradient(135deg, rgba(255,107,82,0.1) 0%, rgba(255,135,95,0.05) 100%)',
+          border: '2px dashed rgba(255,107,82,0.3)',
+          borderRadius: '24px',
+          padding: '1.75rem',
+          marginBottom: '2rem',
+          display: 'flex',
+          alignItems: 'center',
+          justify: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1.25rem'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 20px rgba(255,107,82,0.35)' }}>
+            <HeartHandshake size={28} />
+          </div>
+          <div>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+              Have Extra Leftover Food From a Wedding or Party?
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: '0.25rem 0 0 0' }}>
+              Don't let good food spoil! List your excess meals and nearby NGOs will arrange instant pickup.
+            </p>
+          </div>
+        </div>
+        <button onClick={() => setShowDonateModal(true)} className="btn btn-primary btn-lg">
+          <Plus size={18} /> Submit Food Donation
+        </button>
+      </div>
+
+      {/* RECENT DONATIONS TABLE */}
+      <div className="card">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>My Recent Home & Event Surplus Donations</h3>
+          <span className="badge badge-green"><Sparkles size={12} /> Real-Time Pickup Status</span>
         </div>
 
-        <div className="card">
-          <History size={32} color="var(--accent-saffron)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>{t('donation_history')}</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            {t('individual_feature_2')}
-          </p>
-          <Link to="/individual/history" className="btn btn-secondary btn-sm">{t('donation_history')} &rarr;</Link>
+        <div className="table-wrapper">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Donation Item / Event</th>
+                <th>Quantity</th>
+                <th>Pickup Location</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>Loading donations...</td></tr>
+              ) : !data?.recent_donations || data.recent_donations.length === 0 ? (
+                <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No home donations submitted yet. Click "Donate Surplus Food" to create your first donation!</td></tr>
+              ) : data.recent_donations.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{item.product_name}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ID: #{item.id}</div>
+                  </td>
+                  <td>{item.quantity} {item.unit}</td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
+                      <MapPin size={14} color="#FF6B52" /> {item.pickup_address}
+                    </div>
+                  </td>
+                  <td>{item.created_at || 'Recent'}</td>
+                  <td>
+                    <span className={`badge ${
+                      item.status === 'delivered' ? 'badge-green' :
+                      item.status === 'in_transit' || item.status === 'accepted' ? 'badge-saffron' : 'badge-purple'
+                    }`}>
+                      {item.status === 'pending' ? '⏳ Waiting for NGO' :
+                       item.status === 'accepted' ? '✅ NGO Accepted' :
+                       item.status === 'in_transit' ? '🚚 Pickup In Transit' : '🎉 Delivered'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+
+      {/* DONATE FOOD MODAL */}
+      {showDonateModal && (
+        <div className="modal-overlay">
+          <div className="modal" style={{ maxWidth: '520px' }}>
+            <h3 className="modal-title">Donate Household / Event Surplus Food</h3>
+            <form onSubmit={handleSubmitDonation} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className="input-group">
+                <label className="input-label">Event / Food Description *</label>
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="e.g. Wedding Function Paneer Curry & Naan"
+                  value={formData.product_name}
+                  onChange={(e) => setFormData({ ...formData, product_name: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="input-group" style={{ flex: 1 }}>
+                  <label className="input-label">Category</label>
+                  <select className="input" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
+                    <option value="Wedding Surplus">Wedding Surplus</option>
+                    <option value="Party Leftovers">Party & Event Leftovers</option>
+                    <option value="Home Meals">Home Cooked Food</option>
+                    <option value="Bakery & Sweets">Bakery & Sweets</option>
+                    <option value="Raw Ration">Packaged Ration</option>
+                  </select>
+                </div>
+
+                <div className="input-group" style={{ flex: 1 }}>
+                  <label className="input-label">Est. Quantity *</label>
+                  <input
+                    type="number"
+                    className="input"
+                    value={formData.quantity}
+                    onChange={(e) => setFormData({ ...formData, quantity: parseFloat(e.target.value) })}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="input-group" style={{ flex: 1 }}>
+                  <label className="input-label">Unit</label>
+                  <select className="input" value={formData.unit} onChange={(e) => setFormData({ ...formData, unit: e.target.value })}>
+                    <option value="kg">kg (weight)</option>
+                    <option value="servings">servings / plates</option>
+                    <option value="packets">packets</option>
+                  </select>
+                </div>
+
+                <div className="input-group" style={{ flex: 1 }}>
+                  <label className="input-label">Must Pickup By (Date)</label>
+                  <input
+                    type="date"
+                    className="input"
+                    value={formData.expiry_date}
+                    onChange={(e) => setFormData({ ...formData, expiry_date: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label className="input-label">Pickup Address *</label>
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="e.g. Community Hall / Home Address, Sector 15"
+                  value={formData.pickup_address}
+                  onChange={(e) => setFormData({ ...formData, pickup_address: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="input-group">
+                <label className="input-label">Special Pickup Notes / Instructions</label>
+                <textarea
+                  className="input"
+                  rows="2"
+                  placeholder="e.g. Freshly prepared 4 hours ago, packed in containers."
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+                <button type="button" onClick={() => setShowDonateModal(false)} className="btn btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={submitting} style={{ flex: 1, justifyContent: 'center' }}>
+                  {submitting ? 'Submitting...' : 'Submit Donation'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

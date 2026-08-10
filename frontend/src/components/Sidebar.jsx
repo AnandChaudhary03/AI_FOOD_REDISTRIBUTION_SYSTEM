@@ -1,8 +1,8 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard, Package, HeartHandshake, Receipt, MapPin,
-  Settings, User, LogOut, Calendar, History, Users, FileText, Truck, ShieldCheck, Bell, X
+  Settings, User, LogOut, Calendar, History, Users, FileText, Truck, ShieldCheck, Bell, X, Award
 } from 'lucide-react'
 import AnnaSetuLogo from './AnnaSetuLogo'
 import { useAuth } from '../contexts/AuthContext'
@@ -38,9 +38,9 @@ export default function Sidebar({ collapsed, isOpen, onClose, role }) {
       case 'individual':
         return [
           { path: '/individual', label: t('dashboard'), icon: LayoutDashboard },
-          { path: '/individual/available', label: t('available_donations'), icon: HeartHandshake },
-          { path: '/individual/accepted', label: t('accepted_donations'), icon: ShieldCheck },
-          { path: '/individual/history', label: t('donation_history'), icon: History },
+          { path: '/individual/donations', label: 'My Donations', icon: HeartHandshake },
+          { path: '/individual/map', label: 'Nearby NGOs', icon: MapPin },
+          { path: '/individual/impact', label: 'Food Saved & Impact', icon: Award },
           { path: '/individual/profile', label: t('profile'), icon: User },
         ]
       case 'delivery':
@@ -76,22 +76,22 @@ export default function Sidebar({ collapsed, isOpen, onClose, role }) {
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(53, 19, 95, 0.5)',
+            background: 'rgba(35, 12, 63, 0.5)',
             backdropFilter: 'blur(4px)',
-            zIndex: 149
+            zIndex: 140
           }}
         />
       )}
 
-      {/* Sidebar Drawer */}
       <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header" style={{ justifyContent: 'space-between' }}>
-          <Link to="/" onClick={onClose} style={{ textDecoration: 'none' }}>
-            <AnnaSetuLogo size={collapsed && !isOpen ? 36 : 40} showText={!collapsed || isOpen} subtitle={role?.toUpperCase()} />
-          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <AnnaSetuLogo size={32} />
+            {!collapsed && <span className="sidebar-brand">AnnaSetu</span>}
+          </div>
           {isOpen && (
-            <button onClick={onClose} className="btn btn-ghost btn-sm" style={{ padding: '0.25rem' }}>
-              <X size={20} color="#35135F" />
+            <button onClick={onClose} className="btn btn-ghost btn-sm" style={{ padding: '0.2rem 0.4rem' }}>
+              <X size={18} />
             </button>
           )}
         </div>
@@ -106,18 +106,23 @@ export default function Sidebar({ collapsed, isOpen, onClose, role }) {
                 to={item.path}
                 onClick={onClose}
                 className={`nav-item ${isActive ? 'active' : ''}`}
+                title={collapsed ? item.label : ''}
               >
                 <Icon className="nav-icon" />
-                {(!collapsed || isOpen) && <span className="nav-label">{item.label}</span>}
+                {!collapsed && <span className="nav-label">{item.label}</span>}
               </Link>
             )
           })}
         </nav>
 
-        <div style={{ padding: '0.5rem', borderTop: '1px solid var(--border)' }}>
-          <button onClick={() => { logout(); if (onClose) onClose(); }} className="nav-item" style={{ width: '100%', color: 'var(--accent-red)' }}>
+        <div style={{ padding: '1rem', borderTop: '1px solid var(--border)' }}>
+          <button
+            onClick={logout}
+            className="nav-item"
+            style={{ width: '100%', border: 'none', background: 'transparent', cursor: 'pointer', color: '#ef4444' }}
+          >
             <LogOut className="nav-icon" />
-            {(!collapsed || isOpen) && <span className="nav-label">{t('logout')}</span>}
+            {!collapsed && <span>{t('logout')}</span>}
           </button>
         </div>
       </aside>

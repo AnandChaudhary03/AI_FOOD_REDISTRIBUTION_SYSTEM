@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './contexts/AuthContext.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
-// Pages (Static Imports to guarantee 100% route loading reliability across Vercel & Render)
+// Pages (Static Imports for 100% Reliability)
 import LandingPage from './pages/LandingPage.jsx'
 import LoginPage from './pages/auth/LoginPage.jsx'
 import RegisterPage from './pages/auth/RegisterPage.jsx'
@@ -31,12 +31,12 @@ import Beneficiaries from './pages/ngo/Beneficiaries.jsx'
 import NGOReports from './pages/ngo/Reports.jsx'
 import NGOProfile from './pages/ngo/Profile.jsx'
 
-// Individual
+// Individual Household & Event Food Donor Portal
 import IndividualLayout from './pages/individual/IndividualLayout.jsx'
 import IndividualDashboard from './pages/individual/Dashboard.jsx'
-import IndividualAvailableDonations from './pages/individual/AvailableDonations.jsx'
-import IndividualAccepted from './pages/individual/AcceptedDonations.jsx'
-import IndividualHistory from './pages/individual/DonationHistory.jsx'
+import IndividualMyDonations from './pages/individual/MyDonations.jsx'
+import IndividualMap from './pages/individual/Map.jsx'
+import IndividualImpact from './pages/individual/Impact.jsx'
 import IndividualProfile from './pages/individual/Profile.jsx'
 
 // Delivery
@@ -72,13 +72,13 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ minHeight: '100vh', background: '#FFF8E9', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
-          <div style={{ background: '#ffffff', padding: '2.5rem', borderRadius: '24px', boxShadow: '0 20px 60px rgba(53,19,95,0.15)', maxWidth: '460px', width: '100%', border: '1px solid rgba(53,19,95,0.1)' }}>
-            <h2 style={{ color: '#35135F', fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.75rem' }}>Something went wrong</h2>
-            <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Please refresh the page to reload the latest version of AnnaSetu.</p>
+        <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
+          <div style={{ background: 'var(--bg-card)', padding: '2.5rem', borderRadius: '24px', boxShadow: 'var(--shadow-card)', maxWidth: '460px', width: '100%', border: '1px solid var(--border)' }}>
+            <h2 style={{ color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.75rem' }}>Something went wrong</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Please refresh the page to reload the latest version of AnnaSetu.</p>
             <button
               onClick={() => { window.location.href = '/' }}
-              style={{ background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)', color: '#fff', padding: '0.75rem 1.75rem', borderRadius: '99px', fontWeight: 700, border: 'none', cursor: 'pointer' }}
+              className="btn btn-primary"
             >
               Return to Home Page
             </button>
@@ -126,13 +126,14 @@ export default function App() {
                 <Route path="profile" element={<NGOProfile />} />
               </Route>
 
-              {/* Individual Dashboard Routes */}
+              {/* Individual Household & Event Food Donor Portal Routes */}
               <Route path="/individual" element={<ProtectedRoute role="individual"><IndividualLayout /></ProtectedRoute>}>
                 <Route index element={<IndividualDashboard />} />
-                <Route path="available" element={<IndividualAvailableDonations />} />
-                <Route path="accepted" element={<IndividualAccepted />} />
-                <Route path="history" element={<IndividualHistory />} />
+                <Route path="donations" element={<IndividualMyDonations />} />
+                <Route path="map" element={<IndividualMap />} />
+                <Route path="impact" element={<IndividualImpact />} />
                 <Route path="profile" element={<IndividualProfile />} />
+                <Route path="*" element={<Navigate to="/individual" replace />} />
               </Route>
 
               {/* Delivery Dashboard Routes */}
