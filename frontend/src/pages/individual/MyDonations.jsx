@@ -35,6 +35,15 @@ export default function MyDonations() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (formData.expiry_date) {
+      const selectedExp = new Date(formData.expiry_date)
+      selectedExp.setHours(23, 59, 59, 999)
+      const now = new Date()
+      if (selectedExp < now) {
+        toast.error('🚫 Expired food items cannot be donated for safety reasons. Please select today or a future date.', { duration: 5000 })
+        return
+      }
+    }
     try {
       await api.post('/individual/donations', formData)
       toast.success('Food donation created! NGOs will be notified for pickup.')

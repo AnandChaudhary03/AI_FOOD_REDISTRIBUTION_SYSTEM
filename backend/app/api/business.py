@@ -157,6 +157,8 @@ def get_donations(current_user: User = Depends(require_role(UserRole.business)),
 
 @router.post("/donations", response_model=DonationOut)
 def create_donation(donation: DonationCreate, current_user: User = Depends(require_role(UserRole.business)), db: Session = Depends(get_db)):
+    if donation.expiry_date and donation.expiry_date.date() < datetime.utcnow().date():
+        raise HTTPException(status_code=400, detail="Expired food items cannot be donated for safety reasons")
     db_donation = Donation(
         business_id=current_user.id,
         item_id=donation.item_id,

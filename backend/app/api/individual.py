@@ -84,6 +84,9 @@ def create_individual_donation(
         except:
             exp_date = None
 
+    if exp_date and exp_date.date() < datetime.utcnow().date():
+        raise HTTPException(status_code=400, detail="Expired food items cannot be donated for safety reasons")
+
     new_donation = Donation(
         business_id=current_user.id,
         product_name=payload.product_name,

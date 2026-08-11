@@ -100,6 +100,11 @@ export default function BusinessInventory() {
   }
 
   const handleDonate = async (item) => {
+    const expInfo = getItemExpiryInfo(item.expiry_date)
+    if (expInfo.isExpired) {
+      toast.error('🚫 Expired food items cannot be donated for safety reasons. Please dispose of safely.', { duration: 5000 })
+      return
+    }
     try {
       await api.post('/business/donations', {
         item_id: item.id,
@@ -113,7 +118,7 @@ export default function BusinessInventory() {
       toast.success('Donation created! NGOs will be notified.')
       fetchInventory()
     } catch (err) {
-      toast.error('Failed to create donation')
+      toast.error(err.response?.data?.detail || 'Failed to create donation')
     }
   }
 
@@ -218,30 +223,59 @@ export default function BusinessInventory() {
       </div>
 
       {/* EXPIRY ALERT BANNER NOTIFICATION */}
-      {warningList.length > 0 && (
-        <div style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '16px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <AlertTriangle color="#ef4444" size={24} />
-            <div>
-              <div style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '0.95rem' }}>
-                Alert: {warningList.length} Food Item(s) Expired or Expiring Soon!
+      {warningList.length > 0 && (() => {
+        const expiredItems = warningList.filter(i => getItemExpiryInfo(i.expiry_date).isExpired)
+        const expiringSoonItems = warningList.filter(i => getItemExpiryInfo(i.expiry_date).isExpiringSoon)
+
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            {expiredItems.length > 0 && (
+              <div style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)', borderRadius: '16px', padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <AlertTriangle color="#ef4444" size={22} />
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#ef4444', fontSize: '0.9rem' }}>
+                      🚫 Food Safety Notice: {expiredItems.length} Item(s) EXPIRED
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                      Expired food items cannot be donated to protect public health. Please dispose of safely.
+                    </div>
+                  </div>
+                </div>
+                <span className="badge badge-red" style={{ padding: '0.4rem 0.75rem', whiteSpace: 'nowrap' }}>
+                  Do Not Donate
+                </span>
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                Donate these items to NGOs immediately to prevent food waste.
+            )}
+
+            {expiringSoonItems.length > 0 && (
+              <div style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: '16px', padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <Clock color="#f59e0b" size={22} />
+                  <div>
+                    <div style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '0.9rem' }}>
+                      ⚠️ Urgent Action: {expiringSoonItems.length} Food Item(s) Expiring Soon (1-3 Days Left)
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                      Donate these fresh items to local NGOs now before they expire.
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    const first = expiringSoonItems[0]
+                    if (first) handleDonate(first)
+                  }}
+                  className="btn btn-primary btn-sm"
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  <HeartHandshake size={14} /> Donate Expiring Stock Now
+                </button>
               </div>
-            </div>
+            )}
           </div>
-          <button
-            onClick={() => {
-              const first = warningList[0]
-              if (first) handleDonate(first)
-            }}
-            className="btn btn-danger btn-sm"
-          >
-            Donate Expiring Stock Now
-          </button>
-        </div>
-      )}
+        )
+      })()}
 
       {/* TWO SEPARATE MEDIUM TABS ABOVE INVENTORY LIST */}
       <div style={{ marginBottom: '2rem' }}>
@@ -538,11 +572,22 @@ export default function BusinessInventory() {
                     </span>
                   </td>
                   <td>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                       {item.status === 'available' && (
-                        <button onClick={() => handleDonate(item)} className="btn btn-primary btn-sm" title="Donate">
-                          <HeartHandshake size={14} /> Donate
-                        </button>
+                        expInfo.isExpired ? (
+                          <button
+                            disabled
+                            className="btn btn-ghost btn-sm"
+                            style={{ opacity: 0.6, cursor: 'not-allowed', color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)', fontSize: '0.75rem' }}
+                            title="Expired food cannot be donated for safety reasons"
+                          >
+                            🚫 Cannot Donate
+                          </button>
+                        ) : (
+                          <button onClick={() => handleDonate(item)} className="btn btn-primary btn-sm" title="Donate to NGO">
+                            <HeartHandshake size={14} /> Donate
+                          </button>
+                        )
                       )}
                       <button onClick={() => handleDelete(item.id)} className="btn btn-danger btn-sm" title="Delete">
                         <Trash2 size={14} />
