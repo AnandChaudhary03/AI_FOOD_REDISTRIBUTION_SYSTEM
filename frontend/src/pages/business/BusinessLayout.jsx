@@ -16,7 +16,7 @@ export default function BusinessLayout() {
   }
 
   return (
-    <div className="app-layout">
+    <div className="app-layout" data-portal="business">
       <Sidebar collapsed={collapsed} isOpen={mobileOpen} onClose={() => setMobileOpen(false)} role="business" />
       <div className={`main-content ${collapsed ? 'collapsed' : ''}`}>
         <TopBar onToggleSidebar={handleToggle} />

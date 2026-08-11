@@ -16,7 +16,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="app-layout">
+    <div className="app-layout" data-portal="admin">
       <Sidebar collapsed={collapsed} isOpen={mobileOpen} onClose={() => setMobileOpen(false)} role="admin" />
       <div className={`main-content ${collapsed ? 'collapsed' : ''}`}>
         <TopBar onToggleSidebar={handleToggle} />

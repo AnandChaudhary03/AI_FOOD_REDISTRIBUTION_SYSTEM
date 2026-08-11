@@ -16,7 +16,7 @@ export default function NGOLayout() {
   }
 
   return (
-    <div className="app-layout">
+    <div className="app-layout" data-portal="ngo">
       <Sidebar collapsed={collapsed} isOpen={mobileOpen} onClose={() => setMobileOpen(false)} role="ngo" />
       <div className={`main-content ${collapsed ? 'collapsed' : ''}`}>
         <TopBar onToggleSidebar={handleToggle} />

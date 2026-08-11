@@ -16,7 +16,7 @@ export default function DeliveryLayout() {
   }
 
   return (
-    <div className="app-layout">
+    <div className="app-layout" data-portal="delivery">
       <Sidebar collapsed={collapsed} isOpen={mobileOpen} onClose={() => setMobileOpen(false)} role="delivery" />
       <div className={`main-content ${collapsed ? 'collapsed' : ''}`}>
         <TopBar onToggleSidebar={handleToggle} />

@@ -506,3 +506,97 @@ body {
     gap: 0.6rem;
   }
 }
+
+/* ==========================================================================
+   PORTAL-SPECIFIC NAVBAR & SIDEBAR COLOR THEMES (Vibrant & High Contrast)
+   ========================================================================== */
+
+/* 1. BUSINESS PORTAL (Warm Saffron & Coral Gradient) */
+[data-portal="business"] .sidebar {
+  background: linear-gradient(180deg, #1C1326 0%, #2A173B 100%) !important;
+  border-right: 1px solid rgba(255, 107, 82, 0.25) !important;
+}
+[data-portal="business"] .topbar {
+  background: rgba(28, 19, 38, 0.92) !important;
+  border-bottom: 1px solid rgba(255, 107, 82, 0.25) !important;
+}
+[data-portal="business"] .nav-item.active {
+  background: rgba(255, 107, 82, 0.18) !important;
+  color: #FF6B52 !important;
+  border: 1px solid rgba(255, 107, 82, 0.35) !important;
+}
+[data-portal="business"] .nav-item.active::before {
+  background: #FF6B52 !important;
+}
+
+/* 2. NGO PORTAL (Deep Emerald Forest & Mint) */
+[data-portal="ngo"] .sidebar {
+  background: linear-gradient(180deg, #06372B 0%, #08211B 100%) !important;
+  border-right: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+[data-portal="ngo"] .topbar {
+  background: rgba(6, 55, 43, 0.92) !important;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+[data-portal="ngo"] .nav-item.active {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+[data-portal="ngo"] .nav-item.active::before {
+  background: #34D399 !important;
+}
+
+/* 3. INDIVIDUAL PORTAL (Royal Purple & Magenta Salvation) */
+[data-portal="individual"] .sidebar {
+  background: linear-gradient(180deg, #2D104E 0%, #17072B 100%) !important;
+  border-right: 1px solid rgba(180, 43, 114, 0.35) !important;
+}
+[data-portal="individual"] .topbar {
+  background: rgba(45, 16, 78, 0.92) !important;
+  border-bottom: 1px solid rgba(180, 43, 114, 0.35) !important;
+}
+[data-portal="individual"] .nav-item.active {
+  background: rgba(180, 43, 114, 0.22) !important;
+  color: #F472B6 !important;
+  border: 1px solid rgba(180, 43, 114, 0.45) !important;
+}
+[data-portal="individual"] .nav-item.active::before {
+  background: #F472B6 !important;
+}
+
+/* 4. DELIVERY PARTNER PORTAL (Electric Cyan & Ocean Blue) */
+[data-portal="delivery"] .sidebar {
+  background: linear-gradient(180deg, #0A2342 0%, #051428 100%) !important;
+  border-right: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+[data-portal="delivery"] .topbar {
+  background: rgba(10, 35, 66, 0.92) !important;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+[data-portal="delivery"] .nav-item.active {
+  background: rgba(59, 130, 246, 0.22) !important;
+  color: #60A5FA !important;
+  border: 1px solid rgba(59, 130, 246, 0.45) !important;
+}
+[data-portal="delivery"] .nav-item.active::before {
+  background: #60A5FA !important;
+}
+
+/* 5. ADMIN PORTAL (Midnight Gold & Amber) */
+[data-portal="admin"] .sidebar {
+  background: linear-gradient(180deg, #2B1D0C 0%, #191005 100%) !important;
+  border-right: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+[data-portal="admin"] .topbar {
+  background: rgba(43, 29, 12, 0.92) !important;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+[data-portal="admin"] .nav-item.active {
+  background: rgba(245, 158, 11, 0.22) !important;
+  color: #FBBF24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+[data-portal="admin"] .nav-item.active::before {
+  background: #FBBF24 !important;
+}

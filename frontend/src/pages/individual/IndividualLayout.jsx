@@ -16,7 +16,7 @@ export default function IndividualLayout() {
   }
 
   return (
-    <div className="app-layout">
+    <div className="app-layout" data-portal="individual">
       <Sidebar collapsed={collapsed} isOpen={mobileOpen} onClose={() => setMobileOpen(false)} role="individual" />
       <div className={`main-content ${collapsed ? 'collapsed' : ''}`}>
         <TopBar onToggleSidebar={handleToggle} />
