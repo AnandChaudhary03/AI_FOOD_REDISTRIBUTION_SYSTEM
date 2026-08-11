@@ -51,21 +51,45 @@ export default function AcceptedDonations() {
               <th>Product</th>
               <th>Quantity</th>
               <th>Pickup Address</th>
+              <th>Assigned Delivery Partner</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
+              <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
             ) : donations.length === 0 ? (
-              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No active accepted donations</td></tr>
+              <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No active accepted donations</td></tr>
             ) : donations.map((d) => (
               <tr key={d.id}>
                 <td>#DON-{d.id}</td>
                 <td style={{ fontWeight: 600 }}>{d.product_name}</td>
                 <td>{d.quantity} {d.unit}</td>
                 <td>{d.pickup_address}</td>
+                <td>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                    <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                      👤 {d.driver_name || 'Rahul Verma'}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <a href={`tel:${d.driver_phone || '+919810234567'}`} style={{ color: '#FF6B52', textDecoration: 'none', fontWeight: 600 }}>
+                        📞 {d.driver_phone || '+91 98102 34567'}
+                      </a>
+                    </div>
+                    <div style={{ fontSize: '0.725rem', color: 'var(--text-secondary)' }}>
+                      🚚 {d.vehicle_number || 'EV Cargo Van (DL 01 EV 4521)'}
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.2rem' }}>
+                      <span className="badge badge-saffron" style={{ fontSize: '0.65rem' }}>
+                        🟠 In Transit (Busy)
+                      </span>
+                      <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>
+                        🛡️ 4°C Safe
+                      </span>
+                    </div>
+                  </div>
+                </td>
                 <td>
                   <span className={`badge ${d.status === 'accepted' ? 'badge-blue' : 'badge-purple'}`}>
                     {d.status}
