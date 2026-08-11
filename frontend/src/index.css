@@ -250,6 +250,25 @@ body {
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   width: 100%; box-sizing: border-box; max-width: 100%;
 }
+.topbar-btn {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.45rem 0.85rem; border-radius: 99px;
+  font-size: 0.8rem; font-weight: 700; cursor: pointer;
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: var(--transition);
+}
+.topbar-btn:hover {
+  background: var(--bg-card-hover) !important;
+  border-color: #FF6B52 !important;
+  transform: translateY(-1px);
+}
+.topbar-btn span {
+  color: var(--text-primary) !important;
+  font-weight: 700 !important;
+}
 .content-area { flex: 1; overflow-y: auto; width: 100%; box-sizing: border-box; max-width: 100%; }
 
 /* Auth pages */

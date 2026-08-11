@@ -70,8 +70,8 @@ export default function TopBar({ onToggleSidebar }) {
   return (
     <header className="topbar">
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <button onClick={onToggleSidebar} className="btn btn-ghost btn-sm" style={{ color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.3)' }} title="Toggle Sidebar Menu">
-          <Menu size={20} color="#FFFFFF" />
+        <button onClick={onToggleSidebar} className="topbar-btn" title="Toggle Sidebar Menu">
+          <Menu size={18} color="#FF6B52" />
         </button>
       </div>
 
@@ -91,36 +91,35 @@ export default function TopBar({ onToggleSidebar }) {
         {/* Light / Dark Mode Toggle Button */}
         <button
           onClick={toggleTheme}
-          className="btn btn-secondary btn-sm"
+          className="topbar-btn"
           title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
-          style={{ padding: '0.45rem 0.75rem', borderRadius: '99px', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.25)' }}
         >
           {theme === 'light' ? (
             <>
               <Moon size={16} color="#FF6B52" />
-              <span className="mobile-hide" style={{ fontSize: '0.78rem', fontWeight: 600, color: '#FFFFFF' }}>Dark</span>
+              <span className="mobile-hide">Dark</span>
             </>
           ) : (
             <>
               <Sun size={16} color="#f59e0b" />
-              <span className="mobile-hide" style={{ fontSize: '0.78rem', fontWeight: 600, color: '#FFFFFF' }}>Light</span>
+              <span className="mobile-hide">Light</span>
             </>
           )}
         </button>
 
         {/* Multilingual Language Selector */}
         <div style={{ position: 'relative' }}>
-          <button onClick={() => setLangOpen(!langOpen)} className="btn btn-secondary btn-sm" style={{ gap: '0.4rem', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.25)' }}>
-            <Globe size={16} color="#FFFFFF" />
-            <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{languages.find(l => l.code === i18n.language)?.name || 'English'}</span>
+          <button onClick={() => setLangOpen(!langOpen)} className="topbar-btn">
+            <Globe size={16} color="#FF6B52" />
+            <span>{languages.find(l => l.code === i18n.language)?.name || 'English'}</span>
           </button>
 
           {langOpen && (
             <div style={{
-              position: 'absolute', right: 0, top: '110%',
+              position: 'absolute', right: 0, top: '115%',
               background: 'var(--bg-card)', border: '1px solid var(--border)',
-              borderRadius: 'var(--radius)', padding: '0.4rem', zIndex: 100,
-              minWidth: '130px', boxShadow: 'var(--shadow-card)'
+              borderRadius: 'var(--radius)', padding: '0.4rem', zIndex: 200,
+              minWidth: '135px', boxShadow: 'var(--shadow-card)'
             }}>
               {languages.map((l) => (
                 <button
@@ -130,7 +129,7 @@ export default function TopBar({ onToggleSidebar }) {
                     width: '100%', textAlign: 'left', padding: '0.5rem 0.75rem',
                     background: i18n.language === l.code ? 'rgba(255,107,82,0.15)' : 'transparent',
                     color: i18n.language === l.code ? '#FF6B52' : 'var(--text-primary)',
-                    border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem'
+                    border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600
                   }}
                 >
                   {l.name}
@@ -140,7 +139,7 @@ export default function TopBar({ onToggleSidebar }) {
           )}
         </div>
 
-        {/* User Info with Crystal Clear High Contrast Text */}
+        {/* User Info */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <div style={{
             width: '36px', height: '36px', borderRadius: '50%',
@@ -150,8 +149,8 @@ export default function TopBar({ onToggleSidebar }) {
             {user?.name?.[0] || 'U'}
           </div>
           <div className="mobile-hide" style={{ fontSize: '0.85rem' }}>
-            <div style={{ fontWeight: 800, color: '#FFFFFF' }}>{user?.name}</div>
-            <div style={{ fontSize: '0.725rem', color: 'rgba(255, 255, 255, 0.85)', textTransform: 'capitalize' }}>
+            <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{user?.name}</div>
+            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
               {user?.organization_name || user?.role}
             </div>
           </div>
