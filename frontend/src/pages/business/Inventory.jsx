@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { Package, Plus, Search, Trash2, HeartHandshake, Barcode, Upload, Camera, CheckCircle, X, Sparkles, FileSpreadsheet, AlertTriangle, Clock } from 'lucide-react'
+import { Package, Plus, Search, Trash2, HeartHandshake, Barcode, Upload, Camera, CheckCircle, X, Sparkles, FileSpreadsheet, AlertTriangle, Clock, Download } from 'lucide-react'
 import BarcodeScanner from '../../components/BarcodeScanner'
 import api from '../../api/api'
 
