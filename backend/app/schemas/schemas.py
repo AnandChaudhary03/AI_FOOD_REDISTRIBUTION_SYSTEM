@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional, List
+from typing import Optional, List, Any
 from datetime import datetime
 from app.models.models import UserRole, DonationStatus
 
@@ -103,16 +103,16 @@ class DonationCreate(BaseModel):
 class DonationOut(BaseModel):
     id: int
     product_name: str
-    category: Optional[str]
+    category: Optional[str] = None
     quantity: float
-    unit: str
-    expiry_date: Optional[datetime]
-    description: Optional[str]
-    pickup_address: Optional[str]
-    lat: Optional[float]
-    lng: Optional[float]
-    status: DonationStatus
-    ai_match_score: float
+    unit: str = "kg"
+    expiry_date: Optional[datetime] = None
+    description: Optional[str] = None
+    pickup_address: Optional[str] = None
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+    status: Any
+    ai_match_score: float = 0.0
     business_id: int
     created_at: datetime
     class Config:

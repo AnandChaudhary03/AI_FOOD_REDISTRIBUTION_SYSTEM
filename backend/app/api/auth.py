@@ -26,8 +26,10 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 
 def require_role(*roles: UserRole):
     def role_checker(current_user: User = Depends(get_current_user)):
-        if current_user.role not in roles:
-            raise HTTPException(status_code=403, detail="Insufficient permissions")
+        user_role_str = (current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)).lower()
+        allowed_roles_str = [(r.value if hasattr(r, 'value') else str(r)).lower() for r in roles]
+        if user_role_str not in allowed_roles_str:
+            raise HTTPException(status_code=403, detail=f"Insufficient permissions for role: {user_role_str}")
         return current_user
     return role_checker
 

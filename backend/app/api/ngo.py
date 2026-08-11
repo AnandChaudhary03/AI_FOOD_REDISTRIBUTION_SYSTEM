@@ -40,18 +40,25 @@ def get_available_donations(
     for d in donations:
         dist = None
         if current_user.lat and current_user.lng and d.lat and d.lng:
-            dist = haversine_distance(current_user.lat, current_user.lng, d.lat, d.lng)
-            if dist > radius_km:
-                continue
+            try:
+                dist = haversine_distance(current_user.lat, current_user.lng, d.lat, d.lng)
+                if dist > radius_km:
+                    continue
+            except:
+                dist = None
         business = db.query(User).filter(User.id == d.business_id).first()
+        biz_name = "AnnaSetu Donor"
+        if business:
+            biz_name = business.organization_name or business.name or "AnnaSetu Donor"
         result.append({
-            "id": d.id, "product_name": d.product_name, "category": d.category,
-            "quantity": d.quantity, "unit": d.unit, "expiry_date": d.expiry_date,
-            "description": d.description, "pickup_address": d.pickup_address,
+            "id": d.id, "product_name": d.product_name, "category": d.category or "General",
+            "quantity": d.quantity, "unit": d.unit or "kg",
+            "expiry_date": d.expiry_date.strftime("%Y-%m-%d") if (d.expiry_date and hasattr(d.expiry_date, 'strftime')) else str(d.expiry_date or ''),
+            "description": d.description, "pickup_address": d.pickup_address or "Pickup Address Provided",
             "lat": d.lat, "lng": d.lng, "distance_km": dist,
             "ai_match_score": calculate_match_score(d.quantity),
-            "business_name": business.organization_name or business.name if business else "",
-            "created_at": d.created_at
+            "business_name": biz_name,
+            "created_at": d.created_at.strftime("%Y-%m-%d %H:%M") if (d.created_at and hasattr(d.created_at, 'strftime')) else str(d.created_at or '')
         })
     return sorted(result, key=lambda x: x["ai_match_score"], reverse=True)
 
@@ -102,8 +109,15 @@ def get_accepted_donations(current_user: User = Depends(require_role(UserRole.ng
         Donation.accepted_by_id == current_user.id,
         Donation.status.in_([DonationStatus.accepted, DonationStatus.pickup_scheduled, DonationStatus.in_transit])
     ).all()
-    return [{"id": d.id, "product_name": d.product_name, "quantity": d.quantity, "unit": d.unit,
-             "status": d.status.value, "pickup_address": d.pickup_address, "created_at": d.created_at} for d in donations]
+    return [{
+        "id": d.id,
+        "product_name": d.product_name,
+        "quantity": d.quantity,
+        "unit": d.unit or "kg",
+        "status": d.status.value if hasattr(d.status, 'value') else str(d.status),
+        "pickup_address": d.pickup_address or "Pickup Address Provided",
+        "created_at": d.created_at.strftime("%Y-%m-%d %H:%M") if (d.created_at and hasattr(d.created_at, 'strftime')) else str(d.created_at or '')
+    } for d in donations]
 
 @router.get("/pickup-schedule")
 def get_pickup_schedule(current_user: User = Depends(require_role(UserRole.ngo, UserRole.individual)), db: Session = Depends(get_db)):
