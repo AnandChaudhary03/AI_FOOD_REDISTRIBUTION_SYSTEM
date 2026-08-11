@@ -139,18 +139,21 @@ export default function TopBar({ onToggleSidebar }) {
           )}
         </div>
 
-        {/* User Info */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        {/* User Info with Crystal Clear High-Contrast Text */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', background: 'rgba(0,0,0,0.25)', padding: '0.35rem 0.75rem', borderRadius: '99px', border: '1px solid rgba(255,255,255,0.15)' }}>
           <div style={{
-            width: '36px', height: '36px', borderRadius: '50%',
+            width: '34px', height: '34px', borderRadius: '50%',
             background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)', color: '#ffffff', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', boxShadow: '0 2px 8px rgba(255,107,82,0.3)'
+            alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '0.95rem',
+            border: '2px solid rgba(255,255,255,0.4)', boxShadow: '0 2px 8px rgba(255,107,82,0.4)'
           }}>
             {user?.name?.[0] || 'U'}
           </div>
           <div className="mobile-hide" style={{ fontSize: '0.85rem' }}>
-            <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{user?.name}</div>
-            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+            <div style={{ fontWeight: 900, color: '#FFFFFF', fontSize: '0.9rem', letterSpacing: '-0.01em', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+              {user?.name || 'User'}
+            </div>
+            <div style={{ fontSize: '0.725rem', color: '#FFD166', fontWeight: 700, textTransform: 'capitalize', letterSpacing: '0.01em' }}>
               {user?.organization_name || user?.role}
             </div>
           </div>
