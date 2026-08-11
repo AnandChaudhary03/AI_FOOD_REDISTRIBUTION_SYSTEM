@@ -34,22 +34,36 @@ def get_dashboard(current_user: User = Depends(require_role(UserRole.business)),
         ]
     }
 
-@router.get("/inventory", response_model=List[InventoryItemOut])
+@router.get("/inventory")
 def get_inventory(
     current_user: User = Depends(require_role(UserRole.business)),
     db: Session = Depends(get_db),
-    skip: int = 0, limit: int = 50,
+    skip: int = 0, limit: int = 100,
     search: Optional[str] = None, status: Optional[str] = None
 ):
     q = db.query(InventoryItem).filter(InventoryItem.business_id == current_user.id)
-    if search:
-        q = q.filter(InventoryItem.product_name.contains(search))
+    if search and search.strip():
+        q = q.filter(InventoryItem.product_name.ilike(f"%{search.strip()}%"))
     if status:
         q = q.filter(InventoryItem.status == status)
-    items = q.offset(skip).limit(limit).all()
+    items = q.order_by(InventoryItem.created_at.desc()).offset(skip).limit(limit).all()
+    result = []
     for item in items:
-        item.ai_urgency_score = calculate_urgency_score(item.expiry_date, item.quantity)
-    return items
+        urgency = calculate_urgency_score(item.expiry_date, item.quantity)
+        result.append({
+            "id": item.id,
+            "barcode": item.barcode,
+            "product_name": item.product_name,
+            "category": item.category or "General",
+            "quantity": item.quantity or 1,
+            "unit": item.unit or "kg",
+            "expiry_date": item.expiry_date.strftime("%Y-%m-%d") if (item.expiry_date and hasattr(item.expiry_date, 'strftime')) else str(item.expiry_date or ''),
+            "description": item.description,
+            "status": item.status or "available",
+            "ai_urgency_score": urgency,
+            "created_at": item.created_at.strftime("%Y-%m-%d %H:%M") if (item.created_at and hasattr(item.created_at, 'strftime')) else str(item.created_at or '')
+        })
+    return result
 
 @router.post("/inventory", response_model=InventoryItemOut)
 def add_inventory_item(

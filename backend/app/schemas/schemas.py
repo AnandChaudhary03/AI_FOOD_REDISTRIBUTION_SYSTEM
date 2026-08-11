@@ -75,15 +75,16 @@ class InventoryItemCreate(BaseModel):
 
 class InventoryItemOut(BaseModel):
     id: int
-    barcode: Optional[str]
+    barcode: Optional[str] = None
     product_name: str
-    category: Optional[str]
-    quantity: float
-    unit: str
-    expiry_date: Optional[datetime]
-    status: str
-    ai_urgency_score: float
-    created_at: datetime
+    category: Optional[str] = "General"
+    quantity: float = 1.0
+    unit: str = "kg"
+    expiry_date: Optional[Any] = None
+    description: Optional[str] = None
+    status: Optional[str] = "available"
+    ai_urgency_score: Optional[float] = 0.0
+    created_at: Optional[Any] = None
     class Config:
         from_attributes = True
 
