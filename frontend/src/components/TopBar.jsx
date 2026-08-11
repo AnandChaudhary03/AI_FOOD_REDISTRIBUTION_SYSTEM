@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Globe, Menu, Sparkles, Sun, Moon, Download } from 'lucide-react'
+import { Globe, Menu, Sun, Moon, Download } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function TopBar({ onToggleSidebar }) {
@@ -8,90 +8,75 @@ export default function TopBar({ onToggleSidebar }) {
   const { user, updateLanguage } = useAuth()
   const [langOpen, setLangOpen] = useState(false)
   const [theme, setTheme] = useState(() => localStorage.getItem('annasetu_theme') || 'light')
-  const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [isStandalone, setIsStandalone] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
 
-  // 1. Detect Theme & Apply
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark')
-      document.body.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      document.body.classList.remove('dark')
-    }
-    localStorage.setItem('annasetu_theme', theme)
-  }, [theme])
-
-  // 2. Detect Standalone App Mode (Hide install button when opened in App)
-  useEffect(() => {
+    // Detect if app is running in installed PWA standalone mode
     const checkStandalone = () => {
-      const standalone = window.matchMedia('(display-mode: standalone)').matches ||
+      const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches ||
         window.navigator.standalone === true ||
         document.referrer.includes('android-app://')
-      setIsStandalone(standalone)
+      setIsStandalone(isStandaloneMode)
     }
 
     checkStandalone()
 
-    const handleBeforeInstall = (e) => {
+    // Listen for PWA install prompt
+    const handleBeforeInstallPrompt = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
     }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstall)
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall)
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
   }, [])
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('annasetu_theme', theme)
+  }, [theme])
+
   const toggleTheme = () => {
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'))
+    setTheme(prev => prev === 'light' ? 'dark' : 'light')
   }
 
-  const handleInstallApp = () => {
+  const handleInstallApp = async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt()
-      deferredPrompt.userChoice.then((choice) => {
-        if (choice.outcome === 'accepted') {
-          setIsStandalone(true)
-        }
+      const { outcome } = await deferredPrompt.userChoice
+      if (outcome === 'accepted') {
         setDeferredPrompt(null)
-      })
+      }
     } else {
-      alert('To install AnnaSetu App:\n• Android / Chrome: Tap "Add to Home Screen" or Install\n• iOS Safari: Tap Share -> "Add to Home Screen"\n• Desktop: Click the Install icon in browser address bar.')
+      alert('To install AnnaSetu on your device:\n\n• On Chrome/Edge: Click the ⊕ install icon in address bar.\n• On iOS Safari: Tap Share ➔ Add to Home Screen.')
     }
   }
 
   const languages = [
     { code: 'en', name: 'English' },
-    { code: 'hi', name: 'हिन्दी' },
+    { code: 'hi', name: 'हिंदी' },
     { code: 'ta', name: 'தமிழ்' },
-    { code: 'te', name: 'తెలుగు' }
+    { code: 'te', name: 'తెలుగు' },
   ]
 
   const handleLangChange = (code) => {
     i18n.changeLanguage(code)
     localStorage.setItem('annasetu_lang', code)
-    if (user) updateLanguage(code)
+    updateLanguage(code)
     setLangOpen(false)
   }
 
   return (
     <header className="topbar">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <button onClick={onToggleSidebar} className="btn btn-ghost btn-sm">
-          <Menu size={20} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <button onClick={onToggleSidebar} className="btn btn-ghost btn-sm" style={{ color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.3)' }} title="Toggle Sidebar Menu">
+          <Menu size={20} color="#FFFFFF" />
         </button>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="badge badge-green">
-            <Sparkles size={12} /> AI Powered
-          </span>
-        </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-        {/* INSTALL APP BUTTON — ONLY SHOW WHEN OPENED IN BROWSER, HIDE WHEN OPENED IN APP */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+        {/* PWA Install Button (Only visible when opened in browser, hidden when running inside app) */}
         {!isStandalone && (
           <button
             onClick={handleInstallApp}
@@ -108,26 +93,26 @@ export default function TopBar({ onToggleSidebar }) {
           onClick={toggleTheme}
           className="btn btn-secondary btn-sm"
           title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
-          style={{ padding: '0.45rem 0.75rem', borderRadius: '99px', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+          style={{ padding: '0.45rem 0.75rem', borderRadius: '99px', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.25)' }}
         >
           {theme === 'light' ? (
             <>
               <Moon size={16} color="#FF6B52" />
-              <span className="mobile-hide" style={{ fontSize: '0.78rem', fontWeight: 600 }}>Dark</span>
+              <span className="mobile-hide" style={{ fontSize: '0.78rem', fontWeight: 600, color: '#FFFFFF' }}>Dark</span>
             </>
           ) : (
             <>
               <Sun size={16} color="#f59e0b" />
-              <span className="mobile-hide" style={{ fontSize: '0.78rem', fontWeight: 600 }}>Light</span>
+              <span className="mobile-hide" style={{ fontSize: '0.78rem', fontWeight: 600, color: '#FFFFFF' }}>Light</span>
             </>
           )}
         </button>
 
         {/* Multilingual Language Selector */}
         <div style={{ position: 'relative' }}>
-          <button onClick={() => setLangOpen(!langOpen)} className="btn btn-secondary btn-sm" style={{ gap: '0.4rem' }}>
-            <Globe size={16} />
-            <span>{languages.find(l => l.code === i18n.language)?.name || 'English'}</span>
+          <button onClick={() => setLangOpen(!langOpen)} className="btn btn-secondary btn-sm" style={{ gap: '0.4rem', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.25)' }}>
+            <Globe size={16} color="#FFFFFF" />
+            <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{languages.find(l => l.code === i18n.language)?.name || 'English'}</span>
           </button>
 
           {langOpen && (
@@ -155,18 +140,20 @@ export default function TopBar({ onToggleSidebar }) {
           )}
         </div>
 
-        {/* User Info */}
+        {/* User Info with Crystal Clear High Contrast Text */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <div style={{
             width: '36px', height: '36px', borderRadius: '50%',
-            background: 'var(--gradient-brand)', color: '#ffffff', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'
+            background: 'linear-gradient(135deg, #FF6B52 0%, #FF875F 100%)', color: '#ffffff', display: 'flex',
+            alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', boxShadow: '0 2px 8px rgba(255,107,82,0.3)'
           }}>
             {user?.name?.[0] || 'U'}
           </div>
           <div className="mobile-hide" style={{ fontSize: '0.85rem' }}>
-            <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{user?.name}</div>
-            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>{user?.organization_name || user?.role}</div>
+            <div style={{ fontWeight: 800, color: '#FFFFFF' }}>{user?.name}</div>
+            <div style={{ fontSize: '0.725rem', color: 'rgba(255, 255, 255, 0.85)', textTransform: 'capitalize' }}>
+              {user?.organization_name || user?.role}
+            </div>
           </div>
         </div>
       </div>
