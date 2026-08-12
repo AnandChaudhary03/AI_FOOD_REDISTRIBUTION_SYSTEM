@@ -20,8 +20,8 @@ export default function AnnaSetuLogo({ size = 40, showText = true, subtitle = nu
         }}
       >
         <svg width={size} height={size} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Hand base curve in bright white-coral gradient fill for high contrast */}
-          <path d="M6 24C10 27 20 27 28 22C30 20.8 30.5 19 29 18.5C27 18 24 20 18 21.5C14 22.5 10 22 6 24Z" fill="#FFFFFF" opacity="0.95" />
+          {/* Hand base curve */}
+          <path d="M6 24C10 27 20 27 28 22C30 20.8 30.5 19 29 18.5C27 18 24 20 18 21.5C14 22.5 10 22 6 24Z" fill="var(--accent-green, #22c55e)" opacity="0.95" />
           {/* Center Lotus / Sprout Petals */}
           <path d="M18 6C15 11 14 16 18 21C22 16 21 11 18 6Z" fill="#FF6B52" />
           <path d="M12 11C11 15 12 18 15 21C14 17 14 14 12 11Z" fill="#FF875F" />
@@ -31,11 +31,11 @@ export default function AnnaSetuLogo({ size = 40, showText = true, subtitle = nu
 
       {showText && (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: Math.max(14, size * 0.48), fontWeight: 900, color: textColor || '#FFFFFF', letterSpacing: '-0.02em', lineHeight: 1 }}>
+          <span style={{ fontSize: Math.max(14, size * 0.48), fontWeight: 900, color: textColor || 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1 }}>
             AnnaSetu
           </span>
           {displaySubtitle && (
-            <span style={{ fontSize: Math.max(9, size * 0.22), color: '#FF875F', fontWeight: 700, letterSpacing: '0.01em', marginTop: '0.2rem', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: Math.max(9, size * 0.22), color: '#FF6B52', fontWeight: 700, letterSpacing: '0.01em', marginTop: '0.2rem', whiteSpace: 'nowrap' }}>
               {displaySubtitle}
             </span>
           )}

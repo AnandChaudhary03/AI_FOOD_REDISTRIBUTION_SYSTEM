@@ -58,7 +58,7 @@ export default function LoginPage() {
       <div className="auth-card">
         <div className="auth-logo" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
           <Link to="/" style={{ textDecoration: 'none' }}>
-            <AnnaSetuLogo size={52} />
+            <AnnaSetuLogo size={52} textColor="var(--text-primary)" />
           </Link>
         </div>
 
