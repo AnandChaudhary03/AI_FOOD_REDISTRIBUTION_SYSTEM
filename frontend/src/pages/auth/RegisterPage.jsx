@@ -29,10 +29,10 @@ export default function RegisterPage() {
 
   // Admin registration is disabled (System has single pre-configured admin)
   const roles = [
-    { id: 'business', label: 'Business', icon: Building2 },
-    { id: 'ngo', label: 'NGO', icon: Heart },
-    { id: 'individual', label: 'Individual', icon: User },
-    { id: 'delivery', label: 'Delivery', icon: Truck },
+    { id: 'business', label: t('business'), icon: Building2 },
+    { id: 'ngo', label: t('ngo'), icon: Heart },
+    { id: 'individual', label: t('individual'), icon: User },
+    { id: 'delivery', label: t('delivery'), icon: Truck },
   ]
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
