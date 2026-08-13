@@ -62,7 +62,7 @@ export default function RegisterPage() {
       <div className="auth-card" style={{ maxWidth: '540px' }}>
         <div className="auth-logo">
           <Link to="/" style={{ textDecoration: 'none', display: 'inline-block', marginBottom: '0.5rem' }}>
-            <AnnaSetuLogo size={48} textColor="var(--text-primary)" />
+            <AnnaSetuLogo size={48} />
           </Link>
           <h1 className="auth-title">Create Account</h1>
           <p className="auth-subtitle">Join AnnaSetu to reduce food waste</p>

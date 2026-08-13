@@ -173,7 +173,7 @@ export default function LandingPage() {
         <header className="landing-header">
           {/* Far Left Brand Logo */}
           <Link to="/" style={{ textDecoration: 'none' }}>
-            <AnnaSetuLogo size={38} textColor="var(--text-primary)" />
+            <AnnaSetuLogo size={38} />
           </Link>
 
           {/* Far Right Action Controls */}
