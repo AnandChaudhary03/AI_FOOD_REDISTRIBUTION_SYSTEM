@@ -19,6 +19,7 @@ import BusinessTransactions from './pages/business/Transactions.jsx'
 import BusinessMap from './pages/business/Map.jsx'
 import BusinessSettings from './pages/business/Settings.jsx'
 import BusinessProfile from './pages/business/Profile.jsx'
+import PosIntegration from './pages/business/PosIntegration.jsx'
 
 // NGO
 import NGOLayout from './pages/ngo/NGOLayout.jsx'
@@ -75,6 +76,7 @@ export default function App() {
               <Route path="inventory" element={<BusinessInventory />} />
               <Route path="donations" element={<BusinessDonations />} />
               <Route path="transactions" element={<BusinessTransactions />} />
+              <Route path="pos" element={<PosIntegration />} />
               <Route path="barcode" element={<Navigate to="/business/inventory" replace />} />
               <Route path="map" element={<BusinessMap />} />
               <Route path="settings" element={<BusinessSettings />} />

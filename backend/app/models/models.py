@@ -146,3 +146,26 @@ class Transaction(Base):
     unit = Column(String(50), nullable=True)
     notes = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class POSApiKey(Base):
+    __tablename__ = "pos_api_keys"
+    id = Column(Integer, primary_key=True, index=True)
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    name = Column(String(255), nullable=False)  # e.g. "Square POS Main Store"
+    api_key = Column(String(255), unique=True, index=True, nullable=False)
+    pos_provider = Column(String(100), default="Custom POS")  # Square, Toast, Clover, Custom
+    is_active = Column(Boolean, default=True)
+    last_used_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class POSLog(Base):
+    __tablename__ = "pos_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    api_key_id = Column(Integer, ForeignKey("pos_api_keys.id"), nullable=True)
+    pos_provider = Column(String(100), default="Custom POS")
+    event_type = Column(String(100), nullable=False)  # sync_sale, sync_inventory, webhook
+    items_synced = Column(Integer, default=0)
+    details = Column(Text, nullable=True)
+    status = Column(String(50), default="success")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

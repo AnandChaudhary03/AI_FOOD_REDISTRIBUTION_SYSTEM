@@ -154,3 +154,31 @@ class PickupOut(BaseModel):
     created_at: datetime
     class Config:
         from_attributes = True
+
+# ---- POS Schemas ----
+class POSApiKeyCreate(BaseModel):
+    name: str = "POS Register Key"
+    pos_provider: Optional[str] = "Custom POS"
+
+class POSSaleItem(BaseModel):
+    barcode: Optional[str] = None
+    product_name: Optional[str] = None
+    quantity_sold: float
+
+class POSSaleSync(BaseModel):
+    pos_provider: Optional[str] = "Custom POS"
+    register_id: Optional[str] = "REG-01"
+    items: List[POSSaleItem]
+
+class POSInventorySyncItem(BaseModel):
+    barcode: Optional[str] = None
+    product_name: str
+    category: Optional[str] = "General"
+    quantity: float
+    unit: Optional[str] = "kg"
+    expiry_date: Optional[str] = None
+    description: Optional[str] = None
+
+class POSInventorySyncPayload(BaseModel):
+    pos_provider: Optional[str] = "Custom POS"
+    items: List[POSInventorySyncItem]
