@@ -2,7 +2,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import engine, Base
-from app.api import auth, business, ngo, delivery, admin, individual, pos
+from app.api import auth, business, ngo, delivery, admin, individual, pos, forecasting
 from app.models import models
 from app.seed import seed_db
 import json
@@ -39,6 +39,7 @@ app.include_router(delivery.router)
 app.include_router(admin.router)
 app.include_router(individual.router)
 app.include_router(pos.router)
+app.include_router(forecasting.router)
 
 # WebSocket connections manager
 class ConnectionManager:

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AnnaSetu — Final Project Presentation Deck</title>
+  <style>
+    :root {
+      --bg: #0a1628;
+      --card-bg: #152035;
+      --accent: #FF6B52;
+      --accent-green: #22c55e;
+      --text: #f0f4ff;
+      --muted: #8ba3c7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .slide-container {
+      width: 100%;
+      max-width: 1000px;
+      min-height: 560px;
+      background: linear-gradient(135deg, #152035 0%, #1a2a45 100%);
+      border: 1px solid #1e3a5f;
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1e3a5f;
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FF6B52 0%, #FF875F 50%, #FFD166 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .slide-number {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .slide-body {
+      flex: 1;
+    }
+    .slide-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: #FFFFFF;
+    }
+    .slide-subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    .card-box {
+      background: rgba(10, 22, 40, 0.6);
+      border: 1px solid #1e3a5f;
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .card-box h4 {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    .card-box p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #1e3a5f;
+    }
+    .btn {
+      background: linear-gradient(135deg, #1B5E20, #22c55e);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      background: #152035;
+      border: 1px solid #1e3a5f;
+    }
+  </style>
+</head>
+<body>
+
+  <div className="slide-container" id="slideBox">
+    <!-- Slide Header -->
+    <div className="slide-header">
+      <div className="brand">AnnaSetu</div>
+      <div className="slide-number" id="slideNum">Slide 1 of 15</div>
+    </div>
+
+    <!-- Slide Content -->
+    <div className="slide-body" id="slideContent">
+      <!-- Dynamic content rendered via JS -->
+    </div>
+
+    <!-- Navigation Controls -->
+    <div className="controls">
+      <button className="btn btn-secondary" onclick="prevSlide()">◀ Previous</button>
+      <span style="font-size: 0.85rem; color: var(--muted);">Use Arrow Keys or Buttons to Navigate</span>
+      <button className="btn" onclick="nextSlide()">Next ▶</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = [
+      {
+        title: "AnnaSetu — Bridging Surplus. Ending Hunger.",
+        subtitle: "AI-Powered Food Waste Reduction & Real-Time Redistribution Platform",
+        cards: [
+          { title: "Core Goal", text: "Prevent food waste across businesses & households while delivering fresh meals to NGOs." },
+          { title: "Key Technology", text: "React PWA, FastAPI, POS REST Integration, Haversine AI Matcher & Demand Forecasts." }
+        ]
+      },
+      {
+        title: "Problem Statement & Industry Pain Points",
+        subtitle: "Over 1.3 billion tons of food is wasted globally due to poor inventory foresight.",
+        cards: [
+          { title: "Inaccurate Forecasting", text: "Food businesses over-purchase stock leading to spoilage." },
+          { title: "Lack of Logistics", text: "No real-time bridge to connect surplus food with local food banks before expiry." }
+        ]
+      },
+      {
+        title: "AnnaSetu Dual-Sided Ecosystem",
+        subtitle: "Connecting food businesses, recipient NGOs, and logistics drivers in real-time.",
+        cards: [
+          { title: "Food Businesses", text: "Manage inventory, scan barcodes, sync POS registers, and list surplus food." },
+          { title: "Recipient NGOs", text: "Receive live donation feeds, AI match scores, and schedule pickups with 6-digit OTPs." }
+        ]
+      },
+      {
+        title: "Real-Time POS System Integration",
+        subtitle: "Seamlessly connects third-party registers (Square, Toast, Clover, Custom POS).",
+        cards: [
+          { title: "POS API Keys", text: "Secret token authentication (pos_live_...) with 1-click revocation." },
+          { title: "Real-Time Auto-Deduction", text: "Register sales checkout automatically deducts stock levels in real-time." }
+        ]
+      },
+      {
+        title: "AI Demand Forecasting & Smart Reordering",
+        subtitle: "Predictive time-series consumption velocity per product category.",
+        cards: [
+          { title: "Demand Forecasting", text: "Predicts daily, 7-day, and 30-day product demand." },
+          { title: "Smart Reorder Recommendations", text: "Calculates optimal purchase quantities bounded by warehouse storage capacity." }
+        ]
+      },
+      {
+        title: "Delivery Partner Tracking & Food Safety",
+        subtitle: "Guarantees cold-chain safety and 6-digit OTP verification.",
+        cards: [
+          { title: "Fleet Overview", text: "Tracks driver availability (🟢 Available / Free vs 🟠 In Transit / Busy)." },
+          { title: "6-Digit OTP Handover", text: "Recipient NGOs verify OTP to confirm safe food handover." }
+        ]
+      },
+      {
+        title: "Project Conclusion & Sustainability Impact",
+        subtitle: "Diverting food waste, preventing CO2 emissions, and feeding communities.",
+        cards: [
+          { title: "Impact Metrics", text: "Tracks Food Saved (kg), CO2 Avoided (kg * 2.5), and Meals Served." },
+          { title: "Certificate of Honor", text: "Generates official PDF Certificate of Honor for corporate ESG reporting." }
+        ]
+      }
+    ];
+
+    let current = 0;
+    function render() {
+      const s = slides[current];
+      document.getElementById('slideNum').innerText = `Slide ${current + 1} of ${slides.length}`;
+      let cardsHtml = s.cards.map(c => `
+        <div class="card-box">
+          <h4>${c.title}</h4>
+          <p>${c.text}</p>
+        </div>
+      `).join('');
+      document.getElementById('slideContent').innerHTML = `
+        <h2 class="slide-title">${s.title}</h2>
+        <p class="slide-subtitle">${s.subtitle}</p>
+        <div class="grid">${cardsHtml}</div>
+      `;
+    }
+
+    function nextSlide() { if (current < slides.length - 1) { current++; render(); } }
+    function prevSlide() { if (current > 0) { current--; render(); } }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    render();
+  </script>
+</body>
+</html>

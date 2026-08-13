@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  LayoutDashboard, Package, HeartHandshake, Receipt, MapPin, Radio,
+  LayoutDashboard, Package, HeartHandshake, Receipt, MapPin, Radio, TrendingUp,
   Settings, User, LogOut, Calendar, History, Users, FileText, Truck, ShieldCheck, Bell, X, Award
 } from 'lucide-react'
 import AnnaSetuLogo from './AnnaSetuLogo'
@@ -18,6 +18,7 @@ export default function Sidebar({ collapsed, isOpen, onClose, role }) {
         return [
           { path: '/business', label: t('dashboard'), icon: LayoutDashboard },
           { path: '/business/inventory', label: t('inventory'), icon: Package },
+          { path: '/business/forecasting', label: 'AI Waste Predictor', icon: TrendingUp },
           { path: '/business/donations', label: t('donations'), icon: HeartHandshake },
           { path: '/business/pos', label: 'POS Integration', icon: Radio },
           { path: '/business/transactions', label: t('transactions'), icon: Receipt },
