@@ -29,10 +29,10 @@ export default function RegisterPage() {
 
   // Admin registration is disabled (System has single pre-configured admin)
   const roles = [
-    { id: 'business', label: t('business'), icon: Building2 },
-    { id: 'ngo', label: t('ngo'), icon: Heart },
-    { id: 'individual', label: t('individual'), icon: User },
-    { id: 'delivery', label: t('delivery'), icon: Truck },
+    { id: 'business', label: 'Business', icon: Building2 },
+    { id: 'ngo', label: 'NGO', icon: Heart },
+    { id: 'individual', label: 'Individual', icon: User },
+    { id: 'delivery', label: 'Delivery', icon: Truck },
   ]
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -68,19 +68,21 @@ export default function RegisterPage() {
           <p className="auth-subtitle">Join AnnaSetu to reduce food waste</p>
         </div>
 
-        {/* 4-Role Registration Tabs */}
-        <div className="role-tabs">
+        {/* 4-Role Registration Tabs with Generous Spacing and Role Icons */}
+        <div className="role-tabs" style={{ display: 'flex', gap: '0.65rem', marginBottom: '1.75rem' }}>
           {roles.map((r) => {
             const Icon = r.icon
+            const isActive = activeRole === r.id
             return (
               <button
                 key={r.id}
                 type="button"
                 onClick={() => setActiveRole(r.id)}
-                className={`role-tab ${activeRole === r.id ? 'active' : ''}`}
+                className={`role-tab ${isActive ? 'active' : ''}`}
+                style={{ padding: '0.65rem 0.95rem', display: 'inline-flex', alignItems: 'center', gap: '0.45rem', fontWeight: 700 }}
               >
-                <Icon size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
-                {r.label}
+                <Icon size={16} />
+                <span>{r.label}</span>
               </button>
             )
           })}
