@@ -57,10 +57,10 @@ Open **`http://localhost:5173`** in your browser.
 ## 🌐 Live Demo
 
 **Application URL:**  
-https://ai-food-redistribution-system.vercel.app/login
+https://ai-food-redistribution-system.vercel.app
 
 Or click here:  
-[🚀 AI Food Redistribution System](https://ai-food-redistribution-system.vercel.app/login)
+[🚀 AI Food Redistribution System](https://ai-food-redistribution-system.vercel.app)
 
 ---
 
